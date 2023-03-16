@@ -1,18 +1,20 @@
-﻿using Human_Resource_Generator.Data;
+﻿using Human_Resource_Generator.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Human_Resource_Generator.Controllers
 {
     public class GeneratorController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public GeneratorController(ApplicationDbContext db)
+        private readonly IGeneratorRepo _generatorRepo;
+
+        public GeneratorController(IGeneratorRepo generatorRepo)
         {
-            _db = db;
+            _generatorRepo = generatorRepo;
         }
+
         public IActionResult Index()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
+            var data = _generatorRepo.GetAllEmployeesJoinedAnyTrainingProgram();
             return View();
         }
     }
