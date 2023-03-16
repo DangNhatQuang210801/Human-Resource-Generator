@@ -12,7 +12,6 @@ namespace Human_Resource_Generator.Controllers
         }
         public IActionResult Index()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
             return View();
         }
     }
