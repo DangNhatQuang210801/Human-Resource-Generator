@@ -23,8 +23,7 @@ namespace Human_Resource_Generator.Models;
 //}
 public class Employee_Training
 {
-
-    public int employee_id { get; set; }
+    [System.ComponentModel.DataAnnotations.Key] public int employee_id { get; set; }
     public Employee employee { get; set; }
     public int program_id { get; set; }
     public Training_program training_Program { get; set; }
