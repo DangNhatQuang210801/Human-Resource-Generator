@@ -15,8 +15,7 @@ public class GeneratorRepo : IGeneratorRepo
 
     public List<EmployeeTraining> GetAllEmployeesJoinedAnyTrainingProgram()
     {
-        var result = _applicationDbContext.EmployeeTrainings.Include(t => t.Employee)
-            .ThenInclude(t => t.Training_programs).ToList();
+        var result = _applicationDbContext.EmployeeTrainings.Include(t => t.Employee).ThenInclude(t => t.Training_programs).ToList();
         return result;
     }
 }
