@@ -15,7 +15,7 @@ namespace Human_Resource_Generator.Controllers
         public IActionResult Index()
         {
             var data = _generatorRepo.GetAllEmployeesJoinedAnyTrainingProgram();
-            return View();
+            return View(data);
         }
     }
 }

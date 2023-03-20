@@ -1,6 +1,7 @@
 using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Human_Resource_Generator.Repository;
 
