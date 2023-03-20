@@ -7,12 +7,13 @@ namespace Human_Resource_Generator.Data
     public class ApplicationDbContext : DbContext
     {
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
         {
+
         }
 
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<TrainingProgram> TrainingPrograms { get; set; }
+        public DbSet<TrainingProgram> TrainingPrograms { get; set; } 
         public DbSet<EmployeeTraining> EmployeeTrainings { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,7 +30,7 @@ namespace Human_Resource_Generator.Data
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(bc => bc.TrainingProgram)
                 .WithMany(c => c.employees)
-                .HasForeignKey(bc => bc.program_id);
+                .HasForeignKey(bc => bc.employee_id);
         }
     }
 }

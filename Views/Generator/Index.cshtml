@@ -1,8 +1,31 @@
-@{
-    ViewData["Title"] = "Home Page";
-}
+@model List<EmployeeTraining>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Generator</h1>
+    <table>
+        <tr>
+            <th>Employee Id</th>
+            <th>Employee Name</th>
+            <th>Employee Department</th>
+            <th>Date Of Birth</th>
+            <th>Program Name</th>
+            <th>Program Description</th>
+            <th>Date Of Program</th>
+        </tr>
+
+        @foreach (var employeeTraining in Model)
+        {
+            <tr>
+                <td>@employeeTraining.Employee.employee_id</td>
+                <td>@employeeTraining.Employee.employee_name</td>
+                <td>@employeeTraining.Employee.employee_department</td>
+                <td>@employeeTraining.Employee.date_of_birth.ToShortDateString()</td>
+                <td>@employeeTraining.TrainingProgram.program_name</td>
+                <td>@employeeTraining.TrainingProgram.program_description</td>
+                <td>@employeeTraining.TrainingProgram.date_of_program.ToShortDateString()</td>
+            </tr>
+        }
+
+
+    </table>
 </div>
