@@ -1,4 +1,5 @@
-﻿using Human_Resource_Generator.Repository;
+﻿using Human_Resource_Generator.Models;
+using Human_Resource_Generator.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Human_Resource_Generator.Controllers
@@ -17,5 +18,12 @@ namespace Human_Resource_Generator.Controllers
             var data = _generatorRepo.GetAllEmployeesJoinedAnyTrainingProgram();
             return View(data);
         }
+
+        //Get
+        public IActionResult Create()
+        {
+            return View();
+        }
+
     }
 }
