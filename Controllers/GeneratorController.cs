@@ -26,13 +26,13 @@ namespace Human_Resource_Generator.Controllers
         {
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeTraining obj) {
-            object value = _generatorRepo.EmployeeTraining.Add(obj);
-            object value1 = _generatorRepo.SaveChanges();
-        return RedirectToAction("Index");   
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Create(EmployeeTraining obj) {
+        //    object value = _generatorRepo.EmployeeTraining.Add(obj);
+        //    object value1 = _generatorRepo.SaveChanges();
+        //return RedirectToAction("Index");   
+        //}
 
     }
 }
