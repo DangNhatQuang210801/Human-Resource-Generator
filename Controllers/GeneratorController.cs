@@ -2,6 +2,7 @@
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -10,15 +11,24 @@ namespace Human_Resource_Generator.Controllers
         private readonly IGeneratorRepo _generatorRepo;
         private ApplicationDbContext _db;
 
+
         public GeneratorController(IGeneratorRepo generatorRepo)
         {
             _generatorRepo = generatorRepo;
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index(String SearchName)
         {
-            var data = _generatorRepo.GetAllEmployeesJoinedAnyTrainingProgram();
-            return View(data);
+            ViewData["CurrentFilter"] = SearchName;
+            if (String.IsNullOrEmpty(SearchName))
+            {
+                var data = _generatorRepo.GetAllEmployeesJoinedAnyTrainingProgram();
+                return View(data);
+            }
+            else
+            {
+                var searchData = _generatorRepo.SearchAllEmployee(SearchName);
+                return View( searchData);
+            }
         }
 
         //Get

@@ -9,6 +9,11 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\EmployeeTrainingsController.cs" />
+    <Compile Remove="Controllers\Search.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Generator\Search.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
