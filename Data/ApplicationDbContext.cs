@@ -13,7 +13,7 @@ namespace Human_Resource_Generator.Data
         }
 
         public DbSet<Employee> Employee { get; set; }
-        public DbSet<TrainingProgram> TrainingProgram { get; set; } 
+        public DbSet<TrainingProgram> TrainingProgram { get; set; }  
         public DbSet<EmployeeTraining> EmployeeTraining { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -20,4 +20,8 @@ public class GeneratorRepo : IGeneratorRepo
         var result = _applicationDbContext.EmployeeTraining.Include(t => t.Employee).Include(t => t.TrainingProgram).ToList();
         return result;
     }
+    public List<EmployeeTraining> SearchAllEmployee(String SearchName)
+    {
+        var search = _applicationDbContext.EmployeeTraining.Include(t => t.Employee).Include(t => t.TrainingProgram).Where(s => s.Employee.employee_name.Contains(SearchName)).ToList();
+    }
 }
