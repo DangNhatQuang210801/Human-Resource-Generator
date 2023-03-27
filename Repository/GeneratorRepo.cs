@@ -13,23 +13,33 @@ public class GeneratorRepo : IGeneratorRepo
         _applicationDbContext = applicationDbContext;
     }
 
-    public List<EmployeeTraining> GetAllEmployeesJoinedAnyTrainingProgram()
+    public List<Employee> GetAllEmployeesJoinedAnyTrainingProgram()
     {
-
-        var result = _applicationDbContext.EmployeeTraining.Include(t => t.Employee).Include(t => t.TrainingProgram).ToList();
+        var result = _applicationDbContext.Employees.Include(t => t.employee_training).ThenInclude(t=>t.TrainingProgram).ToList();
+        // var result = _applicationDbContext.EmployeeTrainings.Include(t => t.Employee)
+        //     .Include(t => t.TrainingProgram).ToList();
         return result;
     }
-    public List<EmployeeTraining> SearchAllEmployee(string SearchName)
+    public List<Employee> SearchAllEmployee(string SearchName)
     {
-            var search = _applicationDbContext.EmployeeTraining
-            .Include(t => t.Employee)
-            .Include(t => t.TrainingProgram)
-            .Where(s => s.Employee.employee_name.Contains(SearchName) 
-            || s.Employee.employee_id.ToString().Contains(SearchName)
-            || s.Employee.employee_department.Contains(SearchName)
-            || s.TrainingProgram.program_name.Contains(SearchName)
-            || s.TrainingProgram.program_description.Contains(SearchName))
-            .ToList();
+            var search = _applicationDbContext.Employees
+                .Include(t => t.employee_training)
+                .ThenInclude(t=>t.TrainingProgram)
+                .Where(s => s.employee_name.Contains(SearchName) || s.employee_department.Contains(SearchName)).ToList();
             return search;
+    }
+
+    public bool CreateEmployee(Employee employee)
+    {
+        try
+        {
+            _applicationDbContext.Employees.Add(employee);
+            _applicationDbContext.SaveChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

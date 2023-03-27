@@ -12,9 +12,9 @@ namespace Human_Resource_Generator.Data
 
         }
 
-        public DbSet<Employee> Employee { get; set; }
-        public DbSet<TrainingProgram> TrainingProgram { get; set; }  
-        public DbSet<EmployeeTraining> EmployeeTraining { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<TrainingProgram> TrainingPrograms { get; set; }  
+        public DbSet<EmployeeTraining> EmployeeTrainings { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,13 +23,13 @@ namespace Human_Resource_Generator.Data
             
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(bc => bc.Employee)
-                .WithMany(b => b.Training_programs)
+                .WithMany(b => b.employee_training)
                 .HasForeignKey(bc => bc.program_id);  
             
             
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(bc => bc.TrainingProgram)
-                .WithMany(c => c.employees)
+                .WithMany(c => c.employee_training)
                 .HasForeignKey(bc => bc.employee_id);
         }
     }

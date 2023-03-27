@@ -8,7 +8,7 @@ namespace Human_Resource_Generator.Models
         public Employee Employee { get; set; }
         public int program_id { get; set; }
         public TrainingProgram TrainingProgram { get; set; }
-        
+        // public string Result { get; set; } 
     }
 }
 

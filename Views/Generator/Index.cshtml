@@ -1,6 +1,6 @@
-@model List<EmployeeTraining>
+@model List<Employee>
 <br />
-<h1 class="display-4">SEDV Training Program</h1>
+<h1 class="display-4">SEDV Employee</h1>
 <div text-end>
     <a asp-controller="Generator" asp-action="Create" class="btn btn-primary">
         <i class="bi bi-people"></i> New Employee
@@ -27,19 +27,55 @@
                 <th>Training</th>
                 <th>Room</th>
                 <th>Date Of Training</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var employeeTraining in Model)
+            @foreach (var employee in Model)
             {
                 <tr>
-                    <td width="5%">@employeeTraining.Employee.employee_id</td>
-                    <td width="16%">@employeeTraining.Employee.employee_name</td>
-                    <td width="14%">@employeeTraining.Employee.employee_department</td>
-                    <td width ="14%">@employeeTraining.Employee.date_of_birth.ToShortDateString()</td>
-                    <td width ="14%">@employeeTraining.TrainingProgram.program_name</td>
-                    <td width="14%">@employeeTraining.TrainingProgram.program_description</td>
-                    <td width="14%">@employeeTraining.TrainingProgram.date_of_program.ToShortDateString()</td>
+                    <td width="5%">@employee.employee_id</td>
+                    <td width="16%">@employee.employee_name</td>
+                    <td width="14%">@employee.employee_department</td>
+                    <td width ="14%">@employee.date_of_birth.ToShortDateString()</td>
+                    <td width="14%">
+                        <ul>
+                            @{
+                                var program_names = employee.employee_training.Select(s => s.TrainingProgram.program_name);
+                                foreach (var program_name in program_names)
+                                {
+                                    <li>@program_name</li>
+                                }
+                            }
+                        </ul>
+                        
+                    </td>
+                    <td width="14%">
+                        <ul>
+                            @{
+                                var descriptions = employee.employee_training.Select(s => s.TrainingProgram.program_description);
+                                foreach (var description in descriptions)
+                                {
+                                    <li>@description</li>
+                                }
+                            }
+                        </ul>
+                    </td>
+                    <td width="14%">
+                        <ul>
+                            @{
+                                var dates = employee.employee_training.Select(s => s.TrainingProgram.date_of_program.ToShortDateString());
+                                foreach (var date in dates)
+                                {
+                                    <li>@date</li>
+                                }
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <a href="#">Edit</a>
+                        <a href="#" style="color:red">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

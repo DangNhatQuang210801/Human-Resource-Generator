@@ -28,19 +28,19 @@ namespace Human_Resource_Generator.Controllers
                 return View(searchData);
             }
         }
-
-        //Get
-        public IActionResult Create()
+        
+        public IActionResult Create(Employee employee)
         {
-            return View();
+           var result = _generatorRepo.CreateEmployee(employee);
+           if (result)
+           {
+               return RedirectToAction("Index");
+           }
+           else
+           {
+               return View();
+           }
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create(EmployeeTraining obj) {
-        //    object value = _generatorRepo.EmployeeTraining.Add(obj);
-        //    object value1 = _generatorRepo.SaveChanges();
-        //return RedirectToAction("Index");   
-        //}
 
     }
 }

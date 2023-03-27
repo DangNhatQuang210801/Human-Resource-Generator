@@ -10,5 +10,5 @@ public class TrainingProgram
     public string program_name { get; set;}
     public string program_description { get; set; }
     public DateTime date_of_program { get; set; }
-    public IEnumerable<EmployeeTraining> employees { get; set; }
+    public IEnumerable<EmployeeTraining> employee_training { get; set; }
 }

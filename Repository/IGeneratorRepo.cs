@@ -4,6 +4,7 @@ namespace Human_Resource_Generator.Repository;
 
 public interface IGeneratorRepo
 {
-    public List<EmployeeTraining> GetAllEmployeesJoinedAnyTrainingProgram();
-    public List<EmployeeTraining> SearchAllEmployee(string SearchName);
+    public List<Employee> GetAllEmployeesJoinedAnyTrainingProgram();
+    public List<Employee> SearchAllEmployee(string SearchName);
+    public  bool CreateEmployee(Employee employee);
 }
