@@ -24,4 +24,5 @@ public class GeneratorRepo : IGeneratorRepo
     {
         var search = _applicationDbContext.EmployeeTraining.Include(t => t.Employee).Include(t => t.TrainingProgram).Where(s => s.Employee.employee_name.Contains(SearchName)).ToList();
     }
+
 }

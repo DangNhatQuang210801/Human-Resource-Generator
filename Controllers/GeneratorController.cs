@@ -16,7 +16,7 @@ namespace Human_Resource_Generator.Controllers
         {
             _generatorRepo = generatorRepo;
         }
-        public async Task<IActionResult> Index(String SearchName)
+        public async Task<IActionResult> Index(string SearchName)
         {
             ViewData["CurrentFilter"] = SearchName;
             if (String.IsNullOrEmpty(SearchName))
@@ -27,7 +27,7 @@ namespace Human_Resource_Generator.Controllers
             else
             {
                 var searchData = _generatorRepo.SearchAllEmployee(SearchName);
-                return View( searchData);
+                return View(searchData);
             }
         }
 

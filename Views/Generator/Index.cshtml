@@ -10,10 +10,12 @@
 <div>
     <br />
     <form asp-action="Index" class="d-flex" method="get">
-        <input name="SearchName" class="form-control me-sm-2" type="search" placeholder="Search">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        <div class="form-group">
+            <input name="SearchName" class="me-sm-2" type="text" placeholder="Search" value="@ViewData["CurrentFilter"]"/>
+            <input type="submit" value="Search" class="btn btn-secondary my-2 my-sm-0" />
+        </div>
     </form>
-</div>
+
 <br />
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
@@ -41,6 +43,5 @@
                 </tr>
             }
         </tbody>
-
     </table>
 </div>
