@@ -23,9 +23,7 @@ namespace Human_Resource_Generator.Controllers
             {
                 var data = _generatorRepo.GetAllEmployeesJoinedAnyTrainingProgram();
                 return View(data);
-            }
-            else
-            {
+            } else {
                 var searchData = _generatorRepo.SearchAllEmployee(SearchName);
                 return View(searchData);
             }
