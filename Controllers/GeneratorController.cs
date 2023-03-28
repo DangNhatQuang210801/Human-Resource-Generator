@@ -2,6 +2,7 @@
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -32,6 +33,10 @@ namespace Human_Resource_Generator.Controllers
 
         public IActionResult Create(Employee employee)
         {
+            if(employee.employee_name == employee.employee_number)
+            {
+                ModelState.AddModelError("ErrorSame", "Employee's name and number have to be different");
+            } 
             var result = _generatorRepo.CreateEmployee(employee);
             if (result)
             {

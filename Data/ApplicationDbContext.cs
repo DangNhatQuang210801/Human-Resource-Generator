@@ -1,5 +1,6 @@
 ﻿using Human_Resource_Generator.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Human_Resource_Generator.Data
 
@@ -32,5 +33,6 @@ namespace Human_Resource_Generator.Data
                 .WithMany(c => c.employee_training)
                 .HasForeignKey(bc => bc.employee_id);
         }
+
     }
 }

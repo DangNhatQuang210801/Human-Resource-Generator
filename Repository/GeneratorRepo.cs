@@ -2,6 +2,7 @@ using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Human_Resource_Generator.Repository;
 
