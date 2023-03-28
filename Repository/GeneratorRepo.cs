@@ -1,5 +1,6 @@
 using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Repository;
@@ -15,17 +16,19 @@ public class GeneratorRepo : IGeneratorRepo
 
     public List<Employee> GetAllEmployeesJoinedAnyTrainingProgram()
     {
-        var result = _applicationDbContext.Employees.Include(t => t.employee_training).ThenInclude(t=>t.TrainingProgram).ToList();
-        // var result = _applicationDbContext.EmployeeTrainings.Include(t => t.Employee)
-        //     .Include(t => t.TrainingProgram).ToList();
+        var result = _applicationDbContext.Employee.Include(t => t.employee_training).ThenInclude(t=>t.TrainingProgram).ToList();
         return result;
     }
     public List<Employee> SearchAllEmployee(string SearchName)
     {
-            var search = _applicationDbContext.Employees
+            var search = _applicationDbContext.Employee
                 .Include(t => t.employee_training)
                 .ThenInclude(t=>t.TrainingProgram)
-                .Where(s => s.employee_name.Contains(SearchName) || s.employee_department.Contains(SearchName)).ToList();
+                .Where(s => s.employee_name.Contains(SearchName) 
+                || s.employee_department.Contains(SearchName)
+                || s.employee_id.ToString().Contains(SearchName)
+                || s.employee_training.Select(t=> t.TrainingProgram.program_name).Contains(SearchName)
+                ).ToList();
             return search;
     }
 
@@ -33,12 +36,13 @@ public class GeneratorRepo : IGeneratorRepo
     {
         try
         {
-            _applicationDbContext.Employees.Add(employee);
+            _applicationDbContext.Employee.Add(employee);
             _applicationDbContext.SaveChanges();
             return true;
         }
-        catch
+        catch(Exception ex)
         {
+            var message = ex.ToString();
             return false;
         }
     }

@@ -2,7 +2,6 @@
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Core.Types;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -23,23 +22,25 @@ namespace Human_Resource_Generator.Controllers
             {
                 var data = _generatorRepo.GetAllEmployeesJoinedAnyTrainingProgram();
                 return View(data);
-            } else {
+            }
+            else
+            {
                 var searchData = _generatorRepo.SearchAllEmployee(SearchName);
                 return View(searchData);
             }
         }
-        
+
         public IActionResult Create(Employee employee)
         {
-           var result = _generatorRepo.CreateEmployee(employee);
-           if (result)
-           {
-               return RedirectToAction("Index");
-           }
-           else
-           {
-               return View();
-           }
+            var result = _generatorRepo.CreateEmployee(employee);
+            if (result)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View();
+            }
         }
 
     }

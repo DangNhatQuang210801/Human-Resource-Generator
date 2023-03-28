@@ -1,6 +1,6 @@
 @model List<Employee>
 <br />
-<h1 class="display-4">SEDV Employee</h1>
+<h1 class="display-4">SEDV Generator</h1>
 <div text-end>
     <a asp-controller="Generator" asp-action="Create" class="btn btn-primary">
         <i class="bi bi-people"></i> New Employee
@@ -20,7 +20,7 @@
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Employee's number</th>
                 <th>Name</th>
                 <th>Department</th>
                 <th>Birthday</th>
@@ -34,10 +34,10 @@
             @foreach (var employee in Model)
             {
                 <tr>
-                    <td width="5%">@employee.employee_id</td>
-                    <td width="16%">@employee.employee_name</td>
-                    <td width="14%">@employee.employee_department</td>
-                    <td width ="14%">@employee.date_of_birth.ToShortDateString()</td>
+                    <td width="10%">@employee.employee_number</td>
+                    <td width="14%">@employee.employee_name</td>
+                    <td width="8%">@employee.employee_department</td>
+                    <td width ="10%">@employee.date_of_birth.ToShortDateString()</td>
                     <td width="14%">
                         <ul>
                             @{
@@ -50,7 +50,7 @@
                         </ul>
                         
                     </td>
-                    <td width="14%">
+                    <td width="10%">
                         <ul>
                             @{
                                 var descriptions = employee.employee_training.Select(s => s.TrainingProgram.program_description);
@@ -72,7 +72,7 @@
                             }
                         </ul>
                     </td>
-                    <td>
+                    <td width="14%">
                         <a href="#">Edit</a>
                         <a href="#" style="color:red">Delete</a>
                     </td>
