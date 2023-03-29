@@ -23,7 +23,7 @@ namespace Human_Resource_Generator.Repository
             return _db.Employees.ToList();
         }
 
-        public Employee GetById(int employee_id)
+        public Employee GetById(string employee_id)
         {
             return _db.Employees.FirstOrDefault(x => x.employee_id == employee_id);
         }

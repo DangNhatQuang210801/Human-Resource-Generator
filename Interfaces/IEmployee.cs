@@ -5,7 +5,7 @@ namespace Human_Resource_Generator.Interfaces
     public interface IEmployee
     {
         List<Employee> GetAll();
-        Employee GetById(int employee_id);
+        Employee GetById(string employee_id);
         void Insert(Employee employee);
         void Update(Employee employee);
         void Delete(Employee employee);

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Human_Resource_Generator.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230329011330_InitialCreate")]
+    [Migration("20230329081244_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,11 +26,9 @@ namespace Human_Resource_Generator.Migrations
 
             modelBuilder.Entity("Human_Resource_Generator.Models.Employee", b =>
                 {
-                    b.Property<int>("employee_id")
+                    b.Property<string>("employee_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("employee_id"), 1L, 1);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("date_of_birth")
                         .HasColumnType("datetime2");
@@ -54,11 +52,11 @@ namespace Human_Resource_Generator.Migrations
 
             modelBuilder.Entity("Human_Resource_Generator.Models.EmployeeTraining", b =>
                 {
-                    b.Property<int>("employee_id")
-                        .HasColumnType("int");
+                    b.Property<string>("employee_id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("program_id")
-                        .HasColumnType("int");
+                    b.Property<string>("program_id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("employee_id", "program_id");
 
@@ -69,11 +67,9 @@ namespace Human_Resource_Generator.Migrations
 
             modelBuilder.Entity("Human_Resource_Generator.Models.TrainingProgram", b =>
                 {
-                    b.Property<int>("program_id")
+                    b.Property<string>("program_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("program_id"), 1L, 1);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("date_of_program")
                         .HasColumnType("datetime2");
@@ -91,18 +87,80 @@ namespace Human_Resource_Generator.Migrations
                     b.ToTable("TrainingPrograms");
                 });
 
+            modelBuilder.Entity("Human_Resource_Generator.ViewModels.EmployeeViewModels.EmployeeViewModel", b =>
+                {
+                    b.Property<string>("employee_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("date_of_birth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("employee_department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("employee_name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("employee_number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("employee_id");
+
+                    b.ToTable("EmployeeViewModel");
+                });
+
+            modelBuilder.Entity("Human_Resource_Generator.ViewModels.TrainingProgramViewModel.CreateTrainingProgramViewModel", b =>
+                {
+                    b.Property<DateTime>("date_of_program")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("program_description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("program_name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("CreateTrainingProgramViewModel");
+                });
+
+            modelBuilder.Entity("Human_Resource_Generator.ViewModels.TrainingProgramViewModels.TrainingProgramViewModel", b =>
+                {
+                    b.Property<string>("program_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("date_of_program")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("program_description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("program_name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("program_id");
+
+                    b.ToTable("TrainingProgramViewModel");
+                });
+
             modelBuilder.Entity("Human_Resource_Generator.Models.EmployeeTraining", b =>
                 {
                     b.HasOne("Human_Resource_Generator.Models.Employee", "Employee")
                         .WithMany("employee_training")
                         .HasForeignKey("employee_id")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Human_Resource_Generator.Models.TrainingProgram", "TrainingProgram")
                         .WithMany("employee_training")
                         .HasForeignKey("program_id")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");

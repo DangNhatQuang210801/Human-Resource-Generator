@@ -23,7 +23,7 @@ namespace Human_Resource_Generator.Repository
             return _db.TrainingPrograms.ToList();
         }
 
-        public TrainingProgram GetById(int program_id)
+        public TrainingProgram GetById(string program_id)
         {
             return _db.TrainingPrograms.FirstOrDefault(x => x.program_id == program_id);
         }

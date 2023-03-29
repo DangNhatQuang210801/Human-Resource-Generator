@@ -10,11 +10,22 @@ namespace Human_Resource_Generator.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CreateTrainingProgramViewModel",
+                columns: table => new
+                {
+                    program_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    program_description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    date_of_program = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
-                    employee_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    employee_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     employee_number = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     employee_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     employee_department = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -26,11 +37,25 @@ namespace Human_Resource_Generator.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmployeeViewModel",
+                columns: table => new
+                {
+                    employee_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    employee_number = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    employee_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    employee_department = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    date_of_birth = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeViewModel", x => x.employee_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TrainingPrograms",
                 columns: table => new
                 {
-                    program_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    program_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     program_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     program_description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     date_of_program = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -41,11 +66,25 @@ namespace Human_Resource_Generator.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TrainingProgramViewModel",
+                columns: table => new
+                {
+                    program_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    program_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    program_description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    date_of_program = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainingProgramViewModel", x => x.program_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EmployeeTrainings",
                 columns: table => new
                 {
-                    employee_id = table.Column<int>(type: "int", nullable: false),
-                    program_id = table.Column<int>(type: "int", nullable: false)
+                    employee_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    program_id = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,14 +93,12 @@ namespace Human_Resource_Generator.Migrations
                         name: "FK_EmployeeTrainings_Employees_employee_id",
                         column: x => x.employee_id,
                         principalTable: "Employees",
-                        principalColumn: "employee_id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "employee_id");
                     table.ForeignKey(
                         name: "FK_EmployeeTrainings_TrainingPrograms_program_id",
                         column: x => x.program_id,
                         principalTable: "TrainingPrograms",
-                        principalColumn: "program_id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "program_id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -73,7 +110,16 @@ namespace Human_Resource_Generator.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CreateTrainingProgramViewModel");
+
+            migrationBuilder.DropTable(
                 name: "EmployeeTrainings");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeViewModel");
+
+            migrationBuilder.DropTable(
+                name: "TrainingProgramViewModel");
 
             migrationBuilder.DropTable(
                 name: "Employees");

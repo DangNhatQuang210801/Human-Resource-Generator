@@ -33,8 +33,4 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="6.0.13" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModels\EmployeeViewModels\" />
-  </ItemGroup>
-
 </Project>

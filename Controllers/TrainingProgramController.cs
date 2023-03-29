@@ -28,7 +28,7 @@ namespace Human_Resource_Generator.Controllers
         }
 
         // GET: TrainingProgramController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
             var model = _unitOfWork.TrainingProgram.GetById (id);
             var vm = _mapper.Map<TrainingProgramViewModel>(model);
@@ -60,19 +60,25 @@ namespace Human_Resource_Generator.Controllers
         }
 
         // GET: TrainingProgramController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
-            return View();
+            var model = _unitOfWork.TrainingProgram.GetById(id);
+            var vm = _mapper.Map<TrainingProgramViewModel>(model);
+            return View(vm);
+
         }
 
         // POST: TrainingProgramController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(TrainingProgramViewModel vm)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model = _mapper.Map<TrainingProgram>(vm);
+                _unitOfWork.TrainingProgram.Update(model);
+                _unitOfWork.Save();
+                return RedirectToAction("Index", "TrainingProgram");
             }
             catch
             {
@@ -81,19 +87,24 @@ namespace Human_Resource_Generator.Controllers
         }
 
         // GET: TrainingProgramController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            return View();
+            var model = _unitOfWork.TrainingProgram.GetById(id);
+            var vm = _mapper.Map<TrainingProgramViewModel>(model);
+            return View(vm);
         }
 
         // POST: TrainingProgramController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(TrainingProgramViewModel vm)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model = _mapper.Map<TrainingProgram>(vm);
+                _unitOfWork.TrainingProgram.Delete(model);
+                _unitOfWork.Save();
+                return RedirectToAction("Index", "TrainingProgram");
             }
             catch
             {

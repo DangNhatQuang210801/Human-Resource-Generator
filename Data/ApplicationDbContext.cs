@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Human_Resource_Generator.ViewModels.TrainingProgramViewModels;
 using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
+using Human_Resource_Generator.ViewModels.EmployeeViewModels;
 
 namespace Human_Resource_Generator.Data
 
@@ -25,15 +26,19 @@ namespace Human_Resource_Generator.Data
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(pt => pt.Employee)
                 .WithMany(pt => pt.employee_training)
-                .HasForeignKey(p => p.employee_id);
+                .HasForeignKey(p => p.employee_id)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(pt => pt.TrainingProgram)
                 .WithMany(pt => pt.employee_training)
-                .HasForeignKey(p => p.program_id);
+                .HasForeignKey(p => p.program_id)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
         public DbSet<Human_Resource_Generator.ViewModels.TrainingProgramViewModels.TrainingProgramViewModel>? TrainingProgramViewModel { get; set; }
         public DbSet<Human_Resource_Generator.ViewModels.TrainingProgramViewModel.CreateTrainingProgramViewModel>? CreateTrainingProgramViewModel { get; set; }
+        public DbSet<Human_Resource_Generator.ViewModels.EmployeeViewModels.EmployeeViewModel>? EmployeeViewModel { get; set; }
+        public DbSet<Human_Resource_Generator.ViewModels.EmployeeViewModels.CreateEmployeeViewModel>? CreateEmployeeViewModel { get; set; }
 
     }
 }

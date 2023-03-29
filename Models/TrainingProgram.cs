@@ -8,7 +8,7 @@ public class TrainingProgram
     [Required]
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int program_id { get; set; }
+    public string program_id { get; set; }
     public string program_name { get; set;}
     public string program_description { get; set; }
     public DateTime date_of_program { get; set; }
