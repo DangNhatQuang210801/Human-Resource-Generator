@@ -47,7 +47,7 @@ namespace Human_Resource_Generator.Migrations
 
                     b.HasKey("employee_id");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.EmployeeTraining", b =>
@@ -62,7 +62,7 @@ namespace Human_Resource_Generator.Migrations
 
                     b.HasIndex("program_id");
 
-                    b.ToTable("EmployeeTraining");
+                    b.ToTable("EmployeeTrainings");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.TrainingProgram", b =>
@@ -86,18 +86,18 @@ namespace Human_Resource_Generator.Migrations
 
                     b.HasKey("program_id");
 
-                    b.ToTable("TrainingProgram");
+                    b.ToTable("TrainingPrograms");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.EmployeeTraining", b =>
                 {
-                    b.HasOne("Human_Resource_Generator.Models.TrainingProgram", "TrainingProgram")
+                    b.HasOne("Human_Resource_Generator.Models.Employee", "Employee")
                         .WithMany("employee_training")
                         .HasForeignKey("employee_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Human_Resource_Generator.Models.Employee", "Employee")
+                    b.HasOne("Human_Resource_Generator.Models.TrainingProgram", "TrainingProgram")
                         .WithMany("employee_training")
                         .HasForeignKey("program_id")
                         .OnDelete(DeleteBehavior.Cascade)

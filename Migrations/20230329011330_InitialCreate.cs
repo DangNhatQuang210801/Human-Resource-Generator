@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Human_Resource_Generator.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Employee",
+                name: "Employees",
                 columns: table => new
                 {
                     employee_id = table.Column<int>(type: "int", nullable: false)
@@ -22,11 +22,11 @@ namespace Human_Resource_Generator.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employee", x => x.employee_id);
+                    table.PrimaryKey("PK_Employees", x => x.employee_id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TrainingProgram",
+                name: "TrainingPrograms",
                 columns: table => new
                 {
                     program_id = table.Column<int>(type: "int", nullable: false)
@@ -37,11 +37,11 @@ namespace Human_Resource_Generator.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TrainingProgram", x => x.program_id);
+                    table.PrimaryKey("PK_TrainingPrograms", x => x.program_id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmployeeTraining",
+                name: "EmployeeTrainings",
                 columns: table => new
                 {
                     employee_id = table.Column<int>(type: "int", nullable: false),
@@ -49,37 +49,37 @@ namespace Human_Resource_Generator.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeTraining", x => new { x.employee_id, x.program_id });
+                    table.PrimaryKey("PK_EmployeeTrainings", x => new { x.employee_id, x.program_id });
                     table.ForeignKey(
-                        name: "FK_EmployeeTraining_Employee_program_id",
-                        column: x => x.program_id,
-                        principalTable: "Employee",
+                        name: "FK_EmployeeTrainings_Employees_employee_id",
+                        column: x => x.employee_id,
+                        principalTable: "Employees",
                         principalColumn: "employee_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EmployeeTraining_TrainingProgram_employee_id",
-                        column: x => x.employee_id,
-                        principalTable: "TrainingProgram",
+                        name: "FK_EmployeeTrainings_TrainingPrograms_program_id",
+                        column: x => x.program_id,
+                        principalTable: "TrainingPrograms",
                         principalColumn: "program_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeTraining_program_id",
-                table: "EmployeeTraining",
+                name: "IX_EmployeeTrainings_program_id",
+                table: "EmployeeTrainings",
                 column: "program_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EmployeeTraining");
+                name: "EmployeeTrainings");
 
             migrationBuilder.DropTable(
-                name: "Employee");
+                name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "TrainingProgram");
+                name: "TrainingPrograms");
         }
     }
 }

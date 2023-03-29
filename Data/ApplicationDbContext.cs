@@ -1,6 +1,7 @@
 ﻿using Human_Resource_Generator.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModels;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
 
 namespace Human_Resource_Generator.Data
 
@@ -8,31 +9,31 @@ namespace Human_Resource_Generator.Data
     public class ApplicationDbContext : DbContext
     {
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
         }
 
-        public DbSet<Employee> Employee { get; set; }
-        public DbSet<TrainingProgram> TrainingProgram { get; set; }  
-        public DbSet<EmployeeTraining> EmployeeTraining { get; set; }
-        
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<TrainingProgram> TrainingPrograms { get; set; }
+        public DbSet<EmployeeTraining> EmployeeTrainings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EmployeeTraining>()
-                .HasKey(bc => new { bc.employee_id, bc.program_id }); 
-            
+                .HasKey(pt => new { pt.employee_id, pt.program_id });
+
             modelBuilder.Entity<EmployeeTraining>()
-                .HasOne(bc => bc.Employee)
-                .WithMany(b => b.employee_training)
-                .HasForeignKey(bc => bc.program_id);  
-            
-            
+                .HasOne(pt => pt.Employee)
+                .WithMany(pt => pt.employee_training)
+                .HasForeignKey(p => p.employee_id);
+
             modelBuilder.Entity<EmployeeTraining>()
-                .HasOne(bc => bc.TrainingProgram)
-                .WithMany(c => c.employee_training)
-                .HasForeignKey(bc => bc.employee_id);
+                .HasOne(pt => pt.TrainingProgram)
+                .WithMany(pt => pt.employee_training)
+                .HasForeignKey(p => p.program_id);
         }
+        public DbSet<Human_Resource_Generator.ViewModels.TrainingProgramViewModels.TrainingProgramViewModel>? TrainingProgramViewModel { get; set; }
+        public DbSet<Human_Resource_Generator.ViewModels.TrainingProgramViewModel.CreateTrainingProgramViewModel>? CreateTrainingProgramViewModel { get; set; }
 
     }
 }

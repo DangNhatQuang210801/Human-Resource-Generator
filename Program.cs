@@ -1,4 +1,6 @@
 using Human_Resource_Generator.Data;
+using Human_Resource_Generator.Helper;
+using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +11,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IGeneratorRepo, GeneratorRepo>();
+builder.Services.AddTransient<IUnitOfWork,UnitOfWorkRepo>();
+var config = new AutoMapper.MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new Helper());
+});
+var mapper = config.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
