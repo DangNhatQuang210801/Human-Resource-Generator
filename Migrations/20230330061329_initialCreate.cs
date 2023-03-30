@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Human_Resource_Generator.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,30 +25,30 @@ namespace Human_Resource_Generator.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    employee_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    employee_number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    employee_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    employee_department = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    date_of_birth = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.employee_id);
+                    table.PrimaryKey("PK_Employees", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "EmployeeViewModel",
                 columns: table => new
                 {
-                    employee_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    employee_number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    employee_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    employee_department = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    date_of_birth = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeViewModel", x => x.employee_id);
+                    table.PrimaryKey("PK_EmployeeViewModel", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,17 +83,17 @@ namespace Human_Resource_Generator.Migrations
                 name: "EmployeeTrainings",
                 columns: table => new
                 {
-                    employee_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     program_id = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeTrainings", x => new { x.employee_id, x.program_id });
+                    table.PrimaryKey("PK_EmployeeTrainings", x => new { x.ID, x.program_id });
                     table.ForeignKey(
-                        name: "FK_EmployeeTrainings_Employees_employee_id",
-                        column: x => x.employee_id,
+                        name: "FK_EmployeeTrainings_Employees_ID",
+                        column: x => x.ID,
                         principalTable: "Employees",
-                        principalColumn: "employee_id");
+                        principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_EmployeeTrainings_TrainingPrograms_program_id",
                         column: x => x.program_id,

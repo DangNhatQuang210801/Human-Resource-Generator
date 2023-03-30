@@ -21,17 +21,17 @@ namespace Human_Resource_Generator.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EmployeeTraining>()
-                .HasKey(pt => new { pt.employee_id, pt.program_id });
+                .HasKey(pt => new { pt.ID, pt.program_id });
 
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(pt => pt.Employee)
-                .WithMany(pt => pt.employee_training)
-                .HasForeignKey(p => p.employee_id)
+                .WithMany(pt => pt.EmployeeTrainings)
+                .HasForeignKey(p => p.ID)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(pt => pt.TrainingProgram)
-                .WithMany(pt => pt.employee_training)
+                .WithMany(pt => pt.EmployeeTrainings)
                 .HasForeignKey(p => p.program_id)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         }
@@ -39,6 +39,7 @@ namespace Human_Resource_Generator.Data
         public DbSet<Human_Resource_Generator.ViewModels.TrainingProgramViewModel.CreateTrainingProgramViewModel>? CreateTrainingProgramViewModel { get; set; }
         public DbSet<Human_Resource_Generator.ViewModels.EmployeeViewModels.EmployeeViewModel>? EmployeeViewModel { get; set; }
         public DbSet<Human_Resource_Generator.ViewModels.EmployeeViewModels.CreateEmployeeViewModel>? CreateEmployeeViewModel { get; set; }
+        public DbSet<Human_Resource_Generator.ViewModels.EmployeeViewModels.EditEmployeeViewModel>? EditEmployeeViewModel { get; set; }
 
     }
 }

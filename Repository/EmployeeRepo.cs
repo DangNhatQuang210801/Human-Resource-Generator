@@ -1,6 +1,7 @@
 ﻿using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Repository
 {
@@ -23,13 +24,14 @@ namespace Human_Resource_Generator.Repository
             return _db.Employees.ToList();
         }
 
-        public Employee GetById(string employee_id)
+        public Employee GetById(string ID)
         {
-            return _db.Employees.FirstOrDefault(x => x.employee_id == employee_id);
+            return _db.Employees.Include("EmployeeTrainings.TrainingProgram").FirstOrDefault(x => x.ID == ID);
         }
 
         public void Insert(Employee employee)
         {
+            employee.ID = Guid.NewGuid().ToString();
             _db.Employees.Add(employee);
         }
 

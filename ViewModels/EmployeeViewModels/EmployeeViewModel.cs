@@ -9,10 +9,10 @@ namespace Human_Resource_Generator.ViewModels.EmployeeViewModels
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string employee_id { get; set; }
-        public string employee_number { get; set; }
-        public string employee_name { get; set; }
-        public string employee_department { get; set; }
-        public DateTime date_of_birth { get; set; }
+        public string ID { get; set; }
+        public string Number { get; set; }
+        public string Name { get; set; }
+        public string Department { get; set; }
+        public DateTime Birthday { get; set; }
     }
 }

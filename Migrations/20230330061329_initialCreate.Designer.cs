@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Human_Resource_Generator.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230329081244_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230330061329_initialCreate")]
+    partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,39 +26,39 @@ namespace Human_Resource_Generator.Migrations
 
             modelBuilder.Entity("Human_Resource_Generator.Models.Employee", b =>
                 {
-                    b.Property<string>("employee_id")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("date_of_birth")
+                    b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("employee_department")
+                    b.Property<string>("Department")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("employee_name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("employee_number")
+                    b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("employee_id");
+                    b.HasKey("ID");
 
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.EmployeeTraining", b =>
                 {
-                    b.Property<string>("employee_id")
+                    b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("program_id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("employee_id", "program_id");
+                    b.HasKey("ID", "program_id");
 
                     b.HasIndex("program_id");
 
@@ -89,26 +89,26 @@ namespace Human_Resource_Generator.Migrations
 
             modelBuilder.Entity("Human_Resource_Generator.ViewModels.EmployeeViewModels.EmployeeViewModel", b =>
                 {
-                    b.Property<string>("employee_id")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("date_of_birth")
+                    b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("employee_department")
+                    b.Property<string>("Department")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("employee_name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("employee_number")
+                    b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("employee_id");
+                    b.HasKey("ID");
 
                     b.ToTable("EmployeeViewModel");
                 });
@@ -154,12 +154,12 @@ namespace Human_Resource_Generator.Migrations
             modelBuilder.Entity("Human_Resource_Generator.Models.EmployeeTraining", b =>
                 {
                     b.HasOne("Human_Resource_Generator.Models.Employee", "Employee")
-                        .WithMany("employee_training")
-                        .HasForeignKey("employee_id")
+                        .WithMany("EmployeeTrainings")
+                        .HasForeignKey("ID")
                         .IsRequired();
 
                     b.HasOne("Human_Resource_Generator.Models.TrainingProgram", "TrainingProgram")
-                        .WithMany("employee_training")
+                        .WithMany("EmployeeTrainings")
                         .HasForeignKey("program_id")
                         .IsRequired();
 
@@ -170,12 +170,12 @@ namespace Human_Resource_Generator.Migrations
 
             modelBuilder.Entity("Human_Resource_Generator.Models.Employee", b =>
                 {
-                    b.Navigation("employee_training");
+                    b.Navigation("EmployeeTrainings");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.TrainingProgram", b =>
                 {
-                    b.Navigation("employee_training");
+                    b.Navigation("EmployeeTrainings");
                 });
 #pragma warning restore 612, 618
         }

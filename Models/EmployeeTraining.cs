@@ -4,7 +4,7 @@ namespace Human_Resource_Generator.Models
 {
     public class EmployeeTraining
     {
-        public string employee_id { get; set; }
+        public string ID { get; set; }
         public Employee Employee { get; set; }
         public string program_id { get; set; }
         public TrainingProgram TrainingProgram { get; set; }
