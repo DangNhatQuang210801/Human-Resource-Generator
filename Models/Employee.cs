@@ -13,5 +13,5 @@ public class Employee
         public string Name { get; set; }
         public string Department { get; set; }
         public DateTime Birthday { get; set; }
-        public List<EmployeeTraining> EmployeeTrainings { get; set; } = new List<EmployeeTraining>();
+        public ICollection<EmployeeTraining> EmployeeTrainings { get; set; } = new List<EmployeeTraining>();
 }

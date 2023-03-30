@@ -91,9 +91,8 @@ namespace Human_Resource_Generator.Controllers
             });
             var selectList = new List<SelectListItem>();
             trainingprograms.ForEach(item => selectList.Add(new SelectListItem(item.program_name, item.program_id, selectTrainingPrograms.Select(x => x.program_id).Contains(item.program_id))));
-            var vm = new EditEmployeeViewModel()
+            var vm = new CreateEmployeeViewModel()
             {
-                ID = employees.ID,
                 Number = employees.Number,
                 Name   = employees.Name,
                 Department = employees.Department,
@@ -110,15 +109,16 @@ namespace Human_Resource_Generator.Controllers
         {
             try
             {
-                // var employee = _unitOfWork.Employee.GetById(vm.ID);
+                //var employee = _unitOfWork.Employee.GetById(vm.ID);
                 //employee.Name = vm.Name;
                 //employee.Department = vm.Department;
                 //employee.Birthday = vm.Birthday;
                 //var selectedTrainingProgram = vm.SelectedTrainingProgram;
                 //var existingTrainingProgram = employee.EmployeeTrainings.Select(x => x.program_id).ToList();
                 //var toAdd = selectedTrainingProgram.Except(existingTrainingProgram).ToList();
-                //employee.EmployeeTrainings = employee.EmployeeTrainings.Where(x =>!ToRemove.Contains(x.program_id)).ToList();
-                //foreach(var item in toAdd) {
+                //employee.EmployeeTrainings = employee.EmployeeTrainings.Where(x => !toRemove.Any(y => y.program_id == x.program_id)).ToList());
+                //foreach (var item in toAdd)
+                //{
                 //    employee.EmployeeTrainings.Add(new EmployeeTraining()
                 //    {
                 //        program_id = item,
