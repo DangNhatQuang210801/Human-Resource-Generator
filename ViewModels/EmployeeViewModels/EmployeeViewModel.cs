@@ -6,9 +6,6 @@ namespace Human_Resource_Generator.ViewModels.EmployeeViewModels
 {
     public class EmployeeViewModel
     {
-        [Required]
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string ID { get; set; }
         public string Number { get; set; }
         public string Name { get; set; }

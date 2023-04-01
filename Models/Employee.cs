@@ -8,7 +8,7 @@ public class Employee
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string Number { get; set; }
         public string Name { get; set; }
         public string Department { get; set; }

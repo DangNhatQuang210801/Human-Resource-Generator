@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Repository
 {
-    public class EmployeeRepo : IEmployee
+    public class EmployeeRepo : IEmployeeRepo
     {
         private readonly ApplicationDbContext _db;
 
@@ -14,9 +14,11 @@ namespace Human_Resource_Generator.Repository
             _db = db;
         }
 
-        public void Delete(Employee employee)
+        public void Delete(string id)
         {
+            var employee = _db.Employees.FirstOrDefault(x => x.Id == id);
             _db.Employees.Remove(employee);
+            _db.SaveChanges();
         }
 
         public List<Employee> GetAll()
@@ -24,20 +26,21 @@ namespace Human_Resource_Generator.Repository
             return _db.Employees.ToList();
         }
 
-        public Employee GetById(string ID)
+        public Employee GetById(string Id)
         {
-            return _db.Employees.Include("EmployeeTrainings.TrainingProgram").FirstOrDefault(x => x.ID == ID);
+            return _db.Employees.Include("EmployeeTrainings.TrainingProgram").FirstOrDefault(x => x.Id == Id) ?? new Employee();
         }
 
         public void Insert(Employee employee)
         {
-            employee.ID = Guid.NewGuid().ToString();
             _db.Employees.Add(employee);
+            _db.SaveChanges();
         }
 
         public void Update(Employee employee)
         {
             _db.Employees.Update(employee);
+            _db.SaveChanges();
         }
     }
 }

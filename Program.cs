@@ -8,16 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddTransient<IUnitOfWork,UnitOfWorkRepo>();
-var config = new AutoMapper.MapperConfiguration(cfg =>
-{
-    cfg.AddProfile(new Helper());
-});
-var mapper = config.CreateMapper();
-builder.Services.AddSingleton(mapper);
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IEmployeeRepo, EmployeeRepo>();
+builder.Services.AddScoped<ITrainingProgram,TrainingProRepo>();
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();

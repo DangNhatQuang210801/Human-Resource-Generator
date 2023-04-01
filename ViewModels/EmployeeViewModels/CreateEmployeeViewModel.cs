@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Human_Resource_Generator.ViewModels.EmployeeViewModels
 {
-    [Keyless]
     public class CreateEmployeeViewModel
     {
         public string Number { get; set; }
