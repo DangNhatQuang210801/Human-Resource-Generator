@@ -1,43 +1,43 @@
-﻿@model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.CreateTrainingProgramViewModel
-
-@{
-    ViewData["Title"] = "Create";
-}
-
-<h1>Create</h1>
-
-<h4>CreateTrainingProgramViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="program_name" class="control-label"></label>
-                <input asp-for="program_name" class="form-control" />
-                <span asp-validation-for="program_name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="program_description" class="control-label"></label>
-                <input asp-for="program_description" class="form-control" />
-                <span asp-validation-for="program_description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="date_of_program" class="control-label"></label>
-                <input asp-for="date_of_program" class="form-control" type="date" />
-                <span asp-validation-for="date_of_program" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+﻿@* @model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.CreateTrainingProgramViewModel *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Create"; *@
+@* } *@
+@* *@
+@* <h1>Create</h1> *@
+@* *@
+@* <h4>CreateTrainingProgramViewModel</h4> *@
+@* <hr /> *@
+@* <div class="row"> *@
+@*     <div class="col-md-4"> *@
+@*         <form asp-action="Create"> *@
+@*             <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="program_name" class="control-label"></label> *@
+@*                 <input asp-for="program_name" class="form-control" /> *@
+@*                 <span asp-validation-for="program_name" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="program_description" class="control-label"></label> *@
+@*                 <input asp-for="program_description" class="form-control" /> *@
+@*                 <span asp-validation-for="program_description" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <label asp-for="date_of_program" class="control-label"></label> *@
+@*                 <input asp-for="date_of_program" class="form-control" type="date" /> *@
+@*                 <span asp-validation-for="date_of_program" class="text-danger"></span> *@
+@*             </div> *@
+@*             <div class="form-group"> *@
+@*                 <input type="submit" value="Create" class="btn btn-primary" /> *@
+@*             </div> *@
+@*         </form> *@
+@*     </div> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     <a asp-action="Index">Back to List</a> *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} *@
+@* } *@

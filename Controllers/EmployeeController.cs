@@ -30,7 +30,7 @@ namespace Human_Resource_Generator.Controllers
         // GET: EmployeeController/Details/5
         public ActionResult Details(int id)
         {
-            var employee = _employeeRepo.GetById(id.ToString());
+            var employee = _employeeRepo.GetById(id);
             return View(employee);
         }
         
@@ -47,14 +47,14 @@ namespace Human_Resource_Generator.Controllers
             return RedirectToAction("Index");
         }
         
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int id)
         {
             _employeeRepo.Delete(id);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public IActionResult Edit(string id)
+        public IActionResult Edit(int id)
         {
             var employee = _employeeRepo.GetById(id);
             return View(employee);

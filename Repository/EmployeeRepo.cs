@@ -14,7 +14,7 @@ namespace Human_Resource_Generator.Repository
             _db = db;
         }
 
-        public void Delete(string id)
+        public void Delete(int id)
         {
             var employee = _db.Employees.FirstOrDefault(x => x.Id == id);
             _db.Employees.Remove(employee);
@@ -26,7 +26,7 @@ namespace Human_Resource_Generator.Repository
             return _db.Employees.ToList();
         }
 
-        public Employee GetById(string Id)
+        public Employee GetById(int Id)
         {
             return _db.Employees.Include("EmployeeTrainings.TrainingProgram").FirstOrDefault(x => x.Id == Id) ?? new Employee();
         }

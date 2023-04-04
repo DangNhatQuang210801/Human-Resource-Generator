@@ -19,9 +19,9 @@
         <form asp-action="" method="">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" id="number"/>
-                <span asp-validation-for="Number" class="text-danger"></span>
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" id="number"/>
+                <span asp-validation-for="Code" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -29,14 +29,14 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Department" class="control-label"></label>
-                <input asp-for="Department" class="form-control" id="department"/>
-                <span asp-validation-for="Department" class="text-danger"></span>
+                <label asp-for="Position" class="control-label"></label>
+                <input asp-for="Position" class="form-control" id="department"/>
+                <span asp-validation-for="Position" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Birthday" class="control-label"></label>
-                <input asp-for="Birthday" class="form-control" id="birthday"/>
-                <span asp-validation-for="Birthday" class="text-danger"></span>
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" id="birthday"/>
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <label class="control-label">Training Program</label>
             <div id="myDIV" class="header" style="margin: 20px 0">
@@ -49,7 +49,7 @@
                 <ul style="padding-left: 0" id="myUL">
                     @foreach (var training in trainings)
                     {
-                        <li class="training">@training.TrainingProgram.program_id - @training.TrainingProgram.program_name - @training.TrainingProgram.program_description - @training.TrainingProgram.date_of_program.Date</li>
+                        <li class="training">@training.TrainingProgram.Id - @training.TrainingProgram.Name - @training.TrainingProgram.Description - @training.TrainingProgram.Time.Date</li>
                     }
                 </ul>
                             

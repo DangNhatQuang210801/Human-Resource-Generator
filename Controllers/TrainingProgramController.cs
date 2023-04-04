@@ -13,7 +13,7 @@ public class TrainingProgramController : Controller
         _trainingProgramRepo = trainingProgramRepo;
     }
 
-    public TrainingProgram GetTrainingProgramsById(string id)
+    public TrainingProgram GetTrainingProgramsById(int id)
     {
         return _trainingProgramRepo.GetById(id);
     }

@@ -13,9 +13,9 @@ namespace Human_Resource_Generator.Repository
             _db = db;
         }
 
-        public void Delete(TrainingProgram trainingprogram)
+        public void Delete(TrainingProgram trainingProgram)
         {
-            _db.TrainingPrograms.Remove(trainingprogram);
+            _db.TrainingPrograms.Remove(trainingProgram);
         }
 
         public List<TrainingProgram> GetAll()
@@ -23,19 +23,19 @@ namespace Human_Resource_Generator.Repository
             return _db.TrainingPrograms.ToList();
         }
 
-        public TrainingProgram GetById(string program_id)
+        public TrainingProgram? GetById(int programId)
         {
-            return _db.TrainingPrograms.FirstOrDefault(x => x.program_id == program_id);
+            return _db.TrainingPrograms.FirstOrDefault(x => x.Id == programId);
         }
 
-        public void Insert(TrainingProgram trainingprogram)
+        public void Add(TrainingProgram trainingProgram)
         {
-            _db.TrainingPrograms.Add(trainingprogram);
+            _db.TrainingPrograms.Add(trainingProgram);
         }
 
-        public void Update(TrainingProgram trainingprogram)
+        public void Update(TrainingProgram trainingProgram)
         {
-            _db.TrainingPrograms.Update(trainingprogram);
+            _db.TrainingPrograms.Update(trainingProgram);
         }
     }
 }

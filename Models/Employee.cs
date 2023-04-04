@@ -8,10 +8,14 @@ public class Employee
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
-        public string Number { get; set; }
+        public int Id { get; set; }
+        [Required]
+        public string Code { get; set; }
+        [Required]
         public string Name { get; set; }
-        public string Department { get; set; }
-        public DateTime Birthday { get; set; }
+        [Required]
+        public string Position { get; set; }
+        [Required]
+        public DateTime DateOfBirth { get; set; }
         public ICollection<EmployeeTraining> EmployeeTrainings { get; set; } = new List<EmployeeTraining>();
 }
