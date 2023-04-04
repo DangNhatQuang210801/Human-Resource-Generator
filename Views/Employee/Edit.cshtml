@@ -1,0 +1,169 @@
+@using Human_Resource_Generator.Interfaces
+@inject ITrainingProgram _trainingProgramRepo
+@model Employee
+@{
+    var trainings = Model.EmployeeTrainings;
+    var training = new TrainingProgram();
+}
+@functions
+{
+
+}
+
+
+<h1>Edit Employee</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="" method="">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" id="number"/>
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" id="name"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Department" class="control-label"></label>
+                <input asp-for="Department" class="form-control" id="department"/>
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Birthday" class="control-label"></label>
+                <input asp-for="Birthday" class="form-control" id="birthday"/>
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+            </div>
+            <label class="control-label">Training Program</label>
+            <div id="myDIV" class="header" style="margin: 20px 0">
+                <input class="Add" type="text" id="myInput" placeholder="Training Program ID">
+                <span onclick="newElement()" class="addBtn" >Add</span>
+                <p id="inforAdd" style="color: red"></p>
+            </div>
+            
+            <div class="form-group">
+                <ul style="padding-left: 0" id="myUL">
+                    @foreach (var training in trainings)
+                    {
+                        <li class="training">@training.TrainingProgram.program_id - @training.TrainingProgram.program_name - @training.TrainingProgram.program_description - @training.TrainingProgram.date_of_program.Date</li>
+                    }
+                </ul>
+                            
+            </div>
+        </form>
+        <button  class="btn btn-primary" id="saveBtn" onclick="SaveEdit()">Save</button>
+    </div>
+    
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+     var trainings = document.getElementsByClassName("training");
+                 // add close button
+                 var i;
+                 for (i = 0; i < trainings.length; i++) {
+                   var span = document.createElement("SPAN");
+                   var txt = document.createTextNode("\u00D7");
+                   span.className = "close";
+                   span.appendChild(txt);
+                   trainings[i].appendChild(span);
+                 }
+                 
+                 // Click on a close button to hide the current list item
+                 var close = document.getElementsByClassName("close");
+                 var i;
+                 for (i = 0; i < close.length; i++) {
+                   close[i].onclick = function() {
+                     var div = this.parentElement;
+                     div.style.display = "none";
+                   }
+                 }     
+         
+     // Create a new list item when clicking on the "Add" button
+     function newElement() {
+                        var li = document.createElement("li")
+                        li.classList.add("training");
+                        var inputValue = document.getElementById("myInput").value;
+                        var trainingId = "";
+                        if (inputValue != null && inputValue !== ""){
+                            $("#inforAdd").text("");
+                            $.ajax({
+                                     type: "GET",
+                                     url: `/TrainingProgram/GetTrainingProgramsById/${inputValue}`,
+                                     headers: { "cache-control": "no-cache" },
+                                     contentType: 'application/json',
+    
+                                     success: function (result) {
+                                                    trainingId =  result;
+                                                    if (trainingId){
+                                                        
+                                                        var t = document.createTextNode(trainingId.program_id + " - " + trainingId.program_name + " - " + trainingId.program_description + " - " + trainingId.date_of_program);
+                                                        li.appendChild(t);
+                                                        if (trainingId === '') {
+                                                           alert("You must write something!");
+                                                        } else {
+                                                           document.getElementById("myUL").appendChild(li);
+                                                        }
+                                                        document.getElementById("myInput").value = "";
+                                                        var span = document.createElement("SPAN");
+                                                        var txt = document.createTextNode("\u00D7");
+                                                        span.className = "close";
+                                                        span.appendChild(txt);
+                                                        li.appendChild(span);
+                                                        for (i = 0; i < close.length; i++) {
+                                                           close[i].onclick = function() {
+                                                               var div = this.parentElement;
+                                                               div.style.display = "none";
+                                                           }
+                                                        }
+                                                     }
+                                                    else{
+                                                        $("#inforAdd").text("Cannot find training program");
+                                                    }
+                                     }
+                                                
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                $("#inforAdd").text("Cannot find training program");
+                            });
+                                  // handle error;
+                           }
+                           else{
+                            $("#inforAdd").text("Cannot find training program");
+                           }
+                       }
+                 
+     function SaveEdit(){
+         const employee = {
+         number: $("#number").val(),
+         name: $("#name").val(),
+         department: $("#department").val(),
+         birthday: $("#birthday").val(),
+         };
+         var trainingText = [];
+         for (i = 0; i < trainings.length; i++) {
+                            trainingText.push(trainings[i].textContent);
+         } 
+         var data = {
+             employee: trainings, trainingText: trainingText
+         }
+         var data = {a: 1}
+         $.ajax({
+             type: "post",
+             url: `/Employee/EditEmployee`,
+             contentType: "application/json",
+             dataType: "json",
+             data: JSON.stringify(data),
+         });
+      }
+              
+    </script>
+}
