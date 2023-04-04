@@ -1,27 +1,38 @@
 ﻿using Human_Resource_Generator.Models;
 using Microsoft.EntityFrameworkCore;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModels;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
+using Human_Resource_Generator.ViewModels.EmployeeViewModels;
 
 namespace Human_Resource_Generator.Data
 
 {
     public class ApplicationDbContext : DbContext
     {
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<TrainingProgram> TrainingPrograms { get; set; }
+        public DbSet<EmployeeTraining> EmployeeTrainings { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee_Training>()
-                .HasOne(b => b.employee)
-                .WithMany(ba => ba.employees_Training)
-                .HasForeignKey(b => b.employee_id);
-            modelBuilder.Entity<Employee_Training>()
-                .HasOne(b => b.training_Program)
-                .WithMany(ba => ba.employees_Training)
-                .HasForeignKey(b => b.program_id);
+            modelBuilder.Entity<EmployeeTraining>()
+                .HasKey(pt => new { pt.EmployeeId, pt.ProgramId });
+
+            modelBuilder.Entity<EmployeeTraining>()
+                .HasOne(pt => pt.Employee)
+                .WithMany(pt => pt.EmployeeTrainings)
+                .HasForeignKey(p => p.EmployeeId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<EmployeeTraining>()
+                .HasOne(pt => pt.TrainingProgram)
+                .WithMany(pt => pt.EmployeeTrainings)
+                .HasForeignKey(p => p.ProgramId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
-        public DbSet<Employee> employee { get; set; }
-        public DbSet<Training_program> training_Program { get; set; }
-        public DbSet<Employee_Training> employees_Training { get; set; }
     }
 }
