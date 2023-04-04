@@ -1,5 +1,6 @@
 @using Human_Resource_Generator.Interfaces
-@inject ITrainingProgram _trainingProgramRepo
+@using Human_Resource_Generator.Repository;
+@inject ITrainingProgramRepository _trainingProgramRepo
 @model Employee
 @{
     var trainings = Model.EmployeeTrainings;
@@ -47,9 +48,9 @@
             
             <div class="form-group">
                 <ul style="padding-left: 0" id="myUL">
-                    @foreach (var training in trainings)
+                    @foreach (var each in trainings)
                     {
-                        <li class="training">@training.TrainingProgram.Id - @training.TrainingProgram.Name - @training.TrainingProgram.Description - @training.TrainingProgram.Time.Date</li>
+                        <li class="training">@each.TrainingProgram.Id - @each.TrainingProgram.Name - @each.TrainingProgram.Description - @each.TrainingProgram.CreatedAt.Date</li>
                     }
                 </ul>
                             

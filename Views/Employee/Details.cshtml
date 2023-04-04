@@ -28,7 +28,7 @@
             <label class="control-label">Training_Program</label>
             @foreach (var training in Model.EmployeeTrainings)
             {
-                <input  class="form-control" disabled="disabled" value="@training.TrainingProgram.Name - @training.TrainingProgram.Description - @training.TrainingProgram.Time.Date"/>
+                <input  class="form-control" disabled="disabled" value="@training.TrainingProgram.Name - @training.TrainingProgram.Description - @training.TrainingProgram.CreatedAt.Date"/>
             }
                 
         </div>

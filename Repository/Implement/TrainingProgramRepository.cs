@@ -1,14 +1,13 @@
 ﻿using Human_Resource_Generator.Data;
-using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Models;
 
-namespace Human_Resource_Generator.Repository
+namespace Human_Resource_Generator.Repository.Implement
 {
-    public class TrainingProRepo : ITrainingProgram
+    public class TrainingProgramRepository : ITrainingProgramRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public TrainingProRepo(ApplicationDbContext db)
+        public TrainingProgramRepository(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -16,6 +15,7 @@ namespace Human_Resource_Generator.Repository
         public void Delete(TrainingProgram trainingProgram)
         {
             _db.TrainingPrograms.Remove(trainingProgram);
+            _db.SaveChanges();
         }
 
         public List<TrainingProgram> GetAll()
@@ -31,11 +31,13 @@ namespace Human_Resource_Generator.Repository
         public void Add(TrainingProgram trainingProgram)
         {
             _db.TrainingPrograms.Add(trainingProgram);
+            _db.SaveChanges();
         }
 
         public void Update(TrainingProgram trainingProgram)
         {
             _db.TrainingPrograms.Update(trainingProgram);
+            _db.SaveChanges();
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Human_Resource_Generator.Models;
 
-namespace Human_Resource_Generator.Interfaces
+namespace Human_Resource_Generator.Repository
 {
-    public interface ITrainingProgram 
+    public interface ITrainingProgramRepository
     {
         public List<TrainingProgram> GetAll();
         public TrainingProgram? GetById(int programId);
