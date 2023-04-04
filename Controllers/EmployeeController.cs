@@ -65,6 +65,13 @@ namespace Human_Resource_Generator.Controllers
         {
             return Ok(employee);
         }
+
+        [HttpPost]
+        public ActionResult EditEmployee(string a)
+        {
+            return Ok();
+        }
+        
         
     }
 }
