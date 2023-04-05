@@ -24,13 +24,13 @@ namespace Human_Resource_Generator.Data
                 .HasOne(pt => pt.Employee)
                 .WithMany(pt => pt.EmployeeTrainings)
                 .HasForeignKey(p => p.EmployeeId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(pt => pt.TrainingProgram)
                 .WithMany(pt => pt.EmployeeTrainings)
                 .HasForeignKey(p => p.TrainingProgramId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Attendance>()
                 .HasOne(et => et.EmployeeTraining);

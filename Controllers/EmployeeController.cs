@@ -50,7 +50,7 @@ namespace Human_Resource_Generator.Controllers
         public ActionResult Delete(int id)
         {
             _employeeRepo.Delete(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index",false);
         }
 
         [HttpGet]
@@ -63,15 +63,8 @@ namespace Human_Resource_Generator.Controllers
         [HttpPost]
         public IActionResult Edit(Employee employee)
         {
-            return Ok(employee);
+            _employeeRepo.Update(employee);
+            return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        public ActionResult EditEmployee(string a)
-        {
-            return Ok();
-        }
-        
-        
     }
 }
