@@ -61,7 +61,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Employees)
+            @foreach (var item in Model.JoinedEmployees)
             {
                 <tr>
                     <td>
@@ -78,7 +78,7 @@
                     </td>
                 </tr>
             }
-            @if (Model.Employees.Count == 0)
+            @if (Model.JoinedEmployees.Count == 0)
             {
                 <tr class="text-center">
                     <td colspan="4">

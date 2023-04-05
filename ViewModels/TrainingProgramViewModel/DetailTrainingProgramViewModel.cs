@@ -4,6 +4,6 @@ namespace Human_Resource_Generator.ViewModels.TrainingProgramViewModel
 {
     public class DetailTrainingProgramViewModel:TrainingProgram
     {
-        public List<Employee> Employees { get; set; }
+        public List<Employee> JoinedEmployees { get; set; }
     }
 }

@@ -42,7 +42,26 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public List<EmployeeTraining> GetByTrainingProgramId(int id)
         {
-            return _db.EmployeeTrainings.Where(x => x.TrainingProgramId == id).ToList();
+            return _db.EmployeeTrainings.Where(x => x.TrainingProgramId == id).Distinct().ToList();
+        }
+
+        public EmployeeTraining? GetByTrainingProgramIdAndEmployeeId(int trainingId, int employeeId)
+        {
+            return _db.EmployeeTrainings.FirstOrDefault(x => x.TrainingProgramId == trainingId && x.EmployeeId == employeeId);
+        }
+
+        public void DeleteByTrainingProgramIdAndEmployeeId(int trainingId, int employeeId)
+        {
+            var list = _db.EmployeeTrainings.Where(x => x.TrainingProgramId == trainingId && x.EmployeeId == employeeId).ToList();
+            _db.EmployeeTrainings.RemoveRange(list);
+            _db.SaveChanges();
+        }
+
+        public void DeleteByTrainingProgramId(int trainingId)
+        {
+            var list = _db.EmployeeTrainings.Where(x => x.TrainingProgramId == trainingId).ToList();
+            _db.EmployeeTrainings.RemoveRange(list);
+            _db.SaveChanges();
         }
     }
 }
