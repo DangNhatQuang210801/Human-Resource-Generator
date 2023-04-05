@@ -21,14 +21,14 @@ namespace Human_Resource_Generator.Repository
             _db.SaveChanges();
         }
 
-        public List<Employee> GetAll()
+        public IEnumerable<Employee> GetAll()
         {
             return _db.Employees.ToList();
         }
 
-        public Employee GetById(int Id)
+        public Employee GetById(int id)
         {
-            return _db.Employees.Include("EmployeeTrainings.TrainingProgram").FirstOrDefault(x => x.Id == Id) ?? new Employee();
+            return _db.Employees.Include("EmployeeTrainings.TrainingProgram").FirstOrDefault(x => x.Id == id) ?? new Employee();
         }
 
         public void Insert(Employee employee)
