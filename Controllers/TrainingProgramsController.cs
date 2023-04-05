@@ -9,16 +9,26 @@ using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Repository;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
+using Newtonsoft.Json;
+using AutoMapper;
+using AutoMapper.Internal.Mappers;
 
 namespace Human_Resource_Generator.Controllers
 {
     public class TrainingProgramsController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly ITrainingProgramRepository _trainingProgramRepository;
+        private readonly IEmployeeRepo _employeeRepo;
+        private readonly IEmployeeTrainingRepository _employeeTrainingRepository;
 
-        public TrainingProgramsController(ITrainingProgramRepository trainingProgramRepository)
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeRepo employeeRepo, IEmployeeTrainingRepository employeeTrainingRepository)
         {
             _trainingProgramRepository = trainingProgramRepository;
+            _employeeRepo = employeeRepo;
+            _employeeTrainingRepository = employeeTrainingRepository;
+            _mapper = mapper;
         }
 
         // GET: TrainingPrograms
@@ -36,25 +46,49 @@ namespace Human_Resource_Generator.Controllers
             {
                 return NotFound();
             }
+            var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
+            var employeeTrainingIdsJoinded = new List<int>();
+            var employeesJoined = new List<Employee>();
+            if (employeeTrainingsJoined != null)
+            {
+                employeeTrainingsJoined.ForEach(e =>
+                {
+                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
+                });
+            }
+            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
+            DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
+            model.Employees = employeesJoined;
 
-            return View(trainingProgram);
+            return View(model);
         }
 
         // GET: TrainingPrograms/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new CreateTrainingProgramViewModel();
+            model.Employees = _employeeRepo.GetAll().ToList();
+            return View(model);
         }
 
         // POST: TrainingPrograms/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name,Description,Teacher")] TrainingProgram trainingProgram)
+        public ActionResult Create(InputTrainingProgramViewModel inputTrainingProgram)
         {
-            trainingProgram.CreatedAt = DateTime.Now;
-            trainingProgram.UpdatedAt = DateTime.Now;
-            _trainingProgramRepository.Add(trainingProgram);
-            return RedirectToAction(nameof(Index));
+            inputTrainingProgram.CreatedAt = DateTime.Now;
+            inputTrainingProgram.UpdatedAt = DateTime.Now;
+            List<string> employeeIdsString = JsonConvert.DeserializeObject<List<string>>(inputTrainingProgram.EmployeeIds);
+            List<int> employeeIds = employeeIdsString.Select(int.Parse).ToList();
+            var newTrainingProgramId = _trainingProgramRepository.Add(inputTrainingProgram);
+            if(newTrainingProgramId == -1)
+            {
+                return Json(new { redirectToUrl = "", statusCode = 502, message = "This Training Program is already existed!" });
+            }
+            foreach(var employeeId in employeeIds)
+            {
+                _employeeTrainingRepository.Add(new EmployeeTraining() { EmployeeId = employeeId, TrainingProgramId = newTrainingProgramId });
+            }
+            return Json(new { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
         }
 
         // GET: TrainingPrograms/Edit/5

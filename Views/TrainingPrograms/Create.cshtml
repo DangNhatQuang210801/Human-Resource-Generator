@@ -1,4 +1,5 @@
-﻿@model Human_Resource_Generator.Models.TrainingProgram
+﻿@model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.CreateTrainingProgramViewModel
+@*@model Human_Resource_Generator.Models.Employee*@
 
 @{
     ViewData["Title"] = "Create";
@@ -8,36 +9,116 @@
 
 <h4>Training Program</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<p id="error-message" class="text-danger"></p>
+<form asp-action="Create">
+    <div class="row">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" id="name-input" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group my-1">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control" id="description-input" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Teacher" class="control-label"></label>
-                <input asp-for="Teacher" class="form-control" />
+                <input asp-for="Teacher" class="form-control" id="teacher-input" />
                 <span asp-validation-for="Teacher" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="button" value="Create" id="submit" class="btn btn-primary" />
             </div>
-        </form>
+        </div>
+        <div class="col-md-8">
+            <h3>Select employees to join</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <input class="form-check-input" type="checkbox" id="check-all">
+                        </th>
+                        <th>
+                            Code
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Position
+                        </th>
+                        <th>
+                            Date Of Birth
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Employees)
+                    {
+                        <tr>
+                            <td>
+                                <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id">
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Code)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Position)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateOfBirth)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+</form>
 
 <div class="mt-2">
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $("#check-all").change(function(){
+            $(".check-item-employee").prop("checked", this.checked);
+        })
+
+        $("#submit").click(function(){
+            let URLAction = '@Url.Action("Create", "TrainingPrograms")';
+            let name = $("#name-input").val();
+            let description = $("#description-input").val();
+            let teacher = $("#teacher-input").val();
+            let employeeIds = [];
+            $('input:checkbox.check-item-employee').each(function () {
+                if(this.checked){
+                    employeeIds.push($(this).val());
+                }
+            });
+            $.ajax({
+                url: URLAction,
+                type: 'POST',
+                data: { Name: name, Description: description, Teacher: teacher, EmployeeIds: JSON.stringify(employeeIds) },
+                success: function (response) {
+                    if (response.statusCode != 200) {
+                        $("#error-message").text(response.message);
+                    } else{
+                        window.location.href = response.redirectToUrl;
+                    }
+
+                }
+            });
+        })
+    </script>
 }

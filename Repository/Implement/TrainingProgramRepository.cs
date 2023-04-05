@@ -1,5 +1,6 @@
 ﻿using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 
 namespace Human_Resource_Generator.Repository.Implement
 {
@@ -28,10 +29,16 @@ namespace Human_Resource_Generator.Repository.Implement
             return _db.TrainingPrograms.FirstOrDefault(x => x.Id == programId);
         }
 
-        public void Add(TrainingProgram trainingProgram)
+        public int Add(TrainingProgram trainingProgram)
         {
+            var existTraining =  _db.TrainingPrograms.FirstOrDefault(x => x.Name == trainingProgram.Name);
+            if (existTraining != null)
+            {
+                return -1;
+            }
             _db.TrainingPrograms.Add(trainingProgram);
             _db.SaveChanges();
+            return trainingProgram.Id;
         }
 
         public void Update(TrainingProgram trainingProgram)

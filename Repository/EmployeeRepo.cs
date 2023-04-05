@@ -42,5 +42,10 @@ namespace Human_Resource_Generator.Repository
             _db.Employees.Update(employee);
             _db.SaveChanges();
         }
+
+        public List<Employee> GetListDataByListId(List<int> listId)
+        {
+            return _db.Employees.Where(e => listId.Contains(e.Id)).ToList();
+        }
     }
 }

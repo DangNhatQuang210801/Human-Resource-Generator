@@ -1,4 +1,4 @@
-﻿@model Human_Resource_Generator.Models.TrainingProgram
+﻿@model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.DetailTrainingProgramViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -41,8 +41,55 @@
             @Html.DisplayFor(model => model.UpdatedAt)
         </dd>
     </dl>
+    <hr />
+    <h4>List joined employee </h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Code
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Position
+                </th>
+                <th>
+                    Date Of Birth
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Employees)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Code)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Position)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateOfBirth)
+                    </td>
+                </tr>
+            }
+            @if (Model.Employees.Count == 0)
+            {
+                <tr class="text-center">
+                    <td colspan="4">
+                        <i>There are no employees involved</i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm btn-secondary">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Helper;
 using Human_Resource_Generator.Interfaces;
@@ -12,8 +13,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IEmployeeRepo, EmployeeRepo>();
 builder.Services.AddScoped<ITrainingProgramRepository,TrainingProgramRepository>();
+builder.Services.AddScoped<IEmployeeTrainingRepository, EmployeeTrainingRepository>();
 
 builder.Services.AddControllersWithViews();
+
+// configure automapper with all automapper profiles from this assembly
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

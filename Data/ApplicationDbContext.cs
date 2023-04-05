@@ -1,8 +1,5 @@
 ﻿using Human_Resource_Generator.Models;
 using Microsoft.EntityFrameworkCore;
-using Human_Resource_Generator.ViewModels.TrainingProgramViewModels;
-using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
-using Human_Resource_Generator.ViewModels.EmployeeViewModels;
 
 namespace Human_Resource_Generator.Data
 
