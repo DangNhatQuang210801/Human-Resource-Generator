@@ -36,7 +36,7 @@ namespace Human_Resource_Generator.Controllers
         // GET: TrainingPrograms
         public IActionResult Index()
         {
-            var model = _trainingProgramRepository.GetAll().ToList();
+            var model = _trainingProgramRepository.GetAll();
             return View(model);
         }
 

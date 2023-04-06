@@ -1,4 +1,5 @@
 ﻿using Human_Resource_Generator.Models;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
 
 namespace Human_Resource_Generator.Repository
 {
