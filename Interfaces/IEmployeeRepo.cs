@@ -10,5 +10,6 @@ namespace Human_Resource_Generator.Interfaces
         public void Update(Employee employee);
         public void Delete(int id);
         public List<Employee> GetListDataByListId(List<int> listId);
+        public List<Employee> GetEmployeesByName(string name);
     }
 }

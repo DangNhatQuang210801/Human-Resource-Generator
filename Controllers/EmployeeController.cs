@@ -21,10 +21,18 @@ namespace Human_Resource_Generator.Controllers
         }
 
         // GET: EmployeeController
-        public ActionResult Index()
+        public ActionResult Index(string name)
         {
-            var model = _employeeRepo.GetAll().ToList();
-            return View(model);
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                var model = _employeeRepo.GetAll().ToList();
+                return View(model);
+            }
+            else
+            {
+                var data = _employeeRepo.GetEmployeesByName(name);
+                return View(data);
+            }
         }
 
         // GET: EmployeeController/Details/5

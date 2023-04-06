@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Human_Resource_Generator.Models;
 
-[Table("TrainingProgram")]
+[Table("TrainingPrograms")]
 public class TrainingProgram
 {
     [Key]

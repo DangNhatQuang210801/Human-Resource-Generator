@@ -16,7 +16,6 @@ namespace Human_Resource_Generator.Models
         [Required]
         public int TrainingProgramId { get; set; }
         public TrainingProgram TrainingProgram { get; set; }
-        public int? Score { get; set; }
     }
 }
 
