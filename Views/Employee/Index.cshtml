@@ -5,11 +5,20 @@
     ViewData["Title"] = "Employees Management";
 }
 
-<h1>Index</h1>
+<div style="display: flex; justify-content: space-between; margin-top:20px" >
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <div style="width: 60%">
+        @using (Html.BeginForm())
+                {
+                <p>
+                    @Html.TextBox("Name") <input type="submit" value="Tìm kiếm"/>
+                </p>
+                }
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
     <tr>
@@ -72,6 +81,23 @@
    @*hidden field for storing current employeeId*@
     <input type="hidden" id="hiddenEmployeeId" />
 
+<style>
+    input[type="text"]{
+        width: 70%;
+        height: 30px;
+        border-radius: 5px;
+        border: 1px solid;
+        outline: none;
+    }
+    input[type="submit"]{
+        background-color: #0a58ca;
+        color: white;
+        border-radius: 5px;
+        outline: none;
+        border: none;
+        height: 30px;
+    }
+</style>
 
 @section Scripts{
     <script type="text/javascript">

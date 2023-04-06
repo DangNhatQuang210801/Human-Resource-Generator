@@ -12,6 +12,10 @@
     <Content Remove="Views\Generator\**" />
     <EmbeddedResource Remove="Views\Generator\**" />
     <None Remove="Views\Generator\**" />
+    <Compile Remove="Migrations\20230405083140_InitialCreate4.cs" />
+    <Compile Remove="Migrations\20230405083140_InitialCreate4.Designer.cs" />
+    <Compile Remove="Migrations\20230405081718_InitialCreate3.cs" />
+    <Compile Remove="Migrations\20230405081718_InitialCreate3.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

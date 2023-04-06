@@ -28,7 +28,16 @@ namespace Human_Resource_Generator.Repository
 
         public Employee GetById(int id)
         {
-            return _db.Employees.Include("EmployeeTrainings.TrainingProgram").FirstOrDefault(x => x.Id == id) ?? new Employee();
+            var employees = _db.Employees.Include(e => e.EmployeeTrainings).FirstOrDefault(x => x.Id == id) ?? new Employee();;
+            var employeeTrainings = employees.EmployeeTrainings.Select(et => new EmployeeTraining
+            {
+                TrainingProgram = _db.TrainingPrograms.FirstOrDefault(t => t.Id == et.TrainingProgramId) ??
+                                  new TrainingProgram(),
+                Id = et.Id,
+                EmployeeId = et.EmployeeId
+            }).ToList();
+            employees.EmployeeTrainings = employeeTrainings;
+            return employees;
         }
 
         public void Insert(Employee employee)
@@ -46,6 +55,11 @@ namespace Human_Resource_Generator.Repository
         public List<Employee> GetListDataByListId(List<int> listId)
         {
             return _db.Employees.Where(e => listId.Contains(e.Id)).ToList();
+        }
+
+        public List<Employee> GetEmployeesByName(string name)
+        {
+            return _db.Employees.Where(e => e.Name.Contains(name)).ToList();
         }
     }
 }
