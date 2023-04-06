@@ -1,6 +1,11 @@
 ﻿using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.VisualStudio.Web.CodeGeneration.Design;
+using NuGet.DependencyResolver;
+using System.Xml.Linq;
 
 namespace Human_Resource_Generator.Repository.Implement
 {
@@ -21,7 +26,7 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public List<TrainingProgram> GetAll()
         {
-            return _db.TrainingPrograms.ToList();
+            return _db.TrainingPrograms.Include(x => x.EmployeeTrainings).ToList();
         }
 
         public TrainingProgram? GetById(int programId)
@@ -46,5 +51,6 @@ namespace Human_Resource_Generator.Repository.Implement
             _db.TrainingPrograms.Update(trainingProgram);
             _db.SaveChanges();
         }
+
     }
 }

@@ -14,5 +14,4 @@ public class Attendance
     public EmployeeTraining EmployeeTraining { get; set; }
     public DateTime Date { get; set; }
     public string? Status { get; set; }
-    public int Score { get; set; }
 }
