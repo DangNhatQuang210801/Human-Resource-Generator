@@ -45,12 +45,6 @@
                         <td>@training.TrainingProgram.Description</td>
                         <td>@training.TrainingProgram.CreatedAt.ToString("dd/MM/yyyy")</td>
                         <td>@training.TrainingProgram.Teacher</td>
-                        <td>
-                            @if (training.Score != null)
-                            {
-                                @training.Score
-                            }
-                            "Pending"</td>
                     </tr>
             }
                 </tbody>

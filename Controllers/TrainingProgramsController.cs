@@ -15,6 +15,7 @@ using AutoMapper;
 using AutoMapper.Internal.Mappers;
 using Human_Resource_Generator.Repository.Implement;
 using System.Collections;
+using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -185,6 +186,66 @@ namespace Human_Resource_Generator.Controllers
                 _trainingProgramRepository.Delete(trainingProgram);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+
+        // GET: TrainingPrograms/Attendance/5
+        [HttpGet]
+        public IActionResult Attendance(int id)
+        {
+            var trainingProgram = _trainingProgramRepository.GetById(id);
+            if (trainingProgram == null)
+            {
+                return NotFound();
+            }
+            var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
+            var employeeTrainingIdsJoinded = new List<int>();
+            var employeesJoined = new List<Employee>();
+            if (employeeTrainingsJoined != null)
+            {
+                employeeTrainingsJoined.ForEach(e =>
+                {
+                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
+                });
+            }
+            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
+            DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
+            model.JoinedEmployees = employeesJoined;
+
+            return View(model);
+        }
+
+        // GET: TrainingPrograms/CreateAttendance/id
+        [HttpGet]
+        public IActionResult CreateAttendance(int id)
+        {
+            var trainingProgram = _trainingProgramRepository.GetById(id);
+            if (trainingProgram == null)
+            {
+                return NotFound();
+            }
+            var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
+            var employeeTrainingIdsJoinded = new List<int>();
+            var employeesJoined = new List<Employee>();
+            if (employeeTrainingsJoined != null)
+            {
+                employeeTrainingsJoined.ForEach(e =>
+                {
+                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
+                });
+            }
+            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
+            DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
+            model.JoinedEmployees = employeesJoined;
+            return View(model);
+        }
+
+        // POST: TrainingPrograms/CreateAttendance
+        [HttpPost]
+        public IActionResult CreateAttendance(InputAttendanceViewModel input)
+        {
+            List<EmployeeIdWithScore> employeeIdWithScoreString = JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
+            return View();
         }
     }
 }

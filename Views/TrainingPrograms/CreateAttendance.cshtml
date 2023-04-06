@@ -1,0 +1,174 @@
+﻿@model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.DetailTrainingProgramViewModel
+
+@{
+    ViewData["Title"] = "New Attendance";
+}
+
+<h1>New Attendance</h1>
+
+<div>
+    <h4>Training Program</h4>
+    <hr />
+    <dl class="row">
+        <div class="row">
+            <dt class="col-sm-2">
+                Date*
+            </dt>
+            <dd class="col-sm-4">
+                <input class="form-control" id="attendance-date-input" type="date" required/>
+            </dd>
+        </div>
+        <dt class="col-sm-2">
+            Name
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Description
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            Teacher
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Teacher)
+        </dd>
+        <dt class="col-sm-2">
+            Created At
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+        <dt class="col-sm-2">
+            Updated At
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </dd>
+    </dl>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <h4>List joined employee </h4>
+        </div>
+        <div class="col-md-4 text-end">
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Code
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Is Attended
+                </th>
+                <th>
+                    Score
+                </th>
+                <th>
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.JoinedEmployees)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Code)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id">
+                    </td>
+                    <td>
+                        <input class="form-control score-input" type="number" id="score-@item.Id" disabled>
+                    </td>
+                    <td>
+                        <span id="status-@item.Id"></span>
+                    </td>
+                </tr>
+            }
+            @if (Model.JoinedEmployees.Count == 0)
+            {
+                <tr class="text-center">
+                    <td colspan="4">
+                        <i>There are no employees involved</i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <input type="button" value="Create" id="submit" class="btn btn-primary" />
+    <a asp-action="Attendance" asp-route-id="@Model.Id">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(".check-item-employee").change(function(){
+            let thisId = $(this).val();
+            if (this.checked) {
+                $("#score-" + thisId).prop('disabled', false);
+            }else{
+                $("#score-" + thisId).prop('disabled', true);
+            }
+        })
+
+        $(".score-input").change(function () {
+            let thisId = $(this).attr("id").slice(6,);
+            let thisValue = $(this).val();
+            if (thisValue > 50) {
+                $("#status-" + thisId).text("Pass");
+                $("#status-" + thisId).addClass("text-success");
+                $("#status-" + thisId).removeClass("text-danger");
+            } else {
+                $("#status-" + thisId).text("Fail");
+                $("#status-" + thisId).addClass("text-danger");
+                $("#status-" + thisId).removeClass("text-success");
+            }
+        })
+        
+        $("#submit").click(function () {
+            let URLAction = '@Url.Action("CreateAttendance", "TrainingPrograms")';
+            let attendanceDate = $("#attendance-date-input").val();
+            let trainingProgramId = @Model.Id;
+            let listEmployeeIdWithScore = [];
+            $('input:checkbox.check-item-employee').each(function () {
+                if (this.checked) {
+                    listEmployeeIdWithScore.push({
+                        "employeeId": $(this).val(),
+                        "score": $("#score-"+$(this).val()).val()
+                    });
+                }
+            });
+            console.log(listEmployeeIdWithScore);
+            $.ajax({
+                url: URLAction,
+                type: 'POST',
+                data: { TrainingProgramId: trainingProgramId, AttendanceDate: attendanceDate, ListEmployeeIdWithScore: JSON.stringify(listEmployeeIdWithScore) },
+                success: function (response) {
+                    if (response.statusCode != 200) {
+                        $("#error-message").text(response.message);
+                    } else {
+                        window.location.href = response.redirectToUrl;
+                    }
+
+                }
+            });
+        })
+    </script>
+}

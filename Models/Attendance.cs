@@ -12,8 +12,8 @@ public class Attendance
     [Required]
     public int EmployeeTrainingId { get; set; }
     public EmployeeTraining EmployeeTraining { get; set; }
-    public DateTime Date { get; set; }
-    public string? Status { get; set; }
+    public DateTime AttendanceDate { get; set; }
+    public bool IsJoined { get; set; }
     public int? Score { get; set; }
 
 }

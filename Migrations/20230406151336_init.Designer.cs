@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Human_Resource_Generator.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230404161154_init")]
+    [Migration("20230406151336_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,14 +32,17 @@ namespace Human_Resource_Generator.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("AttendanceDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("EmployeeTrainingId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsJoined")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Score")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -85,9 +88,6 @@ namespace Human_Resource_Generator.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Score")
                         .HasColumnType("int");
 
                     b.Property<int>("TrainingProgramId")
@@ -149,11 +149,13 @@ namespace Human_Resource_Generator.Migrations
                     b.HasOne("Human_Resource_Generator.Models.Employee", "Employee")
                         .WithMany("EmployeeTrainings")
                         .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Human_Resource_Generator.Models.TrainingProgram", "TrainingProgram")
                         .WithMany("EmployeeTrainings")
                         .HasForeignKey("TrainingProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
