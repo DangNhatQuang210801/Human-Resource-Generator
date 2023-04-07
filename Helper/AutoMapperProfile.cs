@@ -14,6 +14,7 @@ namespace Human_Resource_Generator.Helper
             CreateMap<DetailTrainingProgramViewModel, TrainingProgram>();
             CreateMap<TrainingProgram, DetailTrainingProgramViewModel>();
             CreateMap<TrainingProgram, EditTrainingProgramViewModel>();
+            CreateMap<TrainingProgram, AttendanceViewModel>();
         }
     }
 }

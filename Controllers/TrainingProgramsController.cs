@@ -23,12 +23,16 @@ namespace Human_Resource_Generator.Controllers
         private readonly IMapper _mapper;
         private readonly ITrainingProgramRepository _trainingProgramRepository;
         private readonly IEmployeeTrainingRepository _employeeTrainingRepository;
+        private readonly IAttendanceRepository _attendanceRepository;
+        private readonly IAttendanceEmployeeRepository _attendanceEmployeeRepository;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeTrainingRepository employeeTrainingRepository)
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository, IAttendanceEmployeeRepository attendanceEmployeeRepository)
         {
             _trainingProgramRepository = trainingProgramRepository;
             _employeeTrainingRepository = employeeTrainingRepository;
             _mapper = mapper;
+            _attendanceRepository = attendanceRepository;
+            _attendanceEmployeeRepository = attendanceEmployeeRepository;
         }
 
         // GET: TrainingPrograms
@@ -205,9 +209,27 @@ namespace Human_Resource_Generator.Controllers
                     employeeTrainingIdsJoinded.Add(e.EmployeeId);
                 });
             }
-            employeesJoined = _employeeTrainingRepository.GetListDataByListId(employeeTrainingIdsJoinded);
-            DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
+            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
+            AttendanceViewModel model = _mapper.Map<AttendanceViewModel>(trainingProgram);
             model.JoinedEmployees = employeesJoined;
+            model.Attendances = _attendanceRepository.GetAllByTrainingProgramId(id);
+            var attendances = _attendanceRepository.GetAllByTrainingProgramId(id);
+            var listEmployeeWithDate = new List<JoinedEmployeeWithDateViewModel>();
+            attendances.ForEach(e =>
+            {
+                if (e.AttendanceEmployees.Count > 0)
+                {
+                    foreach (var i in e.AttendanceEmployees)
+                    {
+                        listEmployeeWithDate.Add(new JoinedEmployeeWithDateViewModel()
+                        {
+                            JoinedDate = e.AttendanceDate,
+                            EmployeeId = i.EmployeeId
+                        });
+                    }
+                }
+            });
+            model.JoinedEmployeeWithDate = listEmployeeWithDate;
 
             return View(model);
         }
@@ -223,7 +245,7 @@ namespace Human_Resource_Generator.Controllers
             }
             var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
             var employeeTrainingIdsJoinded = new List<int>();
-            var employeesJoined = new List<Employee>();
+            List<Employee> employeesJoined = new List<Employee>();
             if (employeeTrainingsJoined != null)
             {
                 employeeTrainingsJoined.ForEach(e =>
@@ -242,7 +264,24 @@ namespace Human_Resource_Generator.Controllers
         public IActionResult CreateAttendance(InputAttendanceViewModel input)
         {
             List<EmployeeIdWithScore> employeeIdWithScoreString = JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
-            return View();
+
+            // Create new attendance for this training program
+            var newAttendanceId = _attendanceRepository.Add(new Attendance() { AttendanceDate = input.AttendanceDate, TrainingProgramId = input.TrainingProgramId });
+            if(newAttendanceId != -1)
+            {
+                //Create new attendance for all joined employees
+                employeeIdWithScoreString.ForEach(e =>
+                {
+                    _attendanceEmployeeRepository.Add(new AttendanceEmployee()
+                    {
+                        AttendanceId = newAttendanceId,
+                        EmployeeId = Int32.Parse(e.EmployeeId),
+                        Score = Int32.Parse(e.Score)
+                    });
+                });
+            }
+
+            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
         }
     }
 }

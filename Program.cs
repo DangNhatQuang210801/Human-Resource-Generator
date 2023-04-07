@@ -10,6 +10,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ITrainingProgramRepository,TrainingProgramRepository>();
 builder.Services.AddScoped<IEmployeeTrainingRepository, EmployeeTrainingRepository>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IAttendanceEmployeeRepository, AttendanceEmployeeRepository>();
 
 builder.Services.AddControllersWithViews();
 

@@ -1,4 +1,4 @@
-﻿@model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.DetailTrainingProgramViewModel
+﻿@model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.AttendanceViewModel
 
 @{
     ViewData["Title"] = "Attendance";
@@ -47,10 +47,11 @@
             <h4>List joined employee </h4>
         </div>
         <div class="col-md-4 text-end">
+            <button class="btn btn-success btn-sm" id="exportToExcel">Export To Excel</button>
             <a asp-action="CreateAttendance" asp-route-id="@Model?.Id" class="btn btn-sm btn-primary">Create new Attendance day</a>
         </div>
     </div>
-    <table class="table">
+    <table class="table" id="dataTable">
         <thead>
             <tr>
                 <th>
@@ -59,12 +60,10 @@
                 <th>
                     Name
                 </th>
-                <th>
-                    Position
-                </th>
-                <th>
-                    Date Of Birth
-                </th>
+                @foreach(var item in Model.Attendances)
+                {
+                    <th>@item.AttendanceDate.ToShortDateString()</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -77,12 +76,19 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Position)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateOfBirth)
-                    </td>
+                    @foreach (var att in Model.Attendances)
+                    {
+                        <td>
+                        @if (Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Any())
+                        {
+                                <span class="text-success">Joined</span>
+                        } else
+                        {
+                                <span class="text-danger">Miss</span>
+                        }
+                        </td>
+                    }
+                    
                 </tr>
             }
             @if (Model.JoinedEmployees.Count == 0)
@@ -99,3 +105,27 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+<script src="~/js/FileSaver.js"></script>
+<script>
+        $("#exportToExcel").click(function(){
+            let id = "dataTable";
+            let name = "data";
+            var tab_text = '<html xmlns: x="urn:schemas-microsoft-com:office:excel"><head><xml><x: ExcelWorkbook><x: ExcelWorksheets><x: ExcelWorksheet><x: Name>Attendance</x: Name><x: WorksheetOptions><x: Panes></x: Panes></x: WorksheetOptions ></x: ExcelWorksheet ></x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body><table border="1px" style="color:black">';
+
+
+            var exportTable = $('#' + id).clone();
+            exportTable.find('input').each(function (index, elem) { $(elem).remove(); });
+            exportTable.find('a').each(function (index, elem) { $(elem).remove(); });
+
+            tab_text = tab_text + exportTable.html();
+            tab_text = tab_text + '</table></body></html>';
+            var fileName = "Attendance" + '.xls';
+
+            //Save the file
+            var blob = new Blob([tab_text], { type: "application/vnd.ms-excel;charset=utf-8" })
+            window.saveAs(blob, fileName);
+        })
+</script>
+}

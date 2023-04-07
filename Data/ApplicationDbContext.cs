@@ -15,6 +15,7 @@ namespace Human_Resource_Generator.Data
         public DbSet<TrainingProgram> TrainingPrograms { get; set; }
         public DbSet<EmployeeTraining> EmployeeTrainings { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<AttendanceEmployee> AttendanceEmployees { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EmployeeTraining>()
@@ -30,7 +31,22 @@ namespace Human_Resource_Generator.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Attendance>()
-                .HasOne(et => et.EmployeeTraining);
+                .HasOne(et => et.TrainingProgram)
+                .WithMany(pt => pt.Attendances)
+                .HasForeignKey(p => p.TrainingProgramId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AttendanceEmployee>()
+                .HasOne(et => et.Attendance)
+                .WithMany(pt => pt.AttendanceEmployees)
+                .HasForeignKey(p => p.AttendanceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AttendanceEmployee>()
+                .HasOne(et => et.Employee)
+                .WithMany(pt => pt.AttendanceEmployees)
+                .HasForeignKey(p => p.EmployeeId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

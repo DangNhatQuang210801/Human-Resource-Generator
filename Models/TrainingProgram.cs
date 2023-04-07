@@ -16,4 +16,5 @@ public class TrainingProgram
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public ICollection<EmployeeTraining> EmployeeTrainings { get; set; }
+    public ICollection<Attendance> Attendances { get; set; }
 }

@@ -18,4 +18,5 @@ public class Employee
         [Required]
         public DateTime DateOfBirth { get; set; }
         public ICollection<EmployeeTraining> EmployeeTrainings { get; set; } = new List<EmployeeTraining>();
+        public ICollection<AttendanceEmployee> AttendanceEmployees { get; set; } = new List<AttendanceEmployee>();
 }

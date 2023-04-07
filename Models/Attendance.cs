@@ -10,10 +10,9 @@ public class Attendance
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     [Required]
-    public int EmployeeTrainingId { get; set; }
-    public EmployeeTraining EmployeeTraining { get; set; }
+    public int TrainingProgramId { get; set; }
     public DateTime AttendanceDate { get; set; }
-    public bool IsJoined { get; set; }
-    public int? Score { get; set; }
+    public TrainingProgram TrainingProgram { get; set; }
+    public ICollection<AttendanceEmployee> AttendanceEmployees { get; set; }
 
 }
