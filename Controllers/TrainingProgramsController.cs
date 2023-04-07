@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Human_Resource_Generator.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
-using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
 using Newtonsoft.Json;
 using AutoMapper;
-using AutoMapper.Internal.Mappers;
-using Human_Resource_Generator.Repository.Implement;
-using System.Collections;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -22,13 +11,11 @@ namespace Human_Resource_Generator.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITrainingProgramRepository _trainingProgramRepository;
-        private readonly IEmployeeRepo _employeeRepo;
         private readonly IEmployeeTrainingRepository _employeeTrainingRepository;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeRepo employeeRepo, IEmployeeTrainingRepository employeeTrainingRepository)
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeTrainingRepository employeeTrainingRepository)
         {
             _trainingProgramRepository = trainingProgramRepository;
-            _employeeRepo = employeeRepo;
             _employeeTrainingRepository = employeeTrainingRepository;
             _mapper = mapper;
         }
@@ -58,7 +45,7 @@ namespace Human_Resource_Generator.Controllers
                     employeeTrainingIdsJoinded.Add(e.EmployeeId);
                 });
             }
-            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
+            employeesJoined = _employeeTrainingRepository.GetListDataByListId(employeeTrainingIdsJoinded);
             DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
             model.JoinedEmployees = employeesJoined;
 
@@ -69,7 +56,7 @@ namespace Human_Resource_Generator.Controllers
         public IActionResult Create()
         {
             var model = new CreateTrainingProgramViewModel();
-            model.Employees = _employeeRepo.GetAll().ToList();
+            model.Employees = _employeeTrainingRepository.GetAll().ToList();
             return View(model);
         }
 
@@ -112,7 +99,7 @@ namespace Human_Resource_Generator.Controllers
             }
             EditTrainingProgramViewModel model = _mapper.Map<EditTrainingProgramViewModel>(trainingProgram);
             model.JoinedEmployeeIds = employeeTrainingIdsJoinded;
-            model.Employees = _employeeRepo.GetAll().ToList();
+            model.Employees = _employeeTrainingRepository.GetAll().ToList();
 
             return View(model);
         }

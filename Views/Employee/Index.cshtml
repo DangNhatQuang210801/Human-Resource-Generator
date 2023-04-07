@@ -4,11 +4,11 @@
 @{
     ViewData["Title"] = "Employees Management";
 }
-
+<h1>List Employees</h1>
 <div style="display: flex; justify-content: space-between; margin-top:20px" >
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
+<button class="btn btn-primary" style="height: 35px">
+    <a asp-action="Create" class="text-decoration-none text-white">Create New</a>
+</button>
     <div style="width: 60%">
         @using (Html.BeginForm())
                 {
@@ -34,7 +34,7 @@
         <th>
             @Html.DisplayNameFor(model => model.DateOfBirth)
         </th>
-        <th></th>
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>
@@ -53,9 +53,9 @@
                 @Html.DisplayFor(modelItem => item.DateOfBirth)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a href="#" onclick="ConfirmDelete(@item.Id)" style="color: red">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Details</a> |
+                <a href="#" onclick="ConfirmDelete(@item.Id)" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
     }
@@ -66,14 +66,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Delete Employee</h3>
+                <h5 class="modal-title">Delete Employee</h5>
             </div>
             <div class="modal-body">
-                <h4>Are you sure you want to Remove this Employee?</h4>
+                <p>Are you sure you want to Remove this Employee?</p>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-default" data-dismiss="modal" onclick="CloseModal()">Cancel</a>
-                <a href="#" class="btn btn-success" onclick="DeleteEmployee()">Confirm</a>
+                <a href="#" class="btn" data-dismiss="modal" onclick="CloseModal()">Cancel</a>
+                <a href="#" class="btn btn-primary" onclick="DeleteEmployee()">Confirm</a>
             </div>
         </div>
     </div>
@@ -84,18 +84,18 @@
 <style>
     input[type="text"]{
         width: 70%;
-        height: 30px;
+        height: 35px;
         border-radius: 5px;
         border: 1px solid;
         outline: none;
     }
     input[type="submit"]{
-        background-color: #0a58ca;
+        background-color: #2780e3;
         color: white;
         border-radius: 5px;
         outline: none;
         border: none;
-        height: 30px;
+        height: 35px;
     }
 </style>
 

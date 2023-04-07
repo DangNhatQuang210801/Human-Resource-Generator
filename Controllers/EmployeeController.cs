@@ -1,23 +1,16 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using AutoMapper;
-using Human_Resource_Generator.Interfaces;
-using Human_Resource_Generator.Models;
+﻿using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
-using Human_Resource_Generator.ViewModels.EmployeeViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 
 namespace Human_Resource_Generator.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepo _employeeRepo;
+        private readonly IEmployeeTrainingRepository _employeeRepo;
 
-        public EmployeeController(IEmployeeRepo e)
+        public EmployeeController(IEmployeeTrainingRepository employeeRepo)
         {
-            _employeeRepo = e;
+            _employeeRepo = employeeRepo;
         }
 
         // GET: EmployeeController
@@ -25,7 +18,7 @@ namespace Human_Resource_Generator.Controllers
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                var model = _employeeRepo.GetAll().ToList();
+                var model = _employeeRepo.GetAll();
                 return View(model);
             }
             else
