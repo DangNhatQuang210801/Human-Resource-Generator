@@ -282,6 +282,9 @@ namespace Human_Resource_Generator.Controllers
                         Score = Int32.Parse(e.Score)
                     });
                 });
+            } else
+            {
+                return Json(new { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
             }
 
             return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
