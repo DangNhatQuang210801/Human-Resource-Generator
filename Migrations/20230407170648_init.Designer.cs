@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Human_Resource_Generator.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230406151336_init")]
+    [Migration("20230407170648_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,20 +35,40 @@ namespace Human_Resource_Generator.Migrations
                     b.Property<DateTime>("AttendanceDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EmployeeTrainingId")
+                    b.Property<int>("TrainingProgramId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsJoined")
-                        .HasColumnType("bit");
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrainingProgramId");
+
+                    b.ToTable("Attendances");
+                });
+
+            modelBuilder.Entity("Human_Resource_Generator.Models.AttendanceEmployee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AttendanceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Score")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeTrainingId");
+                    b.HasIndex("AttendanceId");
 
-                    b.ToTable("Attendances");
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("AttendanceEmployees");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.Employee", b =>
@@ -130,18 +150,37 @@ namespace Human_Resource_Generator.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TrainingProgram");
+                    b.ToTable("TrainingPrograms");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.Attendance", b =>
                 {
-                    b.HasOne("Human_Resource_Generator.Models.EmployeeTraining", "EmployeeTraining")
-                        .WithMany()
-                        .HasForeignKey("EmployeeTrainingId")
+                    b.HasOne("Human_Resource_Generator.Models.TrainingProgram", "TrainingProgram")
+                        .WithMany("Attendances")
+                        .HasForeignKey("TrainingProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("EmployeeTraining");
+                    b.Navigation("TrainingProgram");
+                });
+
+            modelBuilder.Entity("Human_Resource_Generator.Models.AttendanceEmployee", b =>
+                {
+                    b.HasOne("Human_Resource_Generator.Models.Attendance", "Attendance")
+                        .WithMany("AttendanceEmployees")
+                        .HasForeignKey("AttendanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Human_Resource_Generator.Models.Employee", "Employee")
+                        .WithMany("AttendanceEmployees")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attendance");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.EmployeeTraining", b =>
@@ -163,13 +202,22 @@ namespace Human_Resource_Generator.Migrations
                     b.Navigation("TrainingProgram");
                 });
 
+            modelBuilder.Entity("Human_Resource_Generator.Models.Attendance", b =>
+                {
+                    b.Navigation("AttendanceEmployees");
+                });
+
             modelBuilder.Entity("Human_Resource_Generator.Models.Employee", b =>
                 {
+                    b.Navigation("AttendanceEmployees");
+
                     b.Navigation("EmployeeTrainings");
                 });
 
             modelBuilder.Entity("Human_Resource_Generator.Models.TrainingProgram", b =>
                 {
+                    b.Navigation("Attendances");
+
                     b.Navigation("EmployeeTrainings");
                 });
 #pragma warning restore 612, 618

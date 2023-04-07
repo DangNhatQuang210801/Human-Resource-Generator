@@ -26,7 +26,7 @@ namespace Human_Resource_Generator.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TrainingProgram",
+                name: "TrainingPrograms",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -39,7 +39,27 @@ namespace Human_Resource_Generator.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TrainingProgram", x => x.Id);
+                    table.PrimaryKey("PK_TrainingPrograms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Attendances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrainingProgramId = table.Column<int>(type: "int", nullable: false),
+                    AttendanceDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attendances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Attendances_TrainingPrograms_TrainingProgramId",
+                        column: x => x.TrainingProgramId,
+                        principalTable: "TrainingPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,39 +81,54 @@ namespace Human_Resource_Generator.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EmployeeTrainings_TrainingProgram_TrainingProgramId",
+                        name: "FK_EmployeeTrainings_TrainingPrograms_TrainingProgramId",
                         column: x => x.TrainingProgramId,
-                        principalTable: "TrainingProgram",
+                        principalTable: "TrainingPrograms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Attendances",
+                name: "AttendanceEmployees",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeTrainingId = table.Column<int>(type: "int", nullable: false),
-                    AttendanceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsJoined = table.Column<bool>(type: "bit", nullable: false),
+                    AttendanceId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     Score = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Attendances", x => x.Id);
+                    table.PrimaryKey("PK_AttendanceEmployees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attendances_EmployeeTrainings_EmployeeTrainingId",
-                        column: x => x.EmployeeTrainingId,
-                        principalTable: "EmployeeTrainings",
+                        name: "FK_AttendanceEmployees_Attendances_AttendanceId",
+                        column: x => x.AttendanceId,
+                        principalTable: "Attendances",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AttendanceEmployees_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attendances_EmployeeTrainingId",
+                name: "IX_AttendanceEmployees_AttendanceId",
+                table: "AttendanceEmployees",
+                column: "AttendanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttendanceEmployees_EmployeeId",
+                table: "AttendanceEmployees",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attendances_TrainingProgramId",
                 table: "Attendances",
-                column: "EmployeeTrainingId");
+                column: "TrainingProgramId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmployeeTrainings_EmployeeId",
@@ -109,16 +144,19 @@ namespace Human_Resource_Generator.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Attendances");
+                name: "AttendanceEmployees");
 
             migrationBuilder.DropTable(
                 name: "EmployeeTrainings");
 
             migrationBuilder.DropTable(
+                name: "Attendances");
+
+            migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "TrainingProgram");
+                name: "TrainingPrograms");
         }
     }
 }

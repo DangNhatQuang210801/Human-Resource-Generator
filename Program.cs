@@ -1,4 +1,5 @@
 using Human_Resource_Generator.Data;
+using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.Repository.Implement;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ builder.Services.AddScoped<ITrainingProgramRepository,TrainingProgramRepository>
 builder.Services.AddScoped<IEmployeeTrainingRepository, EmployeeTrainingRepository>();
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IAttendanceEmployeeRepository, AttendanceEmployeeRepository>();
+builder.Services.AddScoped<IEmployeeRepo, EmployeeRepo>();
 
 builder.Services.AddControllersWithViews();
 

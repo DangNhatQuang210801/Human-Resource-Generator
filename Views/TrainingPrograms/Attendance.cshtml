@@ -112,7 +112,13 @@
         $("#exportToExcel").click(function(){
             let id = "dataTable";
             let name = "data";
-            var tab_text = '<html xmlns: x="urn:schemas-microsoft-com:office:excel"><head><xml><x: ExcelWorkbook><x: ExcelWorksheets><x: ExcelWorksheet><x: Name>Attendance</x: Name><x: WorksheetOptions><x: Panes></x: Panes></x: WorksheetOptions ></x: ExcelWorksheet ></x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body><table border="1px" style="color:black">';
+            var tab_text = '<html xmlns: x="urn:schemas-microsoft-com:office:excel">';
+            tab_text = tab_text + '<head><xml><x: ExcelWorkbook><x: ExcelWorksheets><x: ExcelWorksheet>';
+            tab_text = tab_text + '<x: Name>Test Sheet</x: Name>';
+            tab_text = tab_text + '<x: WorksheetOptions><x: Panes></x: Panes></x: WorksheetOptions ></x: ExcelWorksheet > ';
+            tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+            tab_text = tab_text + '<h1>Training Program: '+ '@Model.Name' +'</h1>';
+            tab_text = tab_text + "<table border='1px' style='color:black'>";
 
 
             var exportTable = $('#' + id).clone();

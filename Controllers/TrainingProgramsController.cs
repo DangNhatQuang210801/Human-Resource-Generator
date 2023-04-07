@@ -15,6 +15,7 @@ using AutoMapper.Internal.Mappers;
 using Human_Resource_Generator.Repository.Implement;
 using System.Collections;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
+using Human_Resource_Generator.Interfaces;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -25,14 +26,16 @@ namespace Human_Resource_Generator.Controllers
         private readonly IEmployeeTrainingRepository _employeeTrainingRepository;
         private readonly IAttendanceRepository _attendanceRepository;
         private readonly IAttendanceEmployeeRepository _attendanceEmployeeRepository;
+        private readonly IEmployeeRepo _employeeRepo;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository, IAttendanceEmployeeRepository attendanceEmployeeRepository)
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository, IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo)
         {
             _trainingProgramRepository = trainingProgramRepository;
             _employeeTrainingRepository = employeeTrainingRepository;
             _mapper = mapper;
             _attendanceRepository = attendanceRepository;
             _attendanceEmployeeRepository = attendanceEmployeeRepository;
+            _employeeRepo = employeeRepo;
         }
 
         // GET: TrainingPrograms
