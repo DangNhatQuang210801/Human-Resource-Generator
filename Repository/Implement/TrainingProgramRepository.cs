@@ -51,6 +51,24 @@ namespace Human_Resource_Generator.Repository.Implement
             _db.TrainingPrograms.Update(trainingProgram);
             _db.SaveChanges();
         }
+        
+        public List<TrainingProgram> GetAllByFilter(string? name)
+        {
+            var trainingPrograms = _db.TrainingPrograms.Include(x => x.EmployeeTrainings).ToList();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                trainingPrograms = trainingPrograms.Where(t =>t.Name.Contains(name) 
+                                                              || t.Description.Contains(name) 
+                                                              || name.Contains(t.Name)
+                                                              || name.Contains(t.Description)
+                                                              || t.Teacher.Contains(name)
+                                                              || name.Contains(t.Teacher)
+                                                              || t.CreatedAt.Year.ToString().Contains(name)
+                                                              || name.Contains(t.CreatedAt.Year.ToString())).ToList();
+            }
+
+            return trainingPrograms;
+        }
 
     }
 }

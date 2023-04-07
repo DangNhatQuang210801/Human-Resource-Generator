@@ -32,9 +32,9 @@ namespace Human_Resource_Generator.Controllers
         }
 
         // GET: TrainingPrograms
-        public IActionResult Index()
+        public IActionResult Index(string name)
         {
-            var model = _trainingProgramRepository.GetAll();
+            var model = _trainingProgramRepository.GetAllByFilter(name);
             return View(model);
         }
 

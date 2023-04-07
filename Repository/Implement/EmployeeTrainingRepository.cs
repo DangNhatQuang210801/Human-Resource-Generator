@@ -28,7 +28,7 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public IEnumerable<Employee> GetAll()
         {
-            return _db.Employees.ToList();
+            return _db.Employees.Include(e =>e.EmployeeTrainings).ToList();
         }
 
         public Employee GetById(int id)
@@ -64,7 +64,7 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public List<Employee> GetEmployeesByName(string name)
         {
-            return _db.Employees.Where(e => e.Name.Contains(name)).ToList();
+            return _db.Employees.Where(e => e.Name.Contains(name) || e.Code.Contains(name)).ToList();
         }
 
         public void Add(EmployeeTraining employeeTraining)
