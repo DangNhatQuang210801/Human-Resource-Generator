@@ -1,9 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
+using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
 using Newtonsoft.Json;
 using AutoMapper;
+using AutoMapper.Internal.Mappers;
+using Human_Resource_Generator.Repository.Implement;
+using System.Collections;
+using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -11,11 +23,13 @@ namespace Human_Resource_Generator.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITrainingProgramRepository _trainingProgramRepository;
+        private readonly IEmployeeRepo _employeeRepo;
         private readonly IEmployeeTrainingRepository _employeeTrainingRepository;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeTrainingRepository employeeTrainingRepository)
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeRepo employeeRepo, IEmployeeTrainingRepository employeeTrainingRepository)
         {
             _trainingProgramRepository = trainingProgramRepository;
+            _employeeRepo = employeeRepo;
             _employeeTrainingRepository = employeeTrainingRepository;
             _mapper = mapper;
         }
@@ -45,7 +59,7 @@ namespace Human_Resource_Generator.Controllers
                     employeeTrainingIdsJoinded.Add(e.EmployeeId);
                 });
             }
-            employeesJoined = _employeeTrainingRepository.GetListDataByListId(employeeTrainingIdsJoinded);
+            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
             DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
             model.JoinedEmployees = employeesJoined;
 
@@ -56,7 +70,7 @@ namespace Human_Resource_Generator.Controllers
         public IActionResult Create()
         {
             var model = new CreateTrainingProgramViewModel();
-            model.Employees = _employeeTrainingRepository.GetAll().ToList();
+            model.Employees = _employeeRepo.GetAll().ToList();
             return View(model);
         }
 
@@ -99,7 +113,7 @@ namespace Human_Resource_Generator.Controllers
             }
             EditTrainingProgramViewModel model = _mapper.Map<EditTrainingProgramViewModel>(trainingProgram);
             model.JoinedEmployeeIds = employeeTrainingIdsJoinded;
-            model.Employees = _employeeTrainingRepository.GetAll().ToList();
+            model.Employees = _employeeRepo.GetAll().ToList();
 
             return View(model);
         }
@@ -172,6 +186,66 @@ namespace Human_Resource_Generator.Controllers
                 _trainingProgramRepository.Delete(trainingProgram);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+
+        // GET: TrainingPrograms/Attendance/5
+        [HttpGet]
+        public IActionResult Attendance(int id)
+        {
+            var trainingProgram = _trainingProgramRepository.GetById(id);
+            if (trainingProgram == null)
+            {
+                return NotFound();
+            }
+            var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
+            var employeeTrainingIdsJoinded = new List<int>();
+            var employeesJoined = new List<Employee>();
+            if (employeeTrainingsJoined != null)
+            {
+                employeeTrainingsJoined.ForEach(e =>
+                {
+                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
+                });
+            }
+            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
+            DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
+            model.JoinedEmployees = employeesJoined;
+
+            return View(model);
+        }
+
+        // GET: TrainingPrograms/CreateAttendance/id
+        [HttpGet]
+        public IActionResult CreateAttendance(int id)
+        {
+            var trainingProgram = _trainingProgramRepository.GetById(id);
+            if (trainingProgram == null)
+            {
+                return NotFound();
+            }
+            var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
+            var employeeTrainingIdsJoinded = new List<int>();
+            var employeesJoined = new List<Employee>();
+            if (employeeTrainingsJoined != null)
+            {
+                employeeTrainingsJoined.ForEach(e =>
+                {
+                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
+                });
+            }
+            employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
+            DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
+            model.JoinedEmployees = employeesJoined;
+            return View(model);
+        }
+
+        // POST: TrainingPrograms/CreateAttendance
+        [HttpPost]
+        public IActionResult CreateAttendance(InputAttendanceViewModel input)
+        {
+            List<EmployeeIdWithScore> employeeIdWithScoreString = JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
+            return View();
         }
     }
 }
