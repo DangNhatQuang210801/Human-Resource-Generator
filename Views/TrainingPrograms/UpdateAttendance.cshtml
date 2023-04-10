@@ -1,10 +1,10 @@
-﻿@model Human_Resource_Generator.ViewModels.TrainingProgramViewModel.DetailTrainingProgramViewModel
+﻿@model Human_Resource_Generator.ViewModels.AttendanceViewModels.EditAttendanceViewModel
 
 @{
-    ViewData["Title"] = "New Attendance";
+    ViewData["Title"] = "Update Attendance";
 }
 
-<h1>New Attendance</h1>
+<h1>Update Attendance</h1>
 
 <div>
     <h4>Training Program</h4>
@@ -13,10 +13,10 @@
     <dl class="row">
         <div class="row">
             <dt class="col-sm-2">
-                Date*
+                Attendance Date
             </dt>
             <dd class="col-sm-4">
-                <input class="form-control" id="attendance-date-input" type="date" required/>
+                @Model.Attendance.AttendanceDate.ToShortDateString()
             </dd>
         </div>
         <dt class="col-sm-2">
@@ -36,12 +36,6 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Teacher)
-        </dd>
-        <dt class="col-sm-2">
-            Created At
-        </dt>
-        <dd class="col-sm-10">
-            @Model.CreatedAt.ToShortDateString()
         </dd>
     </dl>
     <hr />
@@ -77,16 +71,16 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Code)
+                        @item.Code
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @item.Name
                     </td>
                     <td>
-                        <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id">
+                        <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id" @(item.AttendanceEmployees.Count > 0 ? "checked" : "")>
                     </td>
                     <td>
-                        <input class="form-control score-input" type="number" id="score-@item.Id" disabled>
+                        <input class="form-control score-input" type="number" id="score-@item.Id" value="@item.AttendanceEmployees.FirstOrDefault()?.Score" @(item.AttendanceEmployees.Count > 0 ? "" : "disabled")>
                     </td>
                     <td>
                         <span id="status-@item.Id"></span>
@@ -105,7 +99,7 @@
     </table>
 </div>
 <div>
-    <input type="button" value="Create" id="submit" class="btn btn-primary" />
+    <input type="button" value="Update" id="submit" class="btn btn-primary" />
     <a asp-action="Attendance" asp-route-id="@Model.Id">Back to List</a>
 </div>
 
@@ -114,11 +108,27 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        $(".check-item-employee").change(function(){
+        $(document).ready(function () {
+            $(".score-input").each(function () {
+                let thisId = $(this).attr("id").slice(6,);
+                let thisValue = $(this).val();
+                if (thisValue > 50) {
+                    $("#status-" + thisId).text("Pass");
+                    $("#status-" + thisId).addClass("text-success");
+                    $("#status-" + thisId).removeClass("text-danger");
+                } else {
+                    $("#status-" + thisId).text("Fail");
+                    $("#status-" + thisId).addClass("text-danger");
+                    $("#status-" + thisId).removeClass("text-success");
+                }
+            })
+        })
+
+        $(".check-item-employee").change(function () {
             let thisId = $(this).val();
             if (this.checked) {
                 $("#score-" + thisId).prop('disabled', false);
-            }else{
+            } else {
                 $("#score-" + thisId).prop('disabled', true);
             }
         })
@@ -136,36 +146,30 @@
                 $("#status-" + thisId).removeClass("text-success");
             }
         })
-        
+
         $("#submit").click(function () {
-            let URLAction = '@Url.Action("CreateAttendance", "TrainingPrograms")';
+            let URLAction = '@Url.Action("UpdateAttendance", "TrainingPrograms")';
             let attendanceDate = $("#attendance-date-input").val();
-            if (attendanceDate == ""){
-                $("#error-message").text("Please choose the attendance date");
-                $("#attendance-date-input").addClass("border-danger border-4");
-                return;
-            } else {
-                $("#attendance-date-input").removeClass("border-danger border-4");
-            }
             let trainingProgramId = @Model.Id;
+            let attendanceId = @Model.Attendance.Id;
             let listEmployeeIdWithScore = [];
             $('input:checkbox.check-item-employee').each(function () {
                 if (this.checked) {
                     listEmployeeIdWithScore.push({
                         "employeeId": $(this).val(),
-                        "score": $("#score-"+$(this).val()).val()
+                        "score": $("#score-" + $(this).val()).val()
                     });
                 }
             });
+
             if (listEmployeeIdWithScore.length == 0) {
                 $("#error-message").text("Please select at least 1 employee to participate");
                 return;
-            } 
-
+            }
             $.ajax({
                 url: URLAction,
                 type: 'POST',
-                data: { TrainingProgramId: trainingProgramId, AttendanceDate: attendanceDate, ListEmployeeIdWithScore: JSON.stringify(listEmployeeIdWithScore) },
+                data: { Id: attendanceId, TrainingProgramId: trainingProgramId, AttendanceDate: attendanceDate, ListEmployeeIdWithScore: JSON.stringify(listEmployeeIdWithScore) },
                 success: function (response) {
                     if (response.statusCode != 200) {
                         $("#error-message").text(response.message);

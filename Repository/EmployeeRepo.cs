@@ -61,5 +61,10 @@ namespace Human_Resource_Generator.Repository
         {
             return _db.Employees.Where(e => e.Name.Contains(name)).ToList();
         }
+
+        public int CountAllEmployee()
+        {
+            return _db.Employees.Count();
+        }
     }
 }

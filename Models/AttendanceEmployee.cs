@@ -13,6 +13,7 @@ namespace Human_Resource_Generator.Models
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
         public int? Score { get; set; }
+        public DateTime AttendanceAt { get; set; }
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGeneration.Design;
 
 namespace Human_Resource_Generator.Repository.Implement
 {
@@ -29,5 +30,15 @@ namespace Human_Resource_Generator.Repository.Implement
             return _db.Attendances.Include(x => x.AttendanceEmployees).Where(x => x.TrainingProgramId.Equals(trainingId)).ToList();
         }
 
+        public Attendance? GetById(int id)
+        {
+            return _db.Attendances.Include(x => x.AttendanceEmployees).FirstOrDefault(x => x.Id == id);
+        }
+
+        public void Update(Attendance attendance)
+        {
+            _db.Attendances.Update(attendance);
+            _db.SaveChanges();
+        }
     }
 }

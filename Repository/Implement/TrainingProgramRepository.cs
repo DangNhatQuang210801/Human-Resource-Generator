@@ -36,7 +36,7 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public int Add(TrainingProgram trainingProgram)
         {
-            var existTraining =  _db.TrainingPrograms.FirstOrDefault(x => x.Name == trainingProgram.Name);
+            var existTraining = _db.TrainingPrograms.FirstOrDefault(x => x.Name == trainingProgram.Name);
             if (existTraining != null)
             {
                 return -1;
@@ -51,14 +51,14 @@ namespace Human_Resource_Generator.Repository.Implement
             _db.TrainingPrograms.Update(trainingProgram);
             _db.SaveChanges();
         }
-        
+
         public List<TrainingProgram> GetAllByFilter(string? name)
         {
             var trainingPrograms = _db.TrainingPrograms.Include(x => x.EmployeeTrainings).ToList();
             if (!string.IsNullOrWhiteSpace(name))
             {
-                trainingPrograms = trainingPrograms.Where(t =>t.Name.Contains(name) 
-                                                              || t.Description.Contains(name) 
+                trainingPrograms = trainingPrograms.Where(t => t.Name.Contains(name)
+                                                              || t.Description.Contains(name)
                                                               || name.Contains(t.Name)
                                                               || name.Contains(t.Description)
                                                               || t.Teacher.Contains(name)

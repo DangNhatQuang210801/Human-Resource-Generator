@@ -4,5 +4,6 @@
     {
         public int EmployeeId { get; set; }
         public DateTime JoinedDate { get; set; }
+        public DateTime AttendanceAt { get; set; }
     }
 }

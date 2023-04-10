@@ -33,9 +33,6 @@
             Created At
         </th>
         <th>
-            Updated At
-        </th>
-        <th>
             Number joined employee
         </th>
         <th>Action</th>
@@ -45,22 +42,19 @@
     @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @item.Name
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @item.Description
+            </td>
+            <td class="teacher-cell">
+                    @item.Teacher
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Teacher)
+                @item.CreatedAt.ToShortDateString()
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeTrainings.Count)
+                @item.EmployeeTrainings.Count
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Edit</a> |
@@ -88,3 +82,18 @@
        width: 250px;
     }
 </style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".teacher-cell").each(function(){
+                let newContentArray = $(this).text().split(",");
+                let newText = "";
+                for (let i = 0; i < newContentArray.length; i++) {
+                    newText += newContentArray[i] + "<br>";
+                }
+                $(this).html(newText);
+            })
+        })
+    </script>
+}

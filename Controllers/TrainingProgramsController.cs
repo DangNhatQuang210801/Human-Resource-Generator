@@ -227,12 +227,17 @@ namespace Human_Resource_Generator.Controllers
                         listEmployeeWithDate.Add(new JoinedEmployeeWithDateViewModel()
                         {
                             JoinedDate = e.AttendanceDate,
-                            EmployeeId = i.EmployeeId
+                            EmployeeId = i.EmployeeId,
+                            AttendanceAt = i.AttendanceAt,
                         });
                     }
                 }
             });
             model.JoinedEmployeeWithDate = listEmployeeWithDate;
+
+            int totalEmployee = _employeeRepo.CountAllEmployee();
+
+            ViewBag.totalEmployee = totalEmployee.ToString();
 
             return View(model);
         }
@@ -270,7 +275,7 @@ namespace Human_Resource_Generator.Controllers
 
             // Create new attendance for this training program
             var newAttendanceId = _attendanceRepository.Add(new Attendance() { AttendanceDate = input.AttendanceDate, TrainingProgramId = input.TrainingProgramId });
-            if(newAttendanceId != -1)
+            if (newAttendanceId != -1)
             {
                 //Create new attendance for all joined employees
                 employeeIdWithScoreString.ForEach(e =>
@@ -282,10 +287,95 @@ namespace Human_Resource_Generator.Controllers
                         Score = Int32.Parse(e.Score)
                     });
                 });
-            } else
+            }
+            else
             {
                 return Json(new { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
             }
+
+            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
+        }
+
+        // GET: TrainingPrograms/UpdateAttendance/id
+        [HttpGet]
+        public IActionResult UpdateAttendance(int id)
+        {
+            var attendance = _attendanceRepository.GetById(id);
+            if (attendance == null)
+            {
+                return NotFound();
+            }
+            var trainingProgram = _trainingProgramRepository.GetById(attendance.TrainingProgramId);
+            if (trainingProgram == null)
+            {
+                return NotFound();
+            }
+            var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(trainingProgram.Id);
+            var employeeTrainingIdsJoinded = new List<int>();
+            List<Employee> employeesJoined = new List<Employee>();
+            if (employeeTrainingsJoined != null)
+            {
+                employeeTrainingsJoined.ForEach(e =>
+                {
+                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
+                });
+            }
+            employeesJoined = _employeeTrainingRepository.GetListDataByListId(employeeTrainingIdsJoinded);
+            EditAttendanceViewModel model = _mapper.Map<EditAttendanceViewModel>(trainingProgram);
+            model.Attendance = attendance;
+            model.JoinedEmployees = employeesJoined;
+            model.AttendanceEmployees = attendance.AttendanceEmployees.ToList();
+
+            return View(model);
+        }
+
+        // POST: TrainingPrograms/UpdateAttendance
+        [HttpPost]
+        public IActionResult UpdateAttendance(InputUpdateAttendanceViewModel input)
+        {
+            List<EmployeeIdWithScore> employeeIdWithScoreString = JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
+
+            //Get old list EmployeeAttendance to check if this request have deleting employee attendance
+            List<AttendanceEmployee> oldAttendanceEmployees = _attendanceEmployeeRepository.GetByAttendanceId(input.Id);
+
+            // Get list old EmployeeIds, new EmployeeIds => compare to get list deleted EmployeeId
+            var listOldEmployeeIds = new List<int>();
+            oldAttendanceEmployees.ForEach(oldE =>
+            {
+                listOldEmployeeIds.Add(oldE.EmployeeId);
+            });
+            var listNewEmployeeIds = new List<int>();
+            employeeIdWithScoreString.ForEach(newE =>
+            {
+                listNewEmployeeIds.Add(Int32.Parse(newE.EmployeeId));
+            });
+
+            var listEmployeeIdDeleted = new List<int>();
+            listOldEmployeeIds.ForEach(oldE =>
+            {
+                if (!listNewEmployeeIds.Contains(oldE))
+                {
+                    listEmployeeIdDeleted.Add(oldE);
+                }
+            });
+
+            //Delete AttendanceEmployee of employee deleted
+            listEmployeeIdDeleted.ForEach(emId =>
+            {
+                _attendanceEmployeeRepository.DeleteByAttendanceIdAndEmployeeId(input.Id, emId);
+            });
+
+            //Create/Update attendance for all joined employees
+            employeeIdWithScoreString.ForEach(e =>
+            {
+                _attendanceEmployeeRepository.Add(new AttendanceEmployee()
+                {
+                    AttendanceId = input.Id,
+                    EmployeeId = Int32.Parse(e.EmployeeId),
+                    Score = Int32.Parse(e.Score),
+                    AttendanceAt = DateTime.Now,
+                });
+            });
 
             return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
         }

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Attendance";
+    var totalEmployee = ViewData["totalEmployee"];
 }
 
 <h1>Attendance</h1>
@@ -32,13 +33,13 @@
             Created At
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
+            @Model.CreatedAt.ToShortDateString()
         </dd>
         <dt class="col-sm-2">
-            Updated At
+            Number Employee joined:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedAt)
+            @Model.JoinedEmployees.Count / @totalEmployee
         </dd>
     </dl>
     <hr />
@@ -62,7 +63,10 @@
                 </th>
                 @foreach(var item in Model.Attendances)
                 {
-                    <th>@item.AttendanceDate.ToShortDateString()</th>
+                    <th>
+                        @item.AttendanceDate.ToShortDateString()
+                        <a asp-action="UpdateAttendance" asp-route-id="@item.Id" title="Update Attendance"><i class="bi bi-pencil"></i></a>
+                    </th>
                 }
             </tr>
         </thead>
@@ -81,7 +85,7 @@
                         <td>
                         @if (Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Any())
                         {
-                                <span class="text-success">Joined</span>
+                                <span class="text-success">@Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Select(x => x.AttendanceAt).FirstOrDefault().ToShortDateString()</span>
                         } else
                         {
                                 <span class="text-danger">Miss</span>
@@ -118,6 +122,9 @@
             tab_text = tab_text + '<x: WorksheetOptions><x: Panes></x: Panes></x: WorksheetOptions ></x: ExcelWorksheet > ';
             tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
             tab_text = tab_text + '<h1>Training Program: '+ '@Model.Name' +'</h1>';
+            tab_text = tab_text + '<h4>Teacher: ' + '@Model.Teacher' + '</h3>';
+            tab_text = tab_text + '<h4>Date: ' + '@Model.CreatedAt.ToShortDateString()' + '</h3>';
+            tab_text = tab_text + '<h4>Description: ' + '@Model.Description' + '</h3>';
             tab_text = tab_text + "<table border='1px' style='color:black'>";
 
 
