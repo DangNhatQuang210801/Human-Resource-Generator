@@ -7,7 +7,7 @@ namespace Human_Resource_Generator.Repository
     {
         public List<TrainingProgram> GetAll();
         public TrainingProgram? GetById(int programId);
-        public int Add(TrainingProgram trainingProgram);
+        public Task<int> Add(TrainingProgram trainingProgram);
         public void Update(TrainingProgram trainingProgram);
         public void Delete(TrainingProgram trainingProgram);
         public List<TrainingProgram> GetAllByFilter(string? name);

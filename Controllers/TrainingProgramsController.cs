@@ -42,6 +42,9 @@ namespace Human_Resource_Generator.Controllers
         public IActionResult Index(string name)
         {
             var model = _trainingProgramRepository.GetAllByFilter(name);
+            int totalEmployee = _employeeRepo.CountAllEmployee();
+
+            ViewBag.totalEmployee = totalEmployee.ToString();
             return View(model);
         }
 
@@ -71,6 +74,7 @@ namespace Human_Resource_Generator.Controllers
         }
 
         // GET: TrainingPrograms/Create
+        [HttpGet]
         public IActionResult Create()
         {
             var model = new CreateTrainingProgramViewModel();
@@ -78,15 +82,31 @@ namespace Human_Resource_Generator.Controllers
             return View(model);
         }
 
+        public ActionResult RenderEmployee(RenderEmployeeViewModel renderEmployeeViewModel)
+        {
+            var employees = new List<Employee>();
+            if (string.IsNullOrEmpty(renderEmployeeViewModel.Searching))
+            {
+                employees = _employeeRepo.GetAll().ToList();
+            } else
+            {
+                employees = _employeeRepo.GetEmployeesByName(renderEmployeeViewModel.Searching);
+            }
+            TempData["employeeIds"] = renderEmployeeViewModel.CheckedEmployeeIds;
+
+            return PartialView("_Employees", employees);
+        }
+
         // POST: TrainingPrograms/Create
         [HttpPost]
-        public ActionResult Create(InputTrainingProgramViewModel inputTrainingProgram)
+        public async Task<ActionResult> Create(InputTrainingProgramViewModel inputTrainingProgram)
         {
             inputTrainingProgram.CreatedAt = DateTime.Now;
             inputTrainingProgram.UpdatedAt = DateTime.Now;
             List<string> employeeIdsString = JsonConvert.DeserializeObject<List<string>>(inputTrainingProgram.EmployeeIds);
             List<int> employeeIds = employeeIdsString.Select(int.Parse).ToList();
-            var newTrainingProgramId = _trainingProgramRepository.Add(inputTrainingProgram);
+            var newTrainingProgramId = await _trainingProgramRepository.Add(inputTrainingProgram);
+            
             if (newTrainingProgramId == -1)
             {
                 return Json(new { redirectToUrl = "", statusCode = 502, message = "This Training Program is already existed!" });

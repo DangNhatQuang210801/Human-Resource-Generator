@@ -34,15 +34,15 @@ namespace Human_Resource_Generator.Repository.Implement
             return _db.TrainingPrograms.FirstOrDefault(x => x.Id == programId);
         }
 
-        public int Add(TrainingProgram trainingProgram)
+        public async Task<int> Add(TrainingProgram trainingProgram)
         {
             var existTraining = _db.TrainingPrograms.FirstOrDefault(x => x.Name == trainingProgram.Name);
             if (existTraining != null)
             {
                 return -1;
             }
-            _db.TrainingPrograms.Add(trainingProgram);
-            _db.SaveChanges();
+            await _db.TrainingPrograms.AddAsync(trainingProgram);
+            await _db.SaveChangesAsync();
             return trainingProgram.Id;
         }
 
