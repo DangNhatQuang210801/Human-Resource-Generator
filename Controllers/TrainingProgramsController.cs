@@ -304,7 +304,8 @@ namespace Human_Resource_Generator.Controllers
                     {
                         AttendanceId = newAttendanceId,
                         EmployeeId = Int32.Parse(e.EmployeeId),
-                        Score = Int32.Parse(e.Score)
+                        Score = Int32.Parse(e.Score),
+                        AttendanceAt = DateTime.Now,
                     });
                 });
             }
