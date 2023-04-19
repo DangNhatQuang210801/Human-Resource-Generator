@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Human_Resource_Generator.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
 using Newtonsoft.Json;
 using AutoMapper;
-using AutoMapper.Internal.Mappers;
-using Human_Resource_Generator.Repository.Implement;
-using System.Collections;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.Interfaces;
 

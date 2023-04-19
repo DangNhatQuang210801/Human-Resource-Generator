@@ -2,7 +2,6 @@ using Human_Resource_Generator.Data;
 using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.Repository.Implement;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +14,6 @@ builder.Services.AddScoped<IEmployeeTrainingRepository, EmployeeTrainingReposito
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IAttendanceEmployeeRepository, AttendanceEmployeeRepository>();
 builder.Services.AddScoped<IEmployeeRepo, EmployeeRepo>();
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
 // configure automapper with all automapper profiles from this assembly
@@ -35,7 +33,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
