@@ -14,9 +14,11 @@
 <input type="hidden" value="@Model.Count" id="totalEmployee" />
 <table class="table">
     <thead>
+
         <tr>
+
             <th>
-                <input class="form-check-input" type="checkbox" id="check-all">
+                <input class="form-check-input " type="checkbox" id="check-all">
             </th>
             <th>
                 Code
@@ -36,6 +38,7 @@
         @foreach (var item in Model)
         {
             <tr>
+
                 <td>
                     <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id" @(employeeIds.Contains(item.Id) ? "checked" : "")>
                 </td>
