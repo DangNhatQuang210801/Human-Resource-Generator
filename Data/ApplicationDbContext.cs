@@ -1,10 +1,12 @@
 ﻿using Human_Resource_Generator.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Data
 
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -18,6 +20,7 @@ namespace Human_Resource_Generator.Data
         public DbSet<AttendanceEmployee> AttendanceEmployees { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<EmployeeTraining>()
                 .HasOne(pt => pt.Employee)
                 .WithMany(pt => pt.EmployeeTrainings)
