@@ -3,6 +3,15 @@
 @{
     ViewData["Title"] = "Index";
     var totalEmployee = ViewData["totalEmployee"];
+
+    int CountActualEmplloyees(TrainingProgram trainingProgram)
+    {
+        if (trainingProgram.Attendances.Any())
+        {
+            return trainingProgram.Attendances.Max(att => att.AttendanceEmployees.Count);
+        }
+        return 0;
+    }
 }
 
 <h1>Training Programs</h1>
@@ -34,7 +43,7 @@
             Created At
         </th>
         <th>
-            Number joined employee
+            Actual number of employees
         </th>
         <th>Action</th>
     </tr>
@@ -49,13 +58,13 @@
                 @item.Description
             </td>
             <td class="teacher-cell">
-                    @item.Teacher
+                @item.Teacher
             </td>
             <td>
                 @item.CreatedAt.ToShortDateString()
             </td>
             <td>
-                    @item.EmployeeTrainings.Count / @totalEmployee
+                    @CountActualEmplloyees(item) / @item.EmployeeTrainings.Count 
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Edit</a> |

@@ -12,6 +12,7 @@
     <Content Remove="Views\Generator\**" />
     <EmbeddedResource Remove="Views\Generator\**" />
     <None Remove="Views\Generator\**" />
+    <Compile Remove="Migrations\ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>

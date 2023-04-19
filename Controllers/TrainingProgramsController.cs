@@ -43,7 +43,6 @@ namespace Human_Resource_Generator.Controllers
         {
             var model = _trainingProgramRepository.GetAllByFilter(name);
             int totalEmployee = _employeeRepo.CountAllEmployee();
-
             ViewBag.totalEmployee = totalEmployee.ToString();
             return View(model);
         }
@@ -255,7 +254,7 @@ namespace Human_Resource_Generator.Controllers
             });
             model.JoinedEmployeeWithDate = listEmployeeWithDate;
 
-            int totalEmployee = _employeeRepo.CountAllEmployee();
+            int totalEmployee = employeesJoined.Count;
 
             ViewBag.totalEmployee = totalEmployee.ToString();
 

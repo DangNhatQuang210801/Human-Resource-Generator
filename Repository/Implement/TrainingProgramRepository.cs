@@ -26,7 +26,7 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public List<TrainingProgram> GetAll()
         {
-            return _db.TrainingPrograms.Include(x => x.EmployeeTrainings).ToList();
+            return _db.TrainingPrograms.Include(x => x.EmployeeTrainings).Include(x => x.Attendances).ToList();
         }
 
         public TrainingProgram? GetById(int programId)
@@ -54,7 +54,10 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public List<TrainingProgram> GetAllByFilter(string? name)
         {
-            var trainingPrograms = _db.TrainingPrograms.Include(x => x.EmployeeTrainings).ToList();
+            var trainingPrograms = _db.TrainingPrograms.Include(x => x.EmployeeTrainings)
+                .Include(x =>x.Attendances)
+                .ThenInclude(y => y.AttendanceEmployees)
+                .ToList();
             if (!string.IsNullOrWhiteSpace(name))
             {
                 trainingPrograms = trainingPrograms.Where(t => t.Name.Contains(name)

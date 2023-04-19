@@ -3,6 +3,30 @@
 @{
     ViewData["Title"] = "Attendance";
     var totalEmployee = ViewData["totalEmployee"];
+
+    int ScoreCalculator(int employeeId)
+    {
+        var score = 0;
+        foreach (var att in Model.Attendances)
+        {
+            var currentEmployeeAttendance = att.AttendanceEmployees.FirstOrDefault(attE => attE.EmployeeId == employeeId);
+            if (currentEmployeeAttendance?.Score != null)
+            {
+                score = (int)currentEmployeeAttendance.Score;
+            }
+        }
+        return score;
+    }
+
+    int EmployeeAttendanceCal()
+    {
+        if (Model.Attendances.Any())
+        {
+            return Model.Attendances.Max(att => att.AttendanceEmployees.Count());
+        }
+
+        return 0;
+    }
 }
 
 <h1>Attendance</h1>
@@ -27,7 +51,7 @@
             Teacher
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Teacher)
+            <span style="white-space: pre-line">@Model.Teacher</span>
         </dd>
         <dt class="col-sm-2">
             Created At
@@ -36,10 +60,10 @@
             @Model.CreatedAt.ToShortDateString()
         </dd>
         <dt class="col-sm-2">
-            Number Employee joined:
+            Actual number of participants
         </dt>
         <dd class="col-sm-10">
-            @Model.JoinedEmployees.Count / @totalEmployee
+            @EmployeeAttendanceCal() / @totalEmployee
         </dd>
     </dl>
     <hr />
@@ -61,6 +85,9 @@
                 <th>
                     Name
                 </th>
+                 <th>
+                   Score
+                 </th>
                 @foreach(var item in Model.Attendances)
                 {
                     <th>
@@ -80,15 +107,21 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
+                    <td>
+                        @ScoreCalculator(item.Id)
+                    </td>
                     @foreach (var att in Model.Attendances)
                     {
                         <td>
                         @if (Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Any())
                         {
-                                <span class="text-success">@Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Select(x => x.AttendanceAt).FirstOrDefault().ToShortDateString()</span>
+                            <span class="text-success">
+                                @* @Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Select(x => x.AttendanceAt).FirstOrDefault().ToShortDateString() *@
+                                Joined
+                            </span>
                         } else
                         {
-                                <span class="text-danger">Miss</span>
+                            <span class="text-danger">Miss</span>
                         }
                         </td>
                     }
@@ -122,7 +155,8 @@
             tab_text = tab_text + '<x: WorksheetOptions><x: Panes></x: Panes></x: WorksheetOptions ></x: ExcelWorksheet > ';
             tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
             tab_text = tab_text + '<h1>Training Program: '+ '@Model.Name' +'</h1>';
-            tab_text = tab_text + '<h4>Teacher: ' + '@Model.Teacher' + '</h3>';
+            tab_text = tab_text + '<h4>Teacher: ' + '@string.Join(" - ",Model.Teacher.Split("\n"))' + '</h3>';
+            
             tab_text = tab_text + '<h4>Date: ' + '@Model.CreatedAt.ToShortDateString()' + '</h3>';
             tab_text = tab_text + '<h4>Description: ' + '@Model.Description' + '</h3>';
             tab_text = tab_text + "<table border='1px' style='color:black'>";
