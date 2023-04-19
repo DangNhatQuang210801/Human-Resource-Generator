@@ -1,6 +1,4 @@
 ﻿using Human_Resource_Generator.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Data
