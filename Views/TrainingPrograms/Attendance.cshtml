@@ -116,8 +116,7 @@
                         @if (Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Any())
                         {
                             <span class="text-success">
-                                @* @Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Select(x => x.AttendanceAt).FirstOrDefault().ToShortDateString() *@
-                                Joined
+                                @Model.JoinedEmployeeWithDate.Where(x => x.JoinedDate == att.AttendanceDate && item.Id == x.EmployeeId).Select(x => x.AttendanceAt).FirstOrDefault().ToShortDateString()
                             </span>
                         } else
                         {

@@ -1,5 +1,15 @@
 $("#check-all").change(function () {
-    $(".check-item-employee").prop("checked", this.checked);
+    let checkAll = $(".check-item-employee")
+    checkAll.prop("checked", this.checked);
+    let checkAll2 = $(".check-item-employee:checked")
+    if(checkAll === null){
+        $("#employeeIdsString").val(JSON.stringify([]));
+    }
+    let newEmployeeIds = [];
+    Array.from(checkAll2).forEach(c => {
+        newEmployeeIds.push(c.value);
+    });
+    $("#employeeIdsString").val(JSON.stringify(newEmployeeIds));
 })
 
 $(".check-item-employee").change(function () {

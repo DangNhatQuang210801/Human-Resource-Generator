@@ -1,7 +1,16 @@
-@model Employee
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.CodeAnalysis.Scripting
+@model Human_Resource_Generator.ViewModels.EmployeeViewModels.EmployeeDetailViewModel
 
 @{
     ViewBag.Title = "title";
+
+    int ScoreCal(int TraininProgramId, int EmployeeId)
+    {
+        var score = 0;
+        
+        return score;
+    }
 }
 
 <h4>Employee Detail</h4>
@@ -28,13 +37,14 @@
             <label class="control-label">Training Program</label>
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Time</th>
-                        <th>Teacher</th>
-                    </tr>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Time</th>
+                    <th>Teacher</th>
+                    <th>Score</th>
+                </tr>
                 </thead>
                 <tbody>
                 @foreach (var training in Model.EmployeeTrainings){
@@ -44,8 +54,9 @@
                         <td>@training.TrainingProgram.Description</td>
                         <td>@training.TrainingProgram.CreatedAt.ToString("dd/MM/yyyy")</td>
                         <td>@training.TrainingProgram.Teacher</td>
+                        <td id="status-@training.Id">@(Model.Score.First(s =>s.Key == training.TrainingProgramId).Value > 50 ? "Pass" : "Fail")</td>
                     </tr>
-            }
+                }
                 </tbody>
             </table>
            
@@ -57,4 +68,23 @@
         <a asp-action="Index">Back to List</a>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+           $('td[id^="status-"]').each(function() {
+               let cellText = $(this).html();  
+               let thisId = $(this).attr("id").slice(7,);
+               if (cellText === "Pass") {
+                   $("#status-" + thisId).addClass("text-success");
+                   $("#status-" + thisId).removeClass("text-danger");
+               }
+               else{
+                   $("#status-" + thisId).removeClass("text-success");
+                   $("#status-" + thisId).addClass("text-danger");
+               }
+           });
+        })
+    </script>
+}
 

@@ -73,5 +73,28 @@ namespace Human_Resource_Generator.Repository.Implement
             return trainingPrograms;
         }
 
+        public int GetScoreEmployee(int trainingProgramId, int employeeId)
+        {
+            var trainingPrograms = _db.TrainingPrograms.Include(x => x.EmployeeTrainings)
+                .Include(x => x.Attendances)
+                .ThenInclude(y => y.AttendanceEmployees)
+                .FirstOrDefault(t => t.Id == trainingProgramId);
+
+            var maxScore = 0;
+            if (!trainingPrograms.Attendances.Any())
+            {
+                return 0;
+            }
+            foreach (var att in trainingPrograms.Attendances)
+            {
+                if (att.AttendanceEmployees.Any())
+                {
+                    maxScore = att.AttendanceEmployees.Where(ae=>ae.EmployeeId == employeeId).Max(ae => ae.Score) ?? 0;
+                }
+            }
+            
+            return maxScore;
+        }
+
     }
 }
