@@ -1,5 +1,6 @@
 ﻿using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
+using Human_Resource_Generator.ViewModels.EmployeeViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Human_Resource_Generator.Controllers
@@ -7,10 +8,12 @@ namespace Human_Resource_Generator.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeTrainingRepository _employeeRepo;
+        private readonly ITrainingProgramRepository _trainingProgramRepository;
 
-        public EmployeeController(IEmployeeTrainingRepository employeeRepo)
+        public EmployeeController(IEmployeeTrainingRepository employeeRepo, ITrainingProgramRepository trainingProgramRepository)
         {
             _employeeRepo = employeeRepo;
+            _trainingProgramRepository = trainingProgramRepository;
         }
 
         // GET: EmployeeController
@@ -32,7 +35,22 @@ namespace Human_Resource_Generator.Controllers
         public ActionResult Details(int id)
         {
             var employee = _employeeRepo.GetById(id);
-            return View(employee);
+            var employeeDetailViewModel = new EmployeeDetailViewModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                DateOfBirth = employee.DateOfBirth,
+                Position = employee.Position,
+                AttendanceEmployees = employee.AttendanceEmployees,
+                EmployeeTrainings = employee.EmployeeTrainings,
+                Score = new List<KeyValuePair<int, int>>()
+            };
+            foreach (var employeeTraining in employee.EmployeeTrainings)
+            {
+                var score = _trainingProgramRepository.GetScoreEmployee(employeeTraining.TrainingProgramId,employee.Id);
+                employeeDetailViewModel.Score.Add(new KeyValuePair<int, int>(employeeTraining.TrainingProgramId,score));
+            }
+            return View(employeeDetailViewModel);
         }
         
         [HttpGet]

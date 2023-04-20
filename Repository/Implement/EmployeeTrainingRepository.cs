@@ -33,15 +33,17 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public Employee GetById(int id)
         {
-            var employees = _db.Employees.Include(e => e.EmployeeTrainings).FirstOrDefault(x => x.Id == id) ?? new Employee();;
-            var employeeTrainings = employees.EmployeeTrainings.Select(et => new EmployeeTraining
-            {
-                TrainingProgram = _db.TrainingPrograms.FirstOrDefault(t => t.Id == et.TrainingProgramId) ??
-                                  new TrainingProgram(),
-                Id = et.Id,
-                EmployeeId = et.EmployeeId
-            }).ToList();
-            employees.EmployeeTrainings = employeeTrainings;
+            var employees = _db.Employees.Include(e => e.EmployeeTrainings)
+                .ThenInclude(e =>e.TrainingProgram)
+                .FirstOrDefault(x => x.Id == id) ?? new Employee();;
+            // var employeeTrainings = employees.EmployeeTrainings.Select(et => new EmployeeTraining
+            // {
+            //     TrainingProgram = _db.TrainingPrograms.FirstOrDefault(t => t.Id == et.TrainingProgramId) ??
+            //                       new TrainingProgram(),
+            //     Id = et.Id,
+            //     TrainingProgramId = 
+            // }).ToList();
+            // employees.EmployeeTrainings = employeeTrainings;
             return employees;
         }
 

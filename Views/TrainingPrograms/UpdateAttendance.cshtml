@@ -111,7 +111,7 @@
         $(document).ready(function () {
             $(".score-input").each(function () {
                 let thisId = $(this).attr("id").slice(6,);
-                let thisValue = $(this).val();
+                console.log(thisValue);
                 if (thisValue > 50) {
                     $("#status-" + thisId).text("Pass");
                     $("#status-" + thisId).addClass("text-success");
