@@ -66,7 +66,7 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public List<Employee> GetEmployeesByName(string name)
         {
-            return _db.Employees.Where(e => e.Name.Contains(name) || e.Code.Contains(name)).ToList();
+            return _db.Employees.Where(e => e.Name.Contains(name) || e.Code.Contains(name) || e.Position.Contains(name) || e.DateOfBirth.Month.ToString().Contains(name) || e.DateOfBirth.Year.ToString().Contains(name) || e.DateOfBirth.Date.ToString().Contains(name)).ToList();
         }
 
         public void Add(EmployeeTraining employeeTraining)

@@ -59,7 +59,7 @@ namespace Human_Resource_Generator.Repository
 
         public List<Employee> GetEmployeesByName(string name)
         {
-            return _db.Employees.Where(e => e.Name.Contains(name) || e.Position.Contains(name)).ToList();
+            return _db.Employees.Where(e => e.Name.Contains(name) || e.Code.Contains(name) || e.Position.Contains(name)).ToList();
         }
 
         public int CountAllEmployee()

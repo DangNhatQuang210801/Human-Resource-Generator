@@ -143,9 +143,10 @@
 </div>
 
 @section Scripts {
-<script src="~/js/FileSaver.js"></script>
-<script>
-        $("#exportToExcel").click(function(){
+@*<script src="~/js/FileSaver.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        $("#exportToExcel").click(function () {
             let id = "dataTable";
             let name = "data";
             var tab_text = '<html xmlns: x="urn:schemas-microsoft-com:office:excel">';
@@ -153,17 +154,27 @@
             tab_text = tab_text + '<x: Name>Test Sheet</x: Name>';
             tab_text = tab_text + '<x: WorksheetOptions><x: Panes></x: Panes></x: WorksheetOptions ></x: ExcelWorksheet > ';
             tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
-            tab_text = tab_text + '<h1>Training Program: '+ '@Model.Name' +'</h1>';
+            tab_text = tab_text + '<h1>Training Program: ' + '@Model.Name' + '</h1>';
             tab_text = tab_text + '<h4>Teacher: ' + '@string.Join(" - ",Model.Teacher.Split("\n"))' + '</h3>';
-            
+
             tab_text = tab_text + '<h4>Date: ' + '@Model.CreatedAt.ToShortDateString()' + '</h3>';
             tab_text = tab_text + '<h4>Description: ' + '@Model.Description' + '</h3>';
             tab_text = tab_text + "<table border='1px' style='color:black'>";
 
-
             var exportTable = $('#' + id).clone();
             exportTable.find('input').each(function (index, elem) { $(elem).remove(); });
             exportTable.find('a').each(function (index, elem) { $(elem).remove(); });
+
+            // Add new column header
+            var newHeader = "<th>Result</th>";
+            exportTable.find('thead tr').append(newHeader);
+
+            // Add new column data
+            exportTable.find('tbody tr').each(function () {
+                var score = $(this).find('td:eq(3)').text();
+                var result = score >= 50 ? "Pass" : "Fail";
+                $(this).append("<td>" + result + "</td>");
+            });
 
             tab_text = tab_text + exportTable.html();
             tab_text = tab_text + '</table></body></html>';
@@ -173,5 +184,6 @@
             var blob = new Blob([tab_text], { type: "application/vnd.ms-excel;charset=utf-8" })
             window.saveAs(blob, fileName);
         })
-</script>
+    </script>
+
 }

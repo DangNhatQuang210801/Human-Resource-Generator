@@ -38,6 +38,7 @@ namespace Human_Resource_Generator.Controllers
             var employeeDetailViewModel = new EmployeeDetailViewModel
             {
                 Id = employee.Id,
+                Code = employee.Code,
                 Name = employee.Name,
                 DateOfBirth = employee.DateOfBirth,
                 Position = employee.Position,
