@@ -172,7 +172,7 @@
             // Add new column data
             exportTable.find('tbody tr').each(function () {
                 var score = $(this).find('td:eq(3)').text();
-                var result = score >= 50 ? "Pass" : "Fail";
+                var result = score >= 70 ? "Pass" : "Fail";
                 $(this).append("<td>" + result + "</td>");
             });
 

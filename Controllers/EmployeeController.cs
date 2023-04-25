@@ -42,6 +42,8 @@ namespace Human_Resource_Generator.Controllers
                 Name = employee.Name,
                 DateOfBirth = employee.DateOfBirth,
                 Position = employee.Position,
+                Status = employee.Status,
+                Description = employee.Description,
                 AttendanceEmployees = employee.AttendanceEmployees,
                 EmployeeTrainings = employee.EmployeeTrainings,
                 Score = new List<KeyValuePair<int, int>>()

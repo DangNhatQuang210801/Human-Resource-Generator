@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using AutoMapper;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -386,6 +387,42 @@ namespace Human_Resource_Generator.Controllers
                     AttendanceAt = DateTime.Now,
                 });
             });
+
+            public IActionResult ExportToExcel(int id)
+            {
+                var trainingProgram = _context.TrainingPrograms
+                    .Include(tp => tp.JoinedEmployees)
+                    .SingleOrDefault(tp => tp.Id == id);
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Employees");
+                    worksheet.Cell(1, 1).Value = "Code";
+                    worksheet.Cell(1, 2).Value = "Name";
+                    worksheet.Cell(1, 3).Value = "Position";
+                    worksheet.Cell(1, 4).Value = "Date Of Birth";
+                    worksheet.Cell(1, 5).Value = "Status";
+
+                    int row = 2;
+                    foreach (var employee in trainingProgram.JoinedEmployees)
+                    {
+                        worksheet.Cell(row, 1).Value = employee.Code;
+                        worksheet.Cell(row, 2).Value = employee.Name;
+                        worksheet.Cell(row, 3).Value = employee.Position;
+                        worksheet.Cell(row, 4).Value = employee.DateOfBirth.ToShortDateString();
+                        worksheet.Cell(row, 5).Value = employee.Status;
+                        row++;
+                    }
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        var content = stream.ToArray();
+                        return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Employees.xlsx");
+                    }
+                }
+            }
+
 
             return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
         }
