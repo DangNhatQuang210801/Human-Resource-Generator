@@ -6,6 +6,9 @@ using Newtonsoft.Json;
 using AutoMapper;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Human_Resource_Generator.Utility;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -170,7 +173,7 @@ namespace Human_Resource_Generator.Controllers
             }
             return Json(new { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
         }
-
+        [Authorize(Roles =SD.Role_Admin)]
         // GET: TrainingPrograms/Delete/5
         public IActionResult Delete(int id)
         {
@@ -386,6 +389,7 @@ namespace Human_Resource_Generator.Controllers
                     AttendanceAt = DateTime.Now,
                 });
             });
+
 
             return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
         }

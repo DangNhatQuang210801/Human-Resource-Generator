@@ -78,3 +78,8 @@ input.Add {
 .addBtn:hover {
   background-color: #bbb;
 }
+
+.form-control {
+    padding: auto;
+    height: 40px; /* Adjust the height as per your requirements */
+}

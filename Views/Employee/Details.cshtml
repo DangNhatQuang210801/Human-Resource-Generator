@@ -30,11 +30,20 @@
             <input  class="form-control" disabled="disabled" value="@Model.Position"/>
         </div>
         <div class="form-group">
-            <label asp-for="DateOfBirth" class="control-label"></label>
+            <label asp-for="DateOfBirth" class="control-label">Birthday</label>
             <input  class="form-control" disabled="disabled" value="@DateTime.Now.ToString(Model.DateOfBirth.ToString("dd/MM/yyyy"))"/>
         </div>
         <div class="form-group">
-            <label class="control-label">Training Program</label>
+            <label asp-for="Status" class="control-label"></label>
+            <input class="form-control" disabled="disabled" value="@Model.Status" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <input class="form-control" disabled="disabled" value="@Model.Description" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label class="control-label" style="font-size: 20px; font-weight: bold;">Training Program</label>
             <table class="table">
                 <thead>
                 <tr>
@@ -54,7 +63,7 @@
                         <td>@training.TrainingProgram.Description</td>
                         <td>@training.TrainingProgram.CreatedAt.ToString("dd/MM/yyyy")</td>
                         <td>@training.TrainingProgram.Teacher</td>
-                        <td id="status-@training.Id">@(Model.Score.First(s =>s.Key == training.TrainingProgramId).Value > 49 ? "Pass" : "Fail")</td>
+                        <td id="status-@training.Id">@(Model.Score.First(s =>s.Key == training.TrainingProgramId).Value >= 70 ? "Pass" : "Fail")</td>
                     </tr>
                 }
                 </tbody>
@@ -86,4 +95,5 @@
         })
     </script>
 }
+
 
