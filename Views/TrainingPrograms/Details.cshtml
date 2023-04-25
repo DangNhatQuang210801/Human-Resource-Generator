@@ -52,6 +52,9 @@
                 <th>
                     Date Of Birth
                 </th>
+                <th>
+                    Status
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -70,6 +73,9 @@
                     <td>
                         @item.DateOfBirth.ToShortDateString()
                     </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
                 </tr>
             }
             @if (Model.JoinedEmployees.Count == 0)
@@ -84,6 +90,7 @@
     </table>
 </div>
 <div>
+
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm btn-secondary">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

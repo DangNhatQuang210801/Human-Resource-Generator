@@ -33,6 +33,16 @@
                 <input id="DateOfBirth" name="DateOfBirth" type="date" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" id="status" />
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-lable"></label>
+                <input asp-for="Description" class="form-control" id="description" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
             <div class="form-group" style="margin-top:20px">
                  <input type="submit" value="Save" class="btn btn-primary"/>
             </div>
