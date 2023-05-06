@@ -1,10 +1,12 @@
 ﻿using Human_Resource_Generator.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Human_Resource_Generator.Data
 
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -16,6 +18,7 @@ namespace Human_Resource_Generator.Data
         public DbSet<EmployeeTraining> EmployeeTrainings { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttendanceEmployee> AttendanceEmployees { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
