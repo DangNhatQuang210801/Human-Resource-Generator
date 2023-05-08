@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using AutoMapper;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Human_Resource_Generator.Utility;
 
 namespace Human_Resource_Generator.Controllers
 {
