@@ -145,8 +145,8 @@
 @section Scripts {
 @*<script src="~/js/FileSaver.js"></script>*@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script>
-        $("#exportToExcel").click(function () {
+<script>
+   $("#exportToExcel").click(function () {
             let id = "dataTable";
             let name = "data";
             var tab_text = '<html xmlns: x="urn:schemas-microsoft-com:office:excel">';
@@ -184,6 +184,6 @@
             var blob = new Blob([tab_text], { type: "application/vnd.ms-excel;charset=utf-8" })
             window.saveAs(blob, fileName);
         })
-    </script>
+ </script>
 
 }
