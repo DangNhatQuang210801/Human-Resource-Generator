@@ -391,5 +391,14 @@ namespace Human_Resource_Generator.Controllers
 
             return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
         }
+        
+        // POST: TrainingPrograms/DeleteAttendance
+        [HttpPost]
+        public ActionResult DeleteAttendance(int id, int programId)
+        {
+            var attendance = _attendanceRepository.GetById(id);
+            _attendanceRepository.Delete(attendance);
+            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = programId }), statusCode = 200, message = "" });
+        }
     }
 }

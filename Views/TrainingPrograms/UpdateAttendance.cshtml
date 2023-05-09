@@ -80,7 +80,7 @@
                         <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id" @(item.AttendanceEmployees.Count > 0 ? "checked" : "")>
                     </td>
                     <td>
-                        <input class="form-control score-input" type="number" id="score-@item.Id" value="@item.AttendanceEmployees.FirstOrDefault()?.Score" @(item.AttendanceEmployees.Count > 0 ? "" : "disabled")>
+                        <input class="form-control score-input" type="number" id="score-@item.Id" value="@(item.AttendanceEmployees.FirstOrDefault()?.Score?? 0)" @(item.AttendanceEmployees.Count > 0 ? "" : "disabled")>
                     </td>
                     <td>
                         <span id="status-@item.Id"></span>
@@ -100,8 +100,28 @@
 </div>
 <div>
     <input type="button" value="Update" id="submit" class="btn btn-primary" />
+    <a href="#" onclick="ConfirmDelete(@Model.AttendanceEmployees.ElementAt(0).AttendanceId)" class="btn btn-sm btn-danger">Delete</a>
     <a asp-action="Attendance" asp-route-id="@Model.Id">Back to List</a>
 </div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Attendance</h5>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to Remove this Attendance?</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal" onclick="CloseModal()">Cancel</a>
+                <a href="#" class="btn btn-primary" onclick="DeleteEmployee()">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+   @*hidden field for storing current employeeId*@
+    <input type="hidden" id="hiddenAttendanceId" />
 
 @section Scripts {
     @{
@@ -123,6 +143,30 @@
                 }
             })
         })
+        var ConfirmDelete = function (attendanceId) {
+                                        $("#hiddenAttendanceId").val(attendanceId);
+                                        $("#myModal").modal('show');
+                                    }
+                                    
+        var DeleteEmployee = function () {
+             var attendanceId = $("#hiddenAttendanceId").val();
+            $.ajax({
+                type: "POST",
+                url: "/TrainingPrograms/DeleteAttendance",
+                data: { Id: attendanceId, ProgramId:@Model.Id },
+                success: function (result) {
+                    $("#myModal").modal("hide");
+                    $("#row_" + attendanceId).remove();
+                    if (result.statusCode == 200) {
+                        window.location.href = result.redirectToUrl;
+                    }
+                    
+                }
+            })
+                        }
+        var CloseModal = function () {
+             $("#myModal").modal('hide');
+        }
 
         $(".check-item-employee").change(function () {
             let thisId = $(this).val();

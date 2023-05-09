@@ -8,5 +8,6 @@ namespace Human_Resource_Generator.Repository
         public void Update(Attendance attendance);
         public List<Attendance> GetAllByTrainingProgramId(int trainingId);
         public Attendance? GetById(int id);
+        public void Delete(Attendance attendance);
     }
 }

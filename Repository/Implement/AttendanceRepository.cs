@@ -35,10 +35,18 @@ namespace Human_Resource_Generator.Repository.Implement
             return _db.Attendances.Include(x => x.AttendanceEmployees).FirstOrDefault(x => x.Id == id);
         }
 
+        public void Delete(Attendance attendance)
+        {
+            _db.Attendances.Remove(attendance);
+            _db.SaveChanges();
+        }
+
         public void Update(Attendance attendance)
         {
             _db.Attendances.Update(attendance);
             _db.SaveChanges();
         }
+        
+        
     }
 }
