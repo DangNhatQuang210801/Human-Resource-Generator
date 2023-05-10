@@ -1,4 +1,6 @@
-﻿@model Human_Resource_Generator.ViewModels.AttendanceViewModels.EditAttendanceViewModel
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Human_Resource_Generator.ViewModels.AttendanceViewModels.EditAttendanceViewModel
 
 @{
     ViewData["Title"] = "Update Attendance";
@@ -16,7 +18,7 @@
                 Attendance Date
             </dt>
             <dd class="col-sm-4">
-                @Model.Attendance.AttendanceDate.ToShortDateString()
+                <input type="date" class="attendanceDate" >
             </dd>
         </div>
         <dt class="col-sm-2">
@@ -129,6 +131,18 @@
     }
     <script>
         $(document).ready(function () {
+            //set default attendance date
+             var date = new Date(Date.parse("@Model.Attendance.AttendanceDate.ToString("yyyy/MM/dd")"));
+             const yyyy = date.getFullYear();
+             let mm = date.getMonth() + 1; // Months start at 0!
+             let dd = date.getDate();
+             
+             if (dd < 10) dd = '0' + dd;
+             if (mm < 10) mm = '0' + mm;
+             
+             const formattedToday = yyyy + '-' + mm + '-' + dd;
+             $(".attendanceDate").val(formattedToday)
+            
             $(".score-input").each(function () {
                 let thisId = $(this).attr("id").slice(6,);
                 console.log(thisValue);
@@ -193,7 +207,7 @@
 
         $("#submit").click(function () {
             let URLAction = '@Url.Action("UpdateAttendance", "TrainingPrograms")';
-            let attendanceDate = $("#attendance-date-input").val();
+            let attendanceDate = $(".attendanceDate").val();
             let trainingProgramId = @Model.Id;
             let attendanceId = @Model.Attendance.Id;
             let listEmployeeIdWithScore = [];

@@ -345,6 +345,10 @@ namespace Human_Resource_Generator.Controllers
         [HttpPost]
         public IActionResult UpdateAttendance(InputUpdateAttendanceViewModel input)
         {
+            // Update Attendance
+            var currentAttendance = _attendanceRepository.GetById(input.Id);
+            currentAttendance.AttendanceDate = input.AttendanceDate;
+            _attendanceRepository.Update(currentAttendance);
             List<EmployeeIdWithScore> employeeIdWithScoreString = JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
 
             //Get old list EmployeeAttendance to check if this request have deleting employee attendance
