@@ -102,7 +102,7 @@
 </div>
 <div>
     <input type="button" value="Update" id="submit" class="btn btn-primary" />
-    <a href="#" onclick="ConfirmDelete(@Model.AttendanceEmployees.ElementAt(0).AttendanceId)" class="btn btn-primary btn-danger">Delete</a>
+    <a href="#" onclick="ConfirmDelete(@Model.AttendanceEmployees?.ElementAt(0).AttendanceId)" class="btn btn-primary btn-danger">Delete</a>
     <a asp-action="Attendance" asp-route-id="@Model.Id">Back to List</a>
 </div>
 

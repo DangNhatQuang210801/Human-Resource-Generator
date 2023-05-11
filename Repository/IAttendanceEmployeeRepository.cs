@@ -8,5 +8,8 @@ namespace Human_Resource_Generator.Repository
         public List<AttendanceEmployee> GetByAttendanceId(int attendanceId);
 
         public void DeleteByAttendanceIdAndEmployeeId(int attendanceId, int employeeId);
+
+        public int CountAttendanceEmployeesByEmployeeIdAndContainingListAttendanceId(int employeeId,
+            List<int> listAttendanceIds);
     }
 }

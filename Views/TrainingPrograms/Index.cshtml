@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Human_Resource_Generator.Models.TrainingProgram>
+﻿@using Human_Resource_Generator.Repository
+@model IEnumerable<Human_Resource_Generator.Models.TrainingProgram>
+@inject IAttendanceEmployeeRepository _attendanceEmployeeRepository;
 
 @{
     ViewData["Title"] = "Index";
@@ -6,11 +8,18 @@
 
     int CountActualEmplloyees(TrainingProgram trainingProgram)
     {
-        if (trainingProgram.Attendances.Any())
+        var count = 0;
+        var employeeesId = trainingProgram.EmployeeTrainings.Select(et=>et.EmployeeId).ToList();
+        var listAttendaceIds = trainingProgram.Attendances.Select(att => att.Id).ToList();
+        employeeesId.ForEach(eId =>
         {
-            return trainingProgram.Attendances.Max(att => att.AttendanceEmployees.Count);
-        }
-        return 0;
+            var c = _attendanceEmployeeRepository.CountAttendanceEmployeesByEmployeeIdAndContainingListAttendanceId(eId,listAttendaceIds);
+            if (c > 0)
+            {
+                count++;
+            }
+        });
+        return count;
     }
 }
 

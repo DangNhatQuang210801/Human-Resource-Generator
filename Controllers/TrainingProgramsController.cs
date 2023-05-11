@@ -154,11 +154,17 @@ namespace Human_Resource_Generator.Controllers
                 });
             }
             var listRemovedEmployeeId = oldEmployeeTrainingIdsJoinded.Except(employeeIds).ToList();
+            var listAttendanceByProgramId = _attendanceRepository.GetAllByTrainingProgramId(inputTrainingProgram.Id);
             if (listRemovedEmployeeId != null)
             {
                 listRemovedEmployeeId.ForEach(e =>
                 {
                     _employeeTrainingRepository.DeleteByTrainingProgramIdAndEmployeeId(inputTrainingProgram.Id, e);
+                    //delete attendace related employee with trainingProgram
+                    listAttendanceByProgramId.ForEach(att =>
+                    {
+                        _attendanceEmployeeRepository.DeleteByAttendanceIdAndEmployeeId(att.Id, e);
+                    });
                 });
             }
 

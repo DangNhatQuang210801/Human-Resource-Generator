@@ -41,5 +41,10 @@ namespace Human_Resource_Generator.Repository.Implement
         {
             return _db.AttendanceEmployees.Where(x => x.AttendanceId == attendanceId).ToList();
         }
+
+        public int CountAttendanceEmployeesByEmployeeIdAndContainingListAttendanceId(int employeeId, List<int> listAttendanceIds)
+        {
+            return _db.AttendanceEmployees.Count(atte => atte.EmployeeId == employeeId && listAttendanceIds.Contains(atte.AttendanceId));
+        }
     }
 }
