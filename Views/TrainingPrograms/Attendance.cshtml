@@ -68,12 +68,13 @@
     </dl>
     <hr />
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-4">
             <h4>List joined employee </h4>
         </div>
-        <div class="col-md-4 text-end">
+        <div class="col-md-8 text-end">
             <button class="btn btn-success btn-sm" id="exportToExcel">Export To Excel</button>
             <a asp-action="CreateAttendance" asp-route-id="@Model?.Id" class="btn btn-sm btn-primary">Create new Attendance day</a>
+            <a asp-action="CreateAttendanceByScanner" asp-route-id="@Model?.Id" class="btn btn-sm btn-info">Create new Attendance by Scanner</a>
         </div>
     </div>
     <table class="table" id="dataTable">

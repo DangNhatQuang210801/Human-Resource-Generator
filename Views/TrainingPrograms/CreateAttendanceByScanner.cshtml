@@ -1,0 +1,44 @@
+@model int
+
+<div>
+    <div>
+         <p id="error-message" class="text-danger"></p>
+        <div class="mb-3">
+            <label for="employee-code" class="form-label">List Employee's Code</label>
+            <textarea style="width: 100%;outline: none;" id="employee-code" rows="10"></textarea>
+        </div>
+        <div class="form-group mt-2">
+            <input type="button" value="Create" id="submit" class="btn btn-primary"/>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $("#submit").click(function () {
+                    let URLAction = '@Url.Action("CreateAttendanceByScanner", "TrainingPrograms")';
+                    let trainingProgramId = @Model;
+                    let listCodes = $('#employee-code').val().split('\n')
+                    if (listCodes.length === 0) {
+                        $("#error-message").text("Please fill at least 1 employee to participate");
+                        return;
+                    } 
+        
+                    $.ajax({
+                        url: URLAction,
+                        type: 'POST',
+                        data: { TrainingProgramId: trainingProgramId, listCodes: JSON.stringify(listCodes) },
+                        success: function (response) {
+                            if (response.statusCode != 200) {
+                                $("#error-message").text(response.message);
+                            } else {
+                                window.location.href = response.redirectToUrl;
+                            }
+        
+                        }
+                    });
+                })
+    </script>
+}

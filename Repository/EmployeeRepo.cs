@@ -66,5 +66,11 @@ namespace Human_Resource_Generator.Repository
         {
             return _db.Employees.Count();
         }
+
+        public int? GetEmployeeIdByCode(string code)
+        {
+            var id = _db.Employees.FirstOrDefault(e => e.Code == code)?.Id;
+            return id;
+        }
     }
 }

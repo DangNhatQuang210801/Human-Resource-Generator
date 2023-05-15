@@ -410,5 +410,47 @@ namespace Human_Resource_Generator.Controllers
             _attendanceRepository.Delete(attendance);
             return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = programId }), statusCode = 200, message = "" });
         }
+
+        [HttpGet]
+        public IActionResult CreateAttendanceByScanner(int id)
+        {
+            return View(id);
+        }
+        [HttpPost]
+        public IActionResult CreateAttendanceByScanner(string listCodes, int trainingProgramId)
+        {
+            var listEmployeeCode = JsonConvert.DeserializeObject<List<string>>(listCodes);
+            var listEmployeeId = new List<int>();
+            listEmployeeCode?.ForEach(c =>
+            {
+                var employeeId = _employeeRepo.GetEmployeeIdByCode(c);
+                if (employeeId != null )
+                {
+                    listEmployeeId.Add(employeeId??1);
+                }
+            });
+            // Create new attendance for this training program
+            var newAttendanceId = _attendanceRepository.Add(new Attendance() { AttendanceDate = DateTime.Now, TrainingProgramId = trainingProgramId });
+            if (newAttendanceId != -1)
+            {
+                //Create new attendance for all joined employees
+                listEmployeeId.ForEach(eId =>
+                {
+                    _attendanceEmployeeRepository.Add(new AttendanceEmployee()
+                    {
+                        AttendanceId = newAttendanceId,
+                        EmployeeId = eId,
+                        Score = 0,
+                        AttendanceAt = DateTime.Now,
+                    });
+                });
+            }
+            else
+            {
+                return Json(new { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
+            }
+
+            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = trainingProgramId }), statusCode = 200, message = "" });
+        }
     }
 }
