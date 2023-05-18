@@ -16,7 +16,7 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public int Add(Attendance attendance)
         {
-            var existAttendance = _db.Attendances.FirstOrDefault(x => x.TrainingProgramId == attendance.TrainingProgramId && x.AttendanceDate == attendance.AttendanceDate);
+            var existAttendance = _db.Attendances.FirstOrDefault(x => x.TrainingProgramId == attendance.TrainingProgramId && x.AttendanceDate.Date == attendance.AttendanceDate.Date);
             if (existAttendance != null)
             {
                 return -1;

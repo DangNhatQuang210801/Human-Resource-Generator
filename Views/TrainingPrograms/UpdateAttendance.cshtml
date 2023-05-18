@@ -59,6 +59,7 @@
                 </th>
                 <th>
                     Is Attended
+                    <button onclick="StartScan()" class="button-scanner"><i class="bi bi-upc-scan"></i></button>
                 </th>
                 <th>
                     Score
@@ -79,7 +80,7 @@
                         @item.Name
                     </td>
                     <td>
-                        <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id" @(item.AttendanceEmployees.Count > 0 ? "checked" : "")>
+                        <input class="form-check-input check-item-employee" type="checkbox" code="@item.Code" value="@item.Id" @(item.AttendanceEmployees.Count > 0 ? "checked" : "")>
                     </td>
                     <td>
                         <input class="form-control score-input" type="number" id="score-@item.Id" value="@(item.AttendanceEmployees.FirstOrDefault()?.Score?? 0)" @(item.AttendanceEmployees.Count > 0 ? "" : "disabled")>
@@ -102,7 +103,7 @@
 </div>
 <div>
     <input type="button" value="Update" id="submit" class="btn btn-primary" />
-    <a href="#" onclick="ConfirmDelete(@Model.AttendanceEmployees?.ElementAt(0).AttendanceId)" class="btn btn-primary btn-danger">Delete</a>
+    <a href="#" onclick="ConfirmDelete(@Model.Attendance.Id)" class="btn btn-primary btn-danger">Delete</a>
     <a asp-action="Attendance" asp-route-id="@Model.Id">Back to List</a>
 </div>
 
@@ -123,7 +124,35 @@
     </div>
 </div>
    @*hidden field for storing current employeeId*@
-    <input type="hidden" id="hiddenAttendanceId" />
+<input type="hidden" id="hiddenAttendanceId" />
+
+<div class="modal fade" id="modalScanner">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scan Attendance</h5>
+            </div>
+            <div class="modal-body">
+                <textarea rows="10" style="width: 100%" class="listCode"></textarea>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal" onclick="CloseModal()">Cancel</a>
+                <a href="#" class="btn btn-primary" onclick="FinishScan()">Save</a>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .button-scanner{
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        transition: 0.3s ease;
+    }
+    .button-scanner:hover{
+        background-color: #868e96;
+    }
+</style>
 
 @section Scripts {
     @{
@@ -157,6 +186,22 @@
                 }
             })
         })
+        
+        var StartScan = function () {
+            $("#modalScanner").modal("show");
+        }
+        
+        var FinishScan = function () {
+            var listCode = $(".listCode").val().split("\n");
+            $('input:checkbox.check-item-employee').each(function () {
+                           if (listCode.includes($(this).attr("code"))){
+                               $(this).prop('checked', true);
+                           }
+                        });
+            
+            $(".listCode").val = "";
+            $("#modalScanner").modal("hide");
+        }
         var ConfirmDelete = function (attendanceId) {
                                         $("#hiddenAttendanceId").val(attendanceId);
                                         $("#myModal").modal('show');
@@ -180,6 +225,7 @@
                         }
         var CloseModal = function () {
              $("#myModal").modal('hide');
+             $("#modalScanner").modal('hide');
         }
 
         $(".check-item-employee").change(function () {
