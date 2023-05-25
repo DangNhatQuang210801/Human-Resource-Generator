@@ -89,6 +89,9 @@
                  <th>
                    Score
                  </th>
+                 <th>
+                    Ghi chú
+                 </th>
                 @foreach(var item in Model.Attendances)
                 {
                     <th>
@@ -152,13 +155,23 @@
                 let name = "data";
                 var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
                 tab_text += '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
-                tab_text += '<x:Name>Test Sheet</x:Name>';
+                tab_text += '<x:Name>Bảng ghi chép hướng dẫn 指示シート</x:Name>';
                 tab_text += '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
                 tab_text += '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
-                tab_text += '<h1>Training Program: @Model.Name</h1>';
-                tab_text += '<h4>Teacher: @Html.Raw(Model.Teacher)</h4>';
-                tab_text += '<h4>Date: @Model.CreatedAt.ToShortDateString()</h4>';
-                tab_text += '<h4>Description: @Model.Description</h4>';
+                tab_text += '<h1>Bảng ghi chép hướng dẫn 指示シート</h1>'
+                tab_text += '<h4>- Thời gian: @Model.CreatedAt.ToShortDateString()</h4>';
+                tab_text += '<h4>- Hạng mục カテゴリー: @Model.Name</h1>';
+                tab_text += '<h4>- Người hướng dẫn インストラクター: @Html.Raw(Model.Teacher)</h4>';
+                tab_text += '<h4>- Description: @Model.Description</h4>';
+                tab_text += '<div style="background-color: #f2f2f2; padding: 10px;">';
+                tab_text += '<h4>Tài liệu hướng dẫn:</h4>';
+                tab_text += '<p style="margin-bottom: 5px;">1. Nội quy Lao động công ty (ban hành lần 4) được phê duyệt bởi Ban quản lý các khu Công nghiệp Đồng Nai ngày 30/3/2021</p>';
+                tab_text += '<p>2. Thông báo nội dung thay đổi Nội quy Lao động</p>';
+                tab_text += '<p>Cam kết:</p>'
+                tab_text += '<p>- Được đọc, hướng dẫn và hiểu rõ nội quy</p>'
+                tab_text += '<p>- Nghiêm túc tuân thủ các qui định của nội quy này</p>'
+                tab_text += '<p>- Không tham gia vào các cuộc định công bất hợp pháp</p>'
+                tab_text += '</div>';
                 tab_text += "<table border='1px' style='color:black'>";
 
                 var exportTable = $('#' + id).clone();
@@ -187,6 +200,7 @@
         });
     </script>
 }
+
 
 
 
