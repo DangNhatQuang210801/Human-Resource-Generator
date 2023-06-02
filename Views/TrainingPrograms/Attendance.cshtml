@@ -177,13 +177,17 @@
 
                 // Add new column header
                 var newHeader = "<th>Result</th>";
+                var indexHeader = "<th>STT</th>";
                 exportTable.find('thead tr').append(newHeader);
+                 exportTable.find('thead tr').prepend(indexHeader);
 
                 // Add new column data
+                var index = 0;
                 exportTable.find('tbody tr').each(function () {
                     var score = $(this).find('td:eq(3)').text();
                     var result = score >= 70 ? "Pass" : "Fail";
                     $(this).append("<td>" + result + "</td>");
+                    $(this).prepend("<td>" + (++index) + "</td>");
                 });
 
                 tab_text += exportTable.html();

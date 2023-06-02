@@ -197,6 +197,12 @@
                            if (listCode.includes($(this).attr("code"))){
                                $(this).prop('checked', true);
                            }
+                           let thisId = $(this).val();
+                           if (this.checked) {
+                                $("#score-" + thisId).prop('disabled', false);
+                           } else {
+                                $("#score-" + thisId).prop('disabled', true);
+                           }
                         });
             
             $(".listCode").val = "";
