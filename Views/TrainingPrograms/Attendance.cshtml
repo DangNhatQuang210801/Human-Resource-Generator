@@ -152,24 +152,31 @@
                 let name = "data";
                 var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
                 tab_text += '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+
                 tab_text += '<x:Name>Bảng ghi chép hướng dẫn 指示シート</x:Name>';
                 tab_text += '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
                 tab_text += '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
-                tab_text += '<h1>Bảng ghi chép hướng dẫn 指示シート</h1>'
-                tab_text += '<h4>- Thời gian: @Model.CreatedAt.ToShortDateString()</h4>';
-                tab_text += '<h4>- Hạng mục カテゴリー: @Model.Name</h1>';
-                tab_text += '<h4>- Người hướng dẫn インストラクター: @Html.Raw(Model.Teacher)</h4>';
-                tab_text += '<h4>- Description: @Model.Description</h4>';
-                tab_text += '<div style="background-color: #f2f2f2; padding: 10px;">';
-                tab_text += '<h4>Tài liệu hướng dẫn:</h4>';
-                tab_text += '<p style="margin-bottom: 5px;">1. Nội quy Lao động công ty (ban hành lần 4) được phê duyệt bởi Ban quản lý các khu Công nghiệp Đồng Nai ngày 30/3/2021</p>';
-                tab_text += '<p>2. Thông báo nội dung thay đổi Nội quy Lao động</p>';
-                tab_text += '<p>Cam kết:</p>'
-                tab_text += '<p>- Được đọc, hướng dẫn và hiểu rõ nội quy</p>'
-                tab_text += '<p>- Nghiêm túc tuân thủ các qui định của nội quy này</p>'
-                tab_text += '<p>- Không tham gia vào các cuộc định công bất hợp pháp</p>'
+                tab_text += '<div style="font-family: Times New Roman; padding: 0; margin:0;">';
+                tab_text += '<h1>Bảng ghi chép hướng dẫn 指示シート</h1>';
+                tab_text += '<h4 style="font-size:20px;">- Thời gian: @Model.CreatedAt.ToShortDateString()</h4>';
+                tab_text += '<h4 style="font-size:20px;">- Hạng mục カテゴリー: @Model.Name</h4>';
+                tab_text += '<h4 style="font-size:20px;">- Người hướng dẫn インストラクター: @Html.Raw(Model.Teacher)</h4>';
+                tab_text += '<h4 style="font-size:20px;">- Description: @Model.Description</h4>';
                 tab_text += '</div>';
-                tab_text += "<table border='1px' style='color:black'>";
+                tab_text += '<div style="margin-bottom: 10px; font-weight: normal; font-family: Times New Roman;font-size: 16px;">';
+                tab_text += '<h4 style="margin: 0; line-height: 1.2;">Tài liệu hướng dẫn:</h4>';
+                tab_text += '<p style="margin: 0; font-size: 16px; line-height: 1.2;">1. Nội quy Lao động công ty (ban hành lần 4) được phê duyệt bởi Ban quản lý các khu Công nghiệp Đồng Nai ngày 30/3/2021</p>';
+                tab_text += '<p style="margin: 0; font-size: 16px; line-height: 1.2;">2. Thông báo nội dung</p>';
+                tab_text += '<p style="margin: 0; font-size: 16px; line-height: 1.2;">Nội quy Lao động:</p>';
+                tab_text += '<p style="margin: 0; font-size: 16px; line-height: 1.2;">Cam kết:</p>';
+                tab_text += '<ul style="margin: 10px; padding-left: 20px;font-size: 16px;">';
+                tab_text += '<li>Được đọc, hướng dẫn và hiểu rõ nội quy</li>';
+                tab_text += '<li>Nghiêm túc tuân thủ các qui định của nội quy này</li>';
+                tab_text += '<li>Không tham gia vào các cuộc định công bất hợp pháp</li>';
+                tab_text += '</ul>';
+                tab_text += '</div>';
+                tab_text += '<p></p>'
+                tab_text += "<table border='1px' style='color: black; font-family: Times New Roman;font-size: 16px;'>";
 
                 var exportTable = $('#' + id).clone();
                 exportTable.find('input').remove();
@@ -179,7 +186,7 @@
                 var newHeader = "<th>Result</th>";
                 var indexHeader = "<th>STT</th>";
                 exportTable.find('thead tr').append(newHeader);
-                 exportTable.find('thead tr').prepend(indexHeader);
+                exportTable.find('thead tr').prepend(indexHeader);
 
                 // Add new column data
                 var index = 0;
