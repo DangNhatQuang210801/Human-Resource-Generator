@@ -22,7 +22,12 @@ namespace Human_Resource_Generator.Controllers
         {
             return View();
         }
-        
+
+        public IActionResult PhoneNumber()
+        {
+            return View();
+        }
+
         // public IActionResult Error()
         // {
         //     return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
