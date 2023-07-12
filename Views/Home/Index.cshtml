@@ -27,8 +27,8 @@
 
             .section-content .divider {
                 width: 1px;
-                background-color: #ccc;
-                margin: 0 10px 0 0;
+                background-color: #000000;
+                margin: 0 0 0 0;
             }
 
             .section h2 {
@@ -48,8 +48,19 @@
         .divider2 {
             width: 100%;
             height: 1px;
-            background-color: #ccc;
+            background-color: #000000;
             margin: 10px 0;
+        }
+
+        .dividerLine {
+            width: 100%;
+            height: 1px;
+            background-color: #000000;
+        }
+        .dividerLine2 {
+            width: 14vw;
+            height: 1px;
+            background-color: #000000;
         }
 
         .bigger-paragraph {
@@ -89,38 +100,52 @@
                 Aivailable links
                 <small>in SEDV</small>
             </h1>
-            @if (User.IsInRole(SD.Role_Admin))
-            {
                 <div class="section">
                     <h2 style="font-weight: bold;">SEDV</h2>
                     <div class="divider2"> </div>
                     <div class="section-content">
                         <div class="col-md-6">
-                    <ul class="website-list ">
-                        <li><a class="link-dark" href="http://10.147.81.71:8080">PO System</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.47/">Procedure Management</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.48/">Temperature and Humidity</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.80:9090/">RP System</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.80:8002/">Stopped machine</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.80:8003/">NG Cost_OPT</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.80:8001/">NG Cost_FET</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.80/">Progress Monitoring OPT</a></li>
-                        <li><a class="link-dark" href="http://10.147.81.8080/">Progress Monitoring FET</a></li>
+                        <ul class="website-list " style="font-weight: bold;">
+                        <li><a class="link-danger" href="http://10.147.81.71:8080">PO System</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.47/">Procedure Management</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.48/">Temperature and Humidity</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.80:9090/">RP System</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.80:8002/">Stopped machine</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.80:8003/">NG Cost_OPT</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.80:8001/">NG Cost_FET</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.80/">Progress Monitoring OPT</a></li>
+                                <li><div class="dividerLine"> </div></li>
+                        <li><a class="link-danger" href="http://10.147.81.8080/">Progress Monitoring FET</a></li>
                     </ul>
                             
                         </div>
                         <div class="divider"></div>
-                        <ul class="website-list">
+                        <ul class="website-list" style="font-weight: bold;">
                             <!-- Add your content for the second section here -->
-                            <li><a class="link-dark" href="http://10.147.81.71:8080">Hệ thống quản lý mua hàng</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.47/">Quản lý quy trình điện tử</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.48/">Quản lý nhiệt độ và độ ẩm</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.80:9090/">Giấy đỏ điện tử</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.80:8002/">Máy sản xuất đang dừng</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.80:8003/">Chi phí NG hàng OPT</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.80:8001/">Chi phí NG hàng FET</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.80/">Xem tiến độ hàng OPT</a></li>
-                            <li><a class="link-dark" href="http://10.147.81.8080/">Xem tiến độ hàng FET</a></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.71:8080">Hệ thống quản lý mua hàng</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.47/">Quản lý quy trình điện tử</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.48/">Quản lý nhiệt độ và độ ẩm</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.80:9090/">Giấy đỏ điện tử</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.80:8002/">Máy sản xuất đang dừng</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.80:8003/">Chi phí NG hàng OPT</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.80:8001/">Chi phí NG hàng FET</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.80/">Xem tiến độ hàng OPT</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://10.147.81.8080/">Xem tiến độ hàng FET</a></li>
                         </ul>      
                     </div>
 
@@ -131,13 +156,15 @@
                     <div class="divider2"> </div>
                     <div class="section-content">
                     <div class="col-md-6">
-                    <ul class="website-list">
-                        <li><a class="link-dark" href="http://raptor-a01.sedi.jp/login">SEDI RP</a></li>
+                    <ul class="website-list" style="font-weight: bold;">
+                        <li><a class="link-danger" href="http://raptor-a01.sedi.jp/login">SEDI RP</a></li>
                     </ul>
                     </div>
                         <div class="divider"></div>
-                        <ul class="website-list">
-                            <li><a class="link-dark" href="http://raptor-a01.sedi.jp/login">Giấy đỏ SEDI</a></li>
+                        <ul class="website-list" style="font-weight: bold;">
+                            <li style="padding-left: 10px;"><a class="link-dark" href="http://raptor-a01.sedi.jp/login">Giấy đỏ SEDI</a>
+
+                </li>
                         </ul>
                     </div>
                 </div>
@@ -147,25 +174,33 @@
                     <div class="divider2"> </div>
                     <div class="section-content">
                         <div class="col-md-6">
-                    <ul class="website-list">
-                        <li><a class="link-dark" href="http://gmcore.sei.co.jp/mcore/">GMCore</a></li>
-                        <li><a class="link-dark" href="http://com00.is.sei.co.jp:7000/RakPortal30/rkptServlet">SEI Portal</a></li>
-                        <li><a class="link-dark" href="http://aimsasv.is.sei.co.jp:8681/dxvas/dxzzServlet?lang=3">AIMS</a></li>
-                        <li><a class="link-dark" href="https://gwf2-o.sei.co.jp/proself/login/login.go?AD=init">GWF2</a></li>
-                        <li><a class="link-dark" href="https://mars.is.sei.co.jp:7607/saiUim/saiUimServlet/sams0100">MARS(Email Setting)</a></li>
+                    <ul class="website-list" style="font-weight: bold;">
+                        <li><a class="link-danger" href="http://gmcore.sei.co.jp/mcore/">GMCore</a></li>
+                        <li><div class="dividerLine"></div></li>
+                        <li><a class="link-danger" href="http://com00.is.sei.co.jp:7000/RakPortal30/rkptServlet">SEI Portal</a></li>
+                        <li><div class="dividerLine"></div></li>
+                        <li><a class="link-danger" href="http://aimsasv.is.sei.co.jp:8681/dxvas/dxzzServlet?lang=3">AIMS</a></li>
+                        <li><div class="dividerLine"></div></li>
+                        <li><a class="link-danger" href="https://gwf2-o.sei.co.jp/proself/login/login.go?AD=init">GWF2</a></li>
+                        <li><div class="dividerLine"></div></li>
+                        <li><a class="link-danger" href="https://mars.is.sei.co.jp:7607/saiUim/saiUimServlet/sams0100">MARS(Email Setting)</a></li>
                     </ul>
                     </div>
                         <div class="divider"></div>
-                        <ul class="website-list">
-                            <li><a class="link-dark" href="http://gmcore.sei.co.jp/mcore/">GMCore</a></li>
-                            <li><a class="link-dark" href="http://com00.is.sei.co.jp:7000/RakPortal30/rkptServlet">SEI Portal</a></li>
-                            <li><a class="link-dark" href="http://aimsasv.is.sei.co.jp:8681/dxvas/dxzzServlet?lang=3">AIMS</a></li>
-                            <li><a class="link-dark" href="https://gwf2-o.sei.co.jp/proself/login/login.go?AD=init">GWF2</a></li>
-                            <li><a class="link-dark" href="https://mars.is.sei.co.jp:7607/saiUim/saiUimServlet/sams0100">Email Setting</a></li>
+                        <ul class="website-list" style="font-weight: bold;">
+                            <li style="margin-left: 10px;"><a class="link-dark" href="http://gmcore.sei.co.jp/mcore/">GMCore</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="margin-left: 10px;"><a class="link-dark" href="http://com00.is.sei.co.jp:7000/RakPortal30/rkptServlet">SEI Portal</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="margin-left: 10px;"><a class="link-dark" href="http://aimsasv.is.sei.co.jp:8681/dxvas/dxzzServlet?lang=3">AIMS</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="margin-left: 10px;"><a class="link-dark" href="https://gwf2-o.sei.co.jp/proself/login/login.go?AD=init">GWF2</a></li>
+                            <li><div class="dividerLine2"></div></li>
+                            <li style="margin-left: 10px;"><a class="link-dark" href="https://mars.is.sei.co.jp:7607/saiUim/saiUimServlet/sams0100">Email Setting</a></li>
+
                         </ul>
                     </div>
                 </div>
-            }
         </div>
 
     </div>
