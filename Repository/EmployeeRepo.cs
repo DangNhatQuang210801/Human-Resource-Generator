@@ -72,5 +72,11 @@ namespace Human_Resource_Generator.Repository
             var id = _db.Employees.FirstOrDefault(e => e.Code == code)?.Id;
             return id;
         }
+
+        public List<Employee> GetEmployeesByListCodes(List<string> listCodes)
+        {
+            var res = _db.Employees.Where(e => listCodes.Contains(e.Code)).ToList();
+            return res;
+        }
     }
 }

@@ -85,7 +85,6 @@ $("#submit").click(function (e) {
     } else {
         $("#validate-description").text("");
     }
-
     let teacher = $("#teacher-input").val();
     if (teacher.trim().length == 0) {
         $("#validate-teacher").text("Teacher cannot be empty");

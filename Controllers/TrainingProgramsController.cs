@@ -8,6 +8,7 @@ using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Human_Resource_Generator.Utility;
+using OfficeOpenXml;
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -20,7 +21,9 @@ namespace Human_Resource_Generator.Controllers
         private readonly IAttendanceEmployeeRepository _attendanceEmployeeRepository;
         private readonly IEmployeeRepo _employeeRepo;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository, IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository, IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo)
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository,
+            IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository,
+            IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo)
         {
             _trainingProgramRepository = trainingProgramRepository;
             _employeeTrainingRepository = employeeTrainingRepository;
@@ -47,16 +50,15 @@ namespace Human_Resource_Generator.Controllers
             {
                 return NotFound();
             }
+
             var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
             var employeeTrainingIdsJoinded = new List<int>();
             var employeesJoined = new List<Employee>();
             if (employeeTrainingsJoined != null)
             {
-                employeeTrainingsJoined.ForEach(e =>
-                {
-                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
-                });
+                employeeTrainingsJoined.ForEach(e => { employeeTrainingIdsJoinded.Add(e.EmployeeId); });
             }
+
             employeesJoined = _employeeTrainingRepository.GetListDataByListId(employeeTrainingIdsJoinded);
             DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
             model.JoinedEmployees = employeesJoined;
@@ -79,10 +81,12 @@ namespace Human_Resource_Generator.Controllers
             if (string.IsNullOrEmpty(renderEmployeeViewModel.Searching))
             {
                 employees = _employeeRepo.GetAll().ToList();
-            } else
+            }
+            else
             {
                 employees = _employeeRepo.GetEmployeesByName(renderEmployeeViewModel.Searching);
             }
+
             TempData["employeeIds"] = renderEmployeeViewModel.CheckedEmployeeIds;
 
             return PartialView("_Employees", employees);
@@ -92,21 +96,26 @@ namespace Human_Resource_Generator.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(InputTrainingProgramViewModel inputTrainingProgram)
         {
-            inputTrainingProgram.CreatedAt = DateTime.Now;
             inputTrainingProgram.UpdatedAt = DateTime.Now;
-            List<string> employeeIdsString = JsonConvert.DeserializeObject<List<string>>(inputTrainingProgram.EmployeeIds);
+            List<string> employeeIdsString =
+                JsonConvert.DeserializeObject<List<string>>(inputTrainingProgram.EmployeeIds);
             List<int> employeeIds = employeeIdsString.Select(int.Parse).ToList();
             var newTrainingProgramId = await _trainingProgramRepository.Add(inputTrainingProgram);
-            
+
             if (newTrainingProgramId == -1)
             {
-                return Json(new { redirectToUrl = "", statusCode = 502, message = "This Training Program is already existed!" });
+                return Json(new
+                    { redirectToUrl = "", statusCode = 502, message = "This Training Program is already existed!" });
             }
+
             foreach (var employeeId in employeeIds)
             {
-                _employeeTrainingRepository.Add(new EmployeeTraining() { EmployeeId = employeeId, TrainingProgramId = newTrainingProgramId });
+                _employeeTrainingRepository.Add(new EmployeeTraining()
+                    { EmployeeId = employeeId, TrainingProgramId = newTrainingProgramId });
             }
-            return Json(new { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
+
+            return Json(new
+                { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
         }
 
         // GET: TrainingPrograms/Edit/5
@@ -117,15 +126,14 @@ namespace Human_Resource_Generator.Controllers
             {
                 return NotFound();
             }
+
             var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
             var employeeTrainingIdsJoinded = new List<int>();
             if (employeeTrainingsJoined != null)
             {
-                employeeTrainingsJoined.ForEach(e =>
-                {
-                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
-                });
+                employeeTrainingsJoined.ForEach(e => { employeeTrainingIdsJoinded.Add(e.EmployeeId); });
             }
+
             EditTrainingProgramViewModel model = _mapper.Map<EditTrainingProgramViewModel>(trainingProgram);
             model.JoinedEmployeeIds = employeeTrainingIdsJoinded;
             model.Employees = _employeeTrainingRepository.GetAll().ToList();
@@ -138,21 +146,21 @@ namespace Human_Resource_Generator.Controllers
         public ActionResult Edit(InputTrainingProgramViewModel inputTrainingProgram)
         {
             inputTrainingProgram.UpdatedAt = DateTime.Now;
-            List<string> employeeIdsString = JsonConvert.DeserializeObject<List<string>>(inputTrainingProgram.EmployeeIds);
+            List<string> employeeIdsString =
+                JsonConvert.DeserializeObject<List<string>>(inputTrainingProgram.EmployeeIds);
             List<int> employeeIds = employeeIdsString.Select(int.Parse).ToList();
             _trainingProgramRepository.Update(inputTrainingProgram);
 
 
             //Get list old EmployeeTraining
-            var oldEmployeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(inputTrainingProgram.Id);
+            var oldEmployeeTrainingsJoined =
+                _employeeTrainingRepository.GetByTrainingProgramId(inputTrainingProgram.Id);
             var oldEmployeeTrainingIdsJoinded = new List<int>();
             if (oldEmployeeTrainingsJoined != null)
             {
-                oldEmployeeTrainingsJoined.ForEach(e =>
-                {
-                    oldEmployeeTrainingIdsJoinded.Add(e.EmployeeId);
-                });
+                oldEmployeeTrainingsJoined.ForEach(e => { oldEmployeeTrainingIdsJoinded.Add(e.EmployeeId); });
             }
+
             var listRemovedEmployeeId = oldEmployeeTrainingIdsJoinded.Except(employeeIds).ToList();
             var listAttendanceByProgramId = _attendanceRepository.GetAllByTrainingProgramId(inputTrainingProgram.Id);
             if (listRemovedEmployeeId != null)
@@ -170,15 +178,21 @@ namespace Human_Resource_Generator.Controllers
 
             foreach (var employeeId in employeeIds)
             {
-                var existedEmployeeTraining = _employeeTrainingRepository.GetByTrainingProgramIdAndEmployeeId(inputTrainingProgram.Id, employeeId);
+                var existedEmployeeTraining =
+                    _employeeTrainingRepository.GetByTrainingProgramIdAndEmployeeId(inputTrainingProgram.Id,
+                        employeeId);
                 if (existedEmployeeTraining == null)
                 {
-                    _employeeTrainingRepository.Add(new EmployeeTraining() { EmployeeId = employeeId, TrainingProgramId = inputTrainingProgram.Id });
+                    _employeeTrainingRepository.Add(new EmployeeTraining()
+                        { EmployeeId = employeeId, TrainingProgramId = inputTrainingProgram.Id });
                 }
             }
-            return Json(new { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
+
+            return Json(new
+                { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
         }
-        [Authorize(Roles =SD.Role_Admin)]
+
+        // [Authorize(Roles =SD.Role_Admin)]
         // GET: TrainingPrograms/Delete/5
         public IActionResult Delete(int id)
         {
@@ -201,11 +215,13 @@ namespace Human_Resource_Generator.Controllers
             {
                 return NotFound();
             }
+
             if (trainingProgram != null)
             {
                 _employeeTrainingRepository.DeleteByTrainingProgramId(trainingProgram.Id);
                 _trainingProgramRepository.Delete(trainingProgram);
             }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -219,16 +235,15 @@ namespace Human_Resource_Generator.Controllers
             {
                 return NotFound();
             }
+
             var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
             var employeeTrainingIdsJoinded = new List<int>();
             var employeesJoined = new List<Employee>();
             if (employeeTrainingsJoined != null)
             {
-                employeeTrainingsJoined.ForEach(e =>
-                {
-                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
-                });
+                employeeTrainingsJoined.ForEach(e => { employeeTrainingIdsJoinded.Add(e.EmployeeId); });
             }
+
             employeesJoined = _employeeRepo.GetListDataByListId(employeeTrainingIdsJoinded);
             AttendanceViewModel model = _mapper.Map<AttendanceViewModel>(trainingProgram);
             model.JoinedEmployees = employeesJoined;
@@ -268,16 +283,15 @@ namespace Human_Resource_Generator.Controllers
             {
                 return NotFound();
             }
+
             var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(id);
             var employeeTrainingIdsJoinded = new List<int>();
             List<Employee> employeesJoined = new List<Employee>();
             if (employeeTrainingsJoined != null)
             {
-                employeeTrainingsJoined.ForEach(e =>
-                {
-                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
-                });
+                employeeTrainingsJoined.ForEach(e => { employeeTrainingIdsJoinded.Add(e.EmployeeId); });
             }
+
             employeesJoined = _employeeTrainingRepository.GetListDataByListId(employeeTrainingIdsJoinded);
             DetailTrainingProgramViewModel model = _mapper.Map<DetailTrainingProgramViewModel>(trainingProgram);
             model.JoinedEmployees = employeesJoined;
@@ -288,10 +302,12 @@ namespace Human_Resource_Generator.Controllers
         [HttpPost]
         public IActionResult CreateAttendance(InputAttendanceViewModel input)
         {
-            List<EmployeeIdWithScore> employeeIdWithScoreString = JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
+            List<EmployeeIdWithScore> employeeIdWithScoreString =
+                JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
 
             // Create new attendance for this training program
-            var newAttendanceId = _attendanceRepository.Add(new Attendance() { AttendanceDate = input.AttendanceDate, TrainingProgramId = input.TrainingProgramId });
+            var newAttendanceId = _attendanceRepository.Add(new Attendance()
+                { AttendanceDate = input.AttendanceDate, TrainingProgramId = input.TrainingProgramId });
             if (newAttendanceId != -1)
             {
                 //Create new attendance for all joined employees
@@ -308,10 +324,15 @@ namespace Human_Resource_Generator.Controllers
             }
             else
             {
-                return Json(new { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
+                return Json(new
+                    { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
             }
 
-            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
+            return Json(new
+            {
+                redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }),
+                statusCode = 200, message = ""
+            });
         }
 
         // GET: TrainingPrograms/UpdateAttendance/id
@@ -323,21 +344,21 @@ namespace Human_Resource_Generator.Controllers
             {
                 return NotFound();
             }
+
             var trainingProgram = _trainingProgramRepository.GetById(attendance.TrainingProgramId);
             if (trainingProgram == null)
             {
                 return NotFound();
             }
+
             var employeeTrainingsJoined = _employeeTrainingRepository.GetByTrainingProgramId(trainingProgram.Id);
             var employeeTrainingIdsJoinded = new List<int>();
             List<Employee> employeesJoined = new List<Employee>();
             if (employeeTrainingsJoined != null)
             {
-                employeeTrainingsJoined.ForEach(e =>
-                {
-                    employeeTrainingIdsJoinded.Add(e.EmployeeId);
-                });
+                employeeTrainingsJoined.ForEach(e => { employeeTrainingIdsJoinded.Add(e.EmployeeId); });
             }
+
             employeesJoined = _employeeTrainingRepository.GetListDataByListId(employeeTrainingIdsJoinded);
             EditAttendanceViewModel model = _mapper.Map<EditAttendanceViewModel>(trainingProgram);
             model.Attendance = attendance;
@@ -355,22 +376,17 @@ namespace Human_Resource_Generator.Controllers
             var currentAttendance = _attendanceRepository.GetById(input.Id);
             currentAttendance.AttendanceDate = input.AttendanceDate;
             _attendanceRepository.Update(currentAttendance);
-            List<EmployeeIdWithScore> employeeIdWithScoreString = JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
+            List<EmployeeIdWithScore> employeeIdWithScoreString =
+                JsonConvert.DeserializeObject<List<EmployeeIdWithScore>>(input.ListEmployeeIdWithScore);
 
             //Get old list EmployeeAttendance to check if this request have deleting employee attendance
             List<AttendanceEmployee> oldAttendanceEmployees = _attendanceEmployeeRepository.GetByAttendanceId(input.Id);
 
             // Get list old EmployeeIds, new EmployeeIds => compare to get list deleted EmployeeId
             var listOldEmployeeIds = new List<int>();
-            oldAttendanceEmployees.ForEach(oldE =>
-            {
-                listOldEmployeeIds.Add(oldE.EmployeeId);
-            });
+            oldAttendanceEmployees.ForEach(oldE => { listOldEmployeeIds.Add(oldE.EmployeeId); });
             var listNewEmployeeIds = new List<int>();
-            employeeIdWithScoreString.ForEach(newE =>
-            {
-                listNewEmployeeIds.Add(Int32.Parse(newE.EmployeeId));
-            });
+            employeeIdWithScoreString.ForEach(newE => { listNewEmployeeIds.Add(Int32.Parse(newE.EmployeeId)); });
 
             var listEmployeeIdDeleted = new List<int>();
             listOldEmployeeIds.ForEach(oldE =>
@@ -399,16 +415,24 @@ namespace Human_Resource_Generator.Controllers
                 });
             });
 
-            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }), statusCode = 200, message = "" });
+            return Json(new
+            {
+                redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }),
+                statusCode = 200, message = ""
+            });
         }
-        
+
         // POST: TrainingPrograms/DeleteAttendance
         [HttpPost]
         public ActionResult DeleteAttendance(int id, int programId)
         {
             var attendance = _attendanceRepository.GetById(id);
             _attendanceRepository.Delete(attendance);
-            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = programId }), statusCode = 200, message = "" });
+            return Json(new
+            {
+                redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = programId }), statusCode = 200,
+                message = ""
+            });
         }
 
         [HttpGet]
@@ -416,6 +440,7 @@ namespace Human_Resource_Generator.Controllers
         {
             return View(id);
         }
+
         [HttpPost]
         public IActionResult CreateAttendanceByScanner(string listCodes, int trainingProgramId)
         {
@@ -424,13 +449,14 @@ namespace Human_Resource_Generator.Controllers
             listEmployeeCode?.ForEach(c =>
             {
                 var employeeId = _employeeRepo.GetEmployeeIdByCode(c);
-                if (employeeId != null )
+                if (employeeId != null)
                 {
-                    listEmployeeId.Add(employeeId??1);
+                    listEmployeeId.Add(employeeId ?? 1);
                 }
             });
             // Create new attendance for this training program
-            var newAttendanceId = _attendanceRepository.Add(new Attendance() { AttendanceDate = DateTime.Now, TrainingProgramId = trainingProgramId });
+            var newAttendanceId = _attendanceRepository.Add(new Attendance()
+                { AttendanceDate = DateTime.Now, TrainingProgramId = trainingProgramId });
             if (newAttendanceId != -1)
             {
                 //Create new attendance for all joined employees
@@ -447,10 +473,71 @@ namespace Human_Resource_Generator.Controllers
             }
             else
             {
-                return Json(new { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
+                return Json(new
+                    { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
             }
 
-            return Json(new { redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = trainingProgramId }), statusCode = 200, message = "" });
+            return Json(new
+            {
+                redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = trainingProgramId }),
+                statusCode = 200, message = ""
+            });
+        }
+
+        [HttpPost]
+        public ActionResult Import(IFormFile? file)
+        {
+            var excelDataList = new List<string>();
+            if (file is not { Length: > 0 }) 
+                return PartialView("_Employees", new List<Employee>());
+            if (file.Length <= 0)
+            {
+                return PartialView("_Employees", new List<Employee>());
+            }
+            using var stream = new MemoryStream();
+            file.CopyTo(stream);
+            using var package = new ExcelPackage(stream);
+            var worksheet = package.Workbook.Worksheets[0]; // Assuming the data is in the first worksheet
+            var rowCount = worksheet.Dimension.Rows;
+
+            for (var row = 2;
+                 row <= rowCount;
+                 row++) 
+            {
+                var value = worksheet?.Cells[row, 1]?.Value?.ToString() ?? "0";
+                excelDataList.Add(value);
+            }
+
+            var listEmployees = _employeeRepo.GetEmployeesByListCodes(excelDataList);
+            return PartialView("_Employees", listEmployees);
+        }
+        
+        [HttpPost]
+        public List<string> ImportAttendance(IFormFile? file)
+        {
+            var excelDataList = new List<string>();
+            if (file is not { Length: > 0 })
+                return excelDataList;
+            if (file.Length <= 0)
+            {
+                return excelDataList;
+            }
+            using var stream = new MemoryStream();
+            file.CopyTo(stream);
+            using var package = new ExcelPackage(stream);
+            var worksheet = package.Workbook.Worksheets[0]; // Assuming the data is in the first worksheet
+            var rowCount = worksheet.Dimension.Rows;
+
+            for (var row = 2;
+                 row <= rowCount;
+                 row++) 
+            {
+                var code = worksheet?.Cells[row, 1]?.Value?.ToString() ?? "0";
+                var score = worksheet?.Cells[row, 3]?.Value?.ToString() ?? "0";
+                excelDataList.Add(code+":"+score);
+            }
+
+            return excelDataList;
         }
     }
 }

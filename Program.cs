@@ -6,6 +6,7 @@ using Human_Resource_Generator.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = $"/Identity/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
-
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 // configure automapper with all automapper profiles from this assembly
 builder.Services.AddAutoMapper(typeof(Program));
 

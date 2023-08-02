@@ -76,15 +76,15 @@
         <tbody>
             @foreach (var item in Model.JoinedEmployees)
             {
-                <tr>
-                    <td>
+                <tr id="row">
+                    <td id="code">
                         @Html.DisplayFor(modelItem => item.Code)
                     </td>
-                    <td>
+                    <td id="name">
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
-                        <input class="form-check-input check-item-employee" type="checkbox" value="@item.Id">
+                        <input class="form-check-input check-item-employee" id="check" type="checkbox" value="@item.Id">
                     </td>
                     <td>
                         <input class="form-control score-input" type="number" id="score-@item.Id" value="0" disabled>
@@ -108,7 +108,25 @@
 
 <div>
     <input type="button" value="Create" id="submit" class="btn btn-primary" />
+    <button type="button" style="margin-left:5px" class="btn btn-info" id="btn-search-employee" onclick="ImportAttendance()">Import</button>
     <a asp-action="Attendance" asp-route-id="@Model.Id">Back to List</a>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Employee</h5>
+            </div>
+            <div class="modal-body">
+                <input type="file" name="file" id="inputFile"/>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal" onclick="CloseModal()">Cancel</a>
+                <a href="#" class="btn btn-primary" onclick="UploadTraining()">Upload</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -183,5 +201,58 @@
                 }
             });
         })
+        
+        var ImportAttendance = function () {
+                     $("#myModal").modal('show');
+                }
+                                
+        var UploadTraining = function () {
+                    var formData = new FormData();
+                    formData.append("file", $("#inputFile")[0].files[0]);
+                    $.ajax({
+                          url: "/TrainingPrograms/ImportAttendance",
+                          type: "POST",
+                          data: formData,
+                          processData: false,
+                          contentType: false,
+                          success: function (response) {
+                              $("tr#row").each(function (){
+                                  var $this = $(this);
+                                  var code = $this.find('td#code').text().trim();
+                                  var checked = $this.find('input#check');
+                                  var score = $this.find('input.score-input');
+                                  for (var i = 0; i <response.length; i++) {
+                                      let rcode = response[i].split(":")[0];
+                                      let rscore = response[i].split(":")[1];
+                                      if (code === rcode){
+                                            checked.prop( "checked", true );
+                                            score.val(rscore);
+                                            let thisId = score.attr("id").slice(6,);
+                                            let thisValue = rscore;
+                                            if (thisValue > 69 && thisValue < 100) {
+                                                 $("#status-" + thisId).text("Pass");
+                                                 $("#status-" + thisId).addClass("text-success");
+                                                 $("#status-" + thisId).removeClass("text-danger");
+                                            } else {
+                                                 $("#status-" + thisId).text("Fail");
+                                                 $("#status-" + thisId).addClass("text-danger");
+                                                 $("#status-" + thisId).removeClass("text-success");
+                                            }
+                                            break;
+                                      }
+                                  }
+                                  
+                              });
+                          },
+                          error: function (xhr, status, error) {
+                              alert(response.responseText);
+                          }
+                    });
+                    
+                    $("#myModal").modal('hide');              
+                }
+                var CloseModal = function () {
+                    $("#myModal").modal('hide');
+                }
     </script>
 }
