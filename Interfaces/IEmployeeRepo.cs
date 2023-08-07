@@ -13,6 +13,7 @@ namespace Human_Resource_Generator.Interfaces
         public List<Employee> GetEmployeesByName(string name);
         public int CountAllEmployee();
         public int? GetEmployeeIdByCode(string code);
+        public int? GetEmployeeIdByCodeScanner(string code);
         public List<Employee> GetEmployeesByListCodes(List<string> listCodes);
     }
 }

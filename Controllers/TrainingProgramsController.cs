@@ -448,7 +448,7 @@ namespace Human_Resource_Generator.Controllers
             var listEmployeeId = new List<int>();
             listEmployeeCode?.ForEach(c =>
             {
-                var employeeId = _employeeRepo.GetEmployeeIdByCode(c);
+                var employeeId = _employeeRepo.GetEmployeeIdByCodeScanner(c);
                 if (employeeId != null)
                 {
                     listEmployeeId.Add(employeeId ?? 1);

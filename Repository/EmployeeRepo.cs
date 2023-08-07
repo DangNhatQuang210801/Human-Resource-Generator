@@ -73,6 +73,17 @@ namespace Human_Resource_Generator.Repository
             return id;
         }
 
+        private static string _getShortCode(string code)
+        {
+            return code[0] + code[^3..];
+        }
+        public int? GetEmployeeIdByCodeScanner(string code)
+        {
+            var listE = _db.Employees.Where(e => e.Code.Contains(code.Substring(code.Length-3))).ToList();
+            var id = listE.FirstOrDefault(e => _getShortCode(e.Code) == code).Id;
+            return id;
+        }
+
         public List<Employee> GetEmployeesByListCodes(List<string> listCodes)
         {
             var res = _db.Employees.Where(e => listCodes.Contains(e.Code)).ToList();
