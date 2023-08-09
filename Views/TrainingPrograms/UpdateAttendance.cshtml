@@ -211,17 +211,17 @@
         var FinishScan = function () {
             var listCode = $(".listCode").val().split("\n");
             $('input:checkbox.check-item-employee').each(function () {
-                           if (listCode.includes($(this).attr("code"))){
-                               $(this).prop('checked', true);
-                           }
-                           let thisId = $(this).val();
-                           if (this.checked) {
-                                $("#score-" + thisId).prop('disabled', false);
-                           } else {
-                                $("#score-" + thisId).prop('disabled', true);
-                           }
-                        });
-            
+                let code = $(this).attr("code");
+                if (listCode.includes(code[0]+code.slice(-3))){
+                    $(this).prop('checked',true);
+                }
+                let thisId = $(this).val();
+                if (this.checked) {
+                    $("#score-" + thisId).prop('disabled', false);
+                } else {
+                    $("#score-" + thisId).prop('disabled',true);
+                }
+            });
             $(".listCode").val = "";
             $("#modalScanner").modal("hide");
         }
