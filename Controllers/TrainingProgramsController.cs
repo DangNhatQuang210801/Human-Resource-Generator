@@ -6,9 +6,9 @@ using Newtonsoft.Json;
 using AutoMapper;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Human_Resource_Generator.Utility;
 using OfficeOpenXml;
+using ClosedXML.Excel;
+
 
 namespace Human_Resource_Generator.Controllers
 {
@@ -539,5 +539,33 @@ namespace Human_Resource_Generator.Controllers
 
             return excelDataList;
         }
+        [HttpGet]
+        public IActionResult DownloadFormTemplate()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Form Template");
+
+                // Set column headers and width
+                worksheet.Cell(1, 1).Value = "Code";
+                worksheet.Cell(1, 2).Value = "Name";
+                worksheet.Cell(1, 3).Value = "Score";
+                worksheet.Column(1).Width = 15;
+                worksheet.Column(2).Width = 20;
+                worksheet.Column(3).Width = 15;
+
+                // Save the workbook to a MemoryStream
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    // Return the Excel file for download
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "FormTemplate.xlsx");
+                }
+            }
+        }
+
+
     }
 }

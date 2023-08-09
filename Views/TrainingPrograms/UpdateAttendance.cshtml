@@ -104,7 +104,7 @@
 <div>
     <input type="button" value="Update" id="submit" class="btn btn-primary" />
     <a href="#" onclick="ConfirmDelete(@Model.Attendance.Id)" class="btn btn-primary btn-danger">Delete</a>
-    <button type="button" style="margin-left:5px" class="btn btn-info" id="btn-search-employee" onclick="ImportAttendance()">Import</button>
+    <button type="button" class="btn btn-info" id="btn-search-employee" onclick="ImportAttendance()">Import</button>
     <a asp-action="Attendance" asp-route-id="@Model.Id">Back to List</a>
 </div>
 
