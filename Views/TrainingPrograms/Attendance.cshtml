@@ -216,7 +216,7 @@
         $(document).ready(function () {
             $("#exportFormExcel").click(function () {
                 $.ajax({
-                    url: '@Url.Action("GenerateExcelTemplate", "TrainingProgramsController")', // Update with the correct controller and action names
+                    url: '@Url.Action("DownloadFormTemplate", "TrainingPrograms")', // Update with the correct controller and action names
                     type: 'GET',
                     success: function () {
                         alert('Excel template file generated successfully.');
