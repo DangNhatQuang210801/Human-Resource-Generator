@@ -215,9 +215,12 @@
     <script>
         $(document).ready(function () {
             $("#exportFormExcel").click(function () {
+                var trainingProgramId = $(this).data("trainingProgramId");
+
                 $.ajax({
-                    url: '@Url.Action("DownloadFormTemplate", "TrainingPrograms")', // Update with the correct controller and action names
+                    url: '@Url.Action("DownloadFormTemplate", "TrainingProgramsController")',
                     type: 'GET',
+                    data: { trainingProgramId: trainingProgramId },
                     success: function () {
                         alert('Excel template file generated successfully.');
                     },
@@ -228,6 +231,8 @@
             });
         });
     </script>
+
+
 
 
 

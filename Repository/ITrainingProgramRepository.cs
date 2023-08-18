@@ -12,5 +12,6 @@ namespace Human_Resource_Generator.Repository
         public void Delete(TrainingProgram trainingProgram);
         public List<TrainingProgram> GetAllByFilter(string? name);
         public int GetScoreEmployee(int trainingProgramId, int employeeId);
+        public List<Employee>GetAllEmployeesByTrainingProgramId (int TrainingProgramId);
     }
 }

@@ -95,6 +95,16 @@ namespace Human_Resource_Generator.Repository.Implement
             
             return maxScore;
         }
+        public List<Employee> GetAllEmployeesByTrainingProgramId(int trainingProgramId)
+        {
+            var employees = _db.TrainingPrograms
+                .Where(t => t.Id == trainingProgramId)
+                .SelectMany(t => t.EmployeeTrainings.Select(et => et.Employee))
+                .ToList();
+
+            return employees;
+        }
+
 
     }
 }

@@ -20,10 +20,12 @@ namespace Human_Resource_Generator.Controllers
         private readonly IAttendanceRepository _attendanceRepository;
         private readonly IAttendanceEmployeeRepository _attendanceEmployeeRepository;
         private readonly IEmployeeRepo _employeeRepo;
+        private readonly ITrainingProgramRepository _GetAllEmployeesByTrainingProgramId;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository,
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository ,
             IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository,
-            IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo)
+            IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo, 
+            ITrainingProgramRepository GetAllEmployeesByTrainingProgramId)
         {
             _trainingProgramRepository = trainingProgramRepository;
             _employeeTrainingRepository = employeeTrainingRepository;
@@ -31,6 +33,7 @@ namespace Human_Resource_Generator.Controllers
             _attendanceRepository = attendanceRepository;
             _attendanceEmployeeRepository = attendanceEmployeeRepository;
             _employeeRepo = employeeRepo;
+            _GetAllEmployeesByTrainingProgramId = GetAllEmployeesByTrainingProgramId;
         }
 
         // GET: TrainingPrograms
@@ -540,8 +543,9 @@ namespace Human_Resource_Generator.Controllers
             return excelDataList;
         }
         [HttpGet]
-        public IActionResult DownloadFormTemplate()
+        public IActionResult DownloadFormTemplate(int trainingProgramId)
         {
+            var employees = _trainingProgramRepository.GetAllEmployeesByTrainingProgramId(trainingProgramId);
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Form Template");
@@ -554,6 +558,16 @@ namespace Human_Resource_Generator.Controllers
                 worksheet.Column(2).Width = 20;
                 worksheet.Column(3).Width = 15;
 
+                // Populate data
+                int row = 2;
+                foreach (var employee in employees)
+                {
+                    worksheet.Cell(row, 1).Value = employee.Code;
+                    worksheet.Cell(row, 2).Value = employee.Name;
+
+                    row++;
+                }
+
                 // Save the workbook to a MemoryStream
                 using (var stream = new MemoryStream())
                 {
@@ -565,6 +579,7 @@ namespace Human_Resource_Generator.Controllers
                 }
             }
         }
+
 
 
     }
