@@ -193,7 +193,7 @@
                 var index = 0;
                 exportTable.find('tbody tr').each(function () {
                     var score = $(this).find('td:eq(3)').text();
-                    var result = score >= 70 ? "Pass" : "Fail";
+                    var result = score > 69 && score < 101 ? "Pass" : "Fail";
                     $(this).append("<td>" + result + "</td>");
                     $(this).prepend("<td>" + (++index) + "</td>");
                 });
@@ -218,7 +218,7 @@
                 var trainingProgramId = $(this).data("trainingProgramId");
 
                 $.ajax({
-                    url: '@Url.Action("DownloadFormTemplate", "TrainingProgramsController")',
+                    url:'/TrainingProgramsController/DownloadFormTemplate',
                     type: 'GET',
                     data: { trainingProgramId: trainingProgramId },
                     success: function () {

@@ -163,7 +163,7 @@
     .button-scanner{
         outline: none;
         border: none;
-        border-radius: 5px;
+        border-radius: 0px;
         transition: 0.3s ease;
     }
     .button-scanner:hover{
@@ -177,32 +177,46 @@
     }
     <script>
         $(document).ready(function () {
-            //set default attendance date
-             var date = new Date(Date.parse("@Model.Attendance.AttendanceDate.ToString("yyyy/MM/dd")"));
-             const yyyy = date.getFullYear();
-             let mm = date.getMonth() + 1; // Months start at 0!
-             let dd = date.getDate();
-             
-             if (dd < 10) dd = '0' + dd;
-             if (mm < 10) mm = '0' + mm;
-             
-             const formattedToday = yyyy + '-' + mm + '-' + dd;
-             $(".attendanceDate").val(formattedToday)
-            
+            // Set default attendance date
+            var date = new Date(Date.parse("@Model.Attendance.AttendanceDate.ToString("yyyy/MM/dd")"));
+            const yyyy = date.getFullYear();
+            let mm = date.getMonth() + 1; // Months start at 0!
+            let dd = date.getDate();
+
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+
+            const formattedToday = yyyy + '-' + mm + '-' + dd;
+            $(".attendanceDate").val(formattedToday);
+
             $(".score-input").each(function () {
-                let thisId = $(this).attr("id").slice(6,);
-                console.log(thisValue);
-                if (thisValue >= 70) {
-                    $("#status-" + thisId).text("Pass");
-                    $("#status-" + thisId).addClass("text-success");
-                    $("#status-" + thisId).removeClass("text-danger");
+                let thisId = $(this).attr("id").slice(6);
+                let thisValue = $(this).val(); // Get input value
+
+                if (thisValue === "#N/A") {
+                    thisValue = 0; // Convert #N/A to 0
+                }
+
+                thisValue = parseFloat(thisValue); // Convert input value to a number
+
+                if (!isNaN(thisValue)) {
+                    if (thisValue > 69 && thisValue < 101) {
+                        $("#status-" + thisId).text("Pass");
+                        $("#status-" + thisId).addClass("text-success");
+                        $("#status-" + thisId).removeClass("text-danger");
+                    } else {
+                        $("#status-" + thisId).text("Fail");
+                        $("#status-" + thisId).addClass("text-danger");
+                        $("#status-" + thisId).removeClass("text-success");
+                    }
                 } else {
-                    $("#status-" + thisId).text("Fail");
+                    $("#status-" + thisId).text("Invalid Input");
                     $("#status-" + thisId).addClass("text-danger");
                     $("#status-" + thisId).removeClass("text-success");
                 }
-            })
-        })
+            });
+        });
+
         
         var StartScan = function () {
             $("#modalScanner").modal("show");
@@ -262,18 +276,35 @@
         })
 
         $(".score-input").change(function () {
-            let thisId = $(this).attr("id").slice(6,);
+            let thisId = $(this).attr("id").slice(6);
             let thisValue = $(this).val();
-            if (thisValue >= 70) {
-                $("#status-" + thisId).text("Pass");
-                $("#status-" + thisId).addClass("text-success");
-                $("#status-" + thisId).removeClass("text-danger");
-            } else {
-                $("#status-" + thisId).text("Fail");
+
+            if (thisValue === "#N/A") {
+                thisValue = 0;
+                $("#status-" + thisId).text("#N/A");
                 $("#status-" + thisId).addClass("text-danger");
                 $("#status-" + thisId).removeClass("text-success");
+            } else {
+                thisValue = parseFloat(thisValue); // Convert to a number
+
+                if (!isNaN(thisValue)) {
+                    if (thisValue > 69 && thisValue < 101) {
+                        $("#status-" + thisId).text("Pass");
+                        $("#status-" + thisId).addClass("text-success");
+                        $("#status-" + thisId).removeClass("text-danger");
+                    } else {
+                        $("#status-" + thisId).text("Fail");
+                        $("#status-" + thisId).addClass("text-danger");
+                        $("#status-" + thisId).removeClass("text-success");
+                    }
+                } else {
+                    $("#status-" + thisId).text("Invalid Input");
+                    $("#status-" + thisId).addClass("text-danger");
+                    $("#status-" + thisId).removeClass("text-success");
+                }
             }
-        })
+        });
+
 
         $("#submit").click(function () {
             let URLAction = '@Url.Action("UpdateAttendance", "TrainingPrograms")';
@@ -322,33 +353,49 @@
                                   processData: false,
                                   contentType: false,
                                   success: function (response) {
-                                      $("tr#row").each(function (){
-                                          var $this = $(this);
-                                          var code = $this.find('td#code').text().trim();
-                                          var checked = $this.find('input#check');
-                                          var score = $this.find('input.score-input');
-                                          for (var i = 0; i < response.length; i++) {
-                                              let rcode = response[i].split(":")[0];
-                                              let rscore = response[i].split(":")[1];
-                                              if (code === rcode){
-                                                    checked.prop( "checked", true );
-                                                    score.val(rscore);
-                                                    let thisId = score.attr("id").slice(6,);
-                                                    let thisValue = rscore;
-                                                    if (thisValue > 69 && thisValue < 100) {
-                                                         $("#status-" + thisId).text("Pass");
-                                                         $("#status-" + thisId).addClass("text-success");
-                                                         $("#status-" + thisId).removeClass("text-danger");
-                                                    } else {
-                                                         $("#status-" + thisId).text("Fail");
-                                                         $("#status-" + thisId).addClass("text-danger");
-                                                         $("#status-" + thisId).removeClass("text-success");
-                                                    }
-                                                    break;
-                                              }
-                                          }
-                                          
-                                      });
+                    $("tr#row").each(function () {
+                        var $this = $(this);
+                        var code = $this.find('td#code').text().trim();
+                        var checked = $this.find('input#check');
+                        var score = $this.find('input.score-input');
+
+                        for (var i = 0; i < response.length; i++) {
+                            let rcode = response[i].split(":")[0];
+                            let rscore = response[i].split(":")[1];
+
+                            if (code === rcode) {
+                                checked.prop("checked", true);
+
+                                let thisId = score.attr("id").slice(6);
+                                let thisValue = parseFloat(rscore);
+
+                                if (isNaN(thisValue)) {
+                                    // Input is not a valid number
+                                    rscore = thisValue;
+                                    $("#status-" + thisId).text(thisValue); // Display the original input string
+                                    $("#status-" + thisId).addClass("text-danger");
+                                    $("#status-" + thisId).removeClass("text-success");
+                                    rscore = 0;
+                                } else {
+                                    score.val(rscore);
+
+                                    if (thisValue > 69) {
+                                        $("#status-" + thisId).text("Pass");
+                                        $("#status-" + thisId).addClass("text-success");
+                                        $("#status-" + thisId).removeClass("text-danger");
+                                    } else {
+                                        $("#status-" + thisId).text("Fail");
+                                        $("#status-" + thisId).addClass("text-danger");
+                                        $("#status-" + thisId).removeClass("text-success");
+                                    }
+                                }
+
+                                break;
+                            }
+                        }
+                    });
+
+
                                   },
                                   error: function (xhr, status, error) {
                                       alert(response.responseText);
