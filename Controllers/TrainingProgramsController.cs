@@ -543,9 +543,9 @@ namespace Human_Resource_Generator.Controllers
             return excelDataList;
         }
         [HttpGet]
-        public IActionResult DownloadFormTemplate(int trainingProgramId)
+        public IActionResult DownloadFormTemplate(int id)
         {
-            var employees = _trainingProgramRepository.GetAllEmployeesByTrainingProgramId(trainingProgramId);
+            var employees = _trainingProgramRepository.GetAllEmployeesByTrainingProgramId(id);
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Form Template");
