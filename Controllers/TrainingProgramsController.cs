@@ -580,7 +580,28 @@ namespace Human_Resource_Generator.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult ExportFormForCreateTraining()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Empty Code List");
+
+                worksheet.Cell(1, 1).Value = "Code";
+                worksheet.Column(1).Width = 15;
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmptyCodeList.xlsx");
+                }
+            }
+            }
+        }
+
 
 
     }
-}
+
