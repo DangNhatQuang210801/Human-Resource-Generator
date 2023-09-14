@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Runtime.Caching;
+using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
@@ -8,6 +9,7 @@ using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.Interfaces;
 using OfficeOpenXml;
 using ClosedXML.Excel;
+using Microsoft.Extensions.Caching.Memory;
 
 
 namespace Human_Resource_Generator.Controllers
@@ -15,6 +17,7 @@ namespace Human_Resource_Generator.Controllers
     public class TrainingProgramsController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _memoryCache;
         private readonly ITrainingProgramRepository _trainingProgramRepository;
         private readonly IEmployeeTrainingRepository _employeeTrainingRepository;
         private readonly IAttendanceRepository _attendanceRepository;
@@ -22,10 +25,10 @@ namespace Human_Resource_Generator.Controllers
         private readonly IEmployeeRepo _employeeRepo;
         private readonly ITrainingProgramRepository _GetAllEmployeesByTrainingProgramId;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository ,
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository,
             IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository,
-            IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo, 
-            ITrainingProgramRepository GetAllEmployeesByTrainingProgramId)
+            IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo,
+            ITrainingProgramRepository GetAllEmployeesByTrainingProgramId, IMemoryCache memoryCache)
         {
             _trainingProgramRepository = trainingProgramRepository;
             _employeeTrainingRepository = employeeTrainingRepository;
@@ -34,6 +37,7 @@ namespace Human_Resource_Generator.Controllers
             _attendanceEmployeeRepository = attendanceEmployeeRepository;
             _employeeRepo = employeeRepo;
             _GetAllEmployeesByTrainingProgramId = GetAllEmployeesByTrainingProgramId;
+            _memoryCache = memoryCache;
         }
 
         // GET: TrainingPrograms
@@ -491,12 +495,13 @@ namespace Human_Resource_Generator.Controllers
         public ActionResult Import(IFormFile? file)
         {
             var excelDataList = new List<string>();
-            if (file is not { Length: > 0 }) 
+            if (file is not { Length: > 0 })
                 return PartialView("_Employees", new List<Employee>());
             if (file.Length <= 0)
             {
                 return PartialView("_Employees", new List<Employee>());
             }
+
             using var stream = new MemoryStream();
             file.CopyTo(stream);
             using var package = new ExcelPackage(stream);
@@ -505,7 +510,7 @@ namespace Human_Resource_Generator.Controllers
 
             for (var row = 2;
                  row <= rowCount;
-                 row++) 
+                 row++)
             {
                 var value = worksheet?.Cells[row, 1]?.Value?.ToString() ?? "0";
                 excelDataList.Add(value);
@@ -514,7 +519,7 @@ namespace Human_Resource_Generator.Controllers
             var listEmployees = _employeeRepo.GetEmployeesByListCodes(excelDataList);
             return PartialView("_Employees", listEmployees);
         }
-        
+
         [HttpPost]
         public List<string> ImportAttendance(IFormFile? file)
         {
@@ -525,6 +530,7 @@ namespace Human_Resource_Generator.Controllers
             {
                 return excelDataList;
             }
+
             using var stream = new MemoryStream();
             file.CopyTo(stream);
             using var package = new ExcelPackage(stream);
@@ -533,14 +539,22 @@ namespace Human_Resource_Generator.Controllers
 
             for (var row = 2;
                  row <= rowCount;
-                 row++) 
+                 row++)
             {
                 var code = worksheet?.Cells[row, 1]?.Value?.ToString() ?? "0";
                 var score = worksheet?.Cells[row, 3]?.Value?.ToString() ?? "0";
-                excelDataList.Add(code+":"+score);
+                excelDataList.Add(code + ":" + score);
             }
 
             return excelDataList;
+        }
+
+        [HttpPost]
+        public IActionResult DataDownloadAttendance([FromBody] List<DataDownloadAttendanceViewModel> data)
+        {
+            var token = Guid.NewGuid().ToString();
+            _memoryCache.Set(token, data);
+            return Ok(token);
         }
         [HttpGet]
         public IActionResult DownloadFormTemplate(int id)
@@ -575,7 +589,8 @@ namespace Human_Resource_Generator.Controllers
                     stream.Seek(0, SeekOrigin.Begin);
 
                     // Return the Excel file for download
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "FormTemplate.xlsx");
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "FormTemplate.xlsx");
                 }
             }
         }
@@ -595,13 +610,111 @@ namespace Human_Resource_Generator.Controllers
                     workbook.SaveAs(stream);
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmptyCodeList.xlsx");
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "EmptyCodeList.xlsx");
                 }
-            }
             }
         }
 
+        [HttpGet]
+        public IActionResult ExportAttendance(string token)
+        {
+            var data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token);
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Training Program Attendance");
 
+                // First row contain text "付属書 No. SEDV-M100-0001-6 (10) 1/1"
+                worksheet.Cell("I1").Value = "付属書 No. SEDV-M100-0001-6 (10) 1/1";
+                worksheet.Range("I1:L2").Row(1).Merge();
+                worksheet.Cell("I1").Style.Font.SetFontSize(10);
 
+                // Second row
+                worksheet.Cell("A2").Value = "BẢNG GHI CHÉP HƯỚNG DẪN 教育記録";
+                worksheet.Cell("A2").Style.Font.SetFontSize(20);
+                worksheet.Cell("A2").Style.Font.SetBold();
+                worksheet.Range("A2:L3").Row(1).Merge();
+
+                // Third row
+                worksheet.Cell("A3").Value = $"\u25cbThời gian  日時  {data.ElementAt(0).CreateAt}";
+                worksheet.Cell("A3").Style.Font.SetFontSize(12);
+                worksheet.Range("A3:L4").Row(1).Merge();
+
+                // fourth row
+                worksheet.Cell("A4").Value =
+                    $"\u25cbHạng mục 項目 : {data.ElementAt(0).Subject}";
+                worksheet.Cell("A4").Style.Font.SetFontSize(12);
+                worksheet.Range("A4:L5").Row(1).Merge();
+
+                // fifth row
+                worksheet.Cell("A5").Value = $"\u25cbNgười hướng dẫn 講師 \t\t   {data.ElementAt(0).Teacher}";
+                worksheet.Cell("A5").Style.Font.SetFontSize(12);
+                worksheet.Range("A5:L6").Row(1).Merge();
+
+                // sixth row
+                worksheet.Cell("A6").Value =
+                    "\u25cbTài liệu hướng dẫn đính kèm  概要 ；使用教育資料 添付 0Có有   (Ghi rõ tên + Mã số ở ô bên dưới)    0Không 無 (Ghi rõ nội dung  hướng dẫn ở ô bên dưới)";
+                worksheet.Cell("A6").Style.Font.SetFontSize(12);
+                worksheet.Cell("A6").Style.Fill.SetBackgroundColor(XLColor.Gray);
+                worksheet.Range("A6:L7").Row(1).Merge();
+
+                // seventh row
+                worksheet.Cell("A7").Value = "Tài liệu đào tạo SEDV-HR&GA-23-02";
+                worksheet.Cell("A7").Style.Font.SetFontSize(12);
+                worksheet.Range("A7:L8").Row(1).Merge();
+                worksheet.Cell("A7").WorksheetRow().Height = 50;
+                
+                // eighth row
+                worksheet.Cell("A8").Style.Fill.SetBackgroundColor(XLColor.Gray);
+                worksheet.Range("A8:L9").Row(1).Merge();
+                
+                // ninth row
+                worksheet.Range("A9:L9").Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
+                worksheet.Range("A9:L9").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell("A9").Value = "No.";
+                worksheet.Cell("B9").Value = "Số thẻ\n所属";
+                worksheet.Cell("C9").Value = "Tên\n氏名";
+                worksheet.Cell("C9").WorksheetColumn().Width = 30;
+                worksheet.Cell("D9").Value = "Xác nhận tham gia\n確認";
+                worksheet.Cell("E9").Value = "Mức độ hiểu\n理解度";
+                worksheet.Cell("F9").Value = "Ghi chú\n備考";
+                
+                worksheet.Cell("G9").Value = "No.";
+                worksheet.Cell("H9").Value = "Số thẻ\n所属";
+                worksheet.Cell("I9").Value = "Tên\n氏名";
+                worksheet.Cell("I9").WorksheetColumn().Width = 30;
+                worksheet.Cell("J9").Value = "Xác nhận tham gia\n確認";
+                worksheet.Cell("K9").Value = "Mức độ hiểu\n理解度";
+                worksheet.Cell("L9").Value = "Ghi chú\n備考";
+                
+                // Insert data
+                var count = data.Count;
+                var mid = (count + 1) / 2;
+                for (var i = 0; i < mid; i++)
+                {
+                    worksheet.Cell($"A{10 + i}").Value = i;
+                    worksheet.Cell($"B{10 + i}").Value = data.ElementAt(i).Code;
+                    worksheet.Cell($"C{10 + i}").Value = data.ElementAt(i).Name;
+                    worksheet.Cell($"E{10 + i}").Value = data.ElementAt(i).Score;
+                }
+                for (var i = mid; i < count; i++)
+                {
+                    worksheet.Cell($"G{10 + i - mid}").Value = i ;
+                    worksheet.Cell($"H{10 + i - mid}").Value = data.ElementAt(i).Code;
+                    worksheet.Cell($"I{10 + i - mid}").Value = data.ElementAt(i).Name;
+                    worksheet.Cell($"K{10 + i - mid}").Value = data.ElementAt(i).Score;
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "EmptyCodeList.xlsx");
+                }
+            }
+        }
     }
+}
 
