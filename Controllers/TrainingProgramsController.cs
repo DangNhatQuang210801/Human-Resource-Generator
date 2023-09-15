@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using ClosedXML.Excel;
+using Human_Resource_Generator.Interfaces;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
-using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
-using Newtonsoft.Json;
-using AutoMapper;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
-using Human_Resource_Generator.Interfaces;
+using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using OfficeOpenXml;
-using ClosedXML.Excel;
 
 
 namespace Human_Resource_Generator.Controllers
@@ -22,9 +22,9 @@ namespace Human_Resource_Generator.Controllers
         private readonly IEmployeeRepo _employeeRepo;
         private readonly ITrainingProgramRepository _GetAllEmployeesByTrainingProgramId;
 
-        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository ,
+        public TrainingProgramsController(IMapper mapper, ITrainingProgramRepository trainingProgramRepository,
             IEmployeeTrainingRepository employeeTrainingRepository, IAttendanceRepository attendanceRepository,
-            IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo, 
+            IAttendanceEmployeeRepository attendanceEmployeeRepository, IEmployeeRepo employeeRepo,
             ITrainingProgramRepository GetAllEmployeesByTrainingProgramId)
         {
             _trainingProgramRepository = trainingProgramRepository;
@@ -108,17 +108,17 @@ namespace Human_Resource_Generator.Controllers
             if (newTrainingProgramId == -1)
             {
                 return Json(new
-                    { redirectToUrl = "", statusCode = 502, message = "This Training Program is already existed!" });
+                { redirectToUrl = "", statusCode = 502, message = "This Training Program is already existed!" });
             }
 
             foreach (var employeeId in employeeIds)
             {
                 _employeeTrainingRepository.Add(new EmployeeTraining()
-                    { EmployeeId = employeeId, TrainingProgramId = newTrainingProgramId });
+                { EmployeeId = employeeId, TrainingProgramId = newTrainingProgramId });
             }
 
             return Json(new
-                { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
+            { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
         }
 
         // GET: TrainingPrograms/Edit/5
@@ -187,12 +187,12 @@ namespace Human_Resource_Generator.Controllers
                 if (existedEmployeeTraining == null)
                 {
                     _employeeTrainingRepository.Add(new EmployeeTraining()
-                        { EmployeeId = employeeId, TrainingProgramId = inputTrainingProgram.Id });
+                    { EmployeeId = employeeId, TrainingProgramId = inputTrainingProgram.Id });
                 }
             }
 
             return Json(new
-                { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
+            { redirectToUrl = Url.Action("Index", "TrainingPrograms"), statusCode = 200, message = "" });
         }
 
         // [Authorize(Roles =SD.Role_Admin)]
@@ -310,7 +310,7 @@ namespace Human_Resource_Generator.Controllers
 
             // Create new attendance for this training program
             var newAttendanceId = _attendanceRepository.Add(new Attendance()
-                { AttendanceDate = input.AttendanceDate, TrainingProgramId = input.TrainingProgramId });
+            { AttendanceDate = input.AttendanceDate, TrainingProgramId = input.TrainingProgramId });
             if (newAttendanceId != -1)
             {
                 //Create new attendance for all joined employees
@@ -328,13 +328,14 @@ namespace Human_Resource_Generator.Controllers
             else
             {
                 return Json(new
-                    { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
+                { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
             }
 
             return Json(new
             {
                 redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }),
-                statusCode = 200, message = ""
+                statusCode = 200,
+                message = ""
             });
         }
 
@@ -421,7 +422,8 @@ namespace Human_Resource_Generator.Controllers
             return Json(new
             {
                 redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = input.TrainingProgramId }),
-                statusCode = 200, message = ""
+                statusCode = 200,
+                message = ""
             });
         }
 
@@ -433,7 +435,8 @@ namespace Human_Resource_Generator.Controllers
             _attendanceRepository.Delete(attendance);
             return Json(new
             {
-                redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = programId }), statusCode = 200,
+                redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = programId }),
+                statusCode = 200,
                 message = ""
             });
         }
@@ -459,7 +462,7 @@ namespace Human_Resource_Generator.Controllers
             });
             // Create new attendance for this training program
             var newAttendanceId = _attendanceRepository.Add(new Attendance()
-                { AttendanceDate = DateTime.Now, TrainingProgramId = trainingProgramId });
+            { AttendanceDate = DateTime.Now, TrainingProgramId = trainingProgramId });
             if (newAttendanceId != -1)
             {
                 //Create new attendance for all joined employees
@@ -477,13 +480,14 @@ namespace Human_Resource_Generator.Controllers
             else
             {
                 return Json(new
-                    { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
+                { redirectToUrl = "", statusCode = 502, message = "This Attendance day is already existed!" });
             }
 
             return Json(new
             {
                 redirectToUrl = Url.Action("Attendance", "TrainingPrograms", new { id = trainingProgramId }),
-                statusCode = 200, message = ""
+                statusCode = 200,
+                message = ""
             });
         }
 
@@ -491,7 +495,7 @@ namespace Human_Resource_Generator.Controllers
         public ActionResult Import(IFormFile? file)
         {
             var excelDataList = new List<string>();
-            if (file is not { Length: > 0 }) 
+            if (file is not { Length: > 0 })
                 return PartialView("_Employees", new List<Employee>());
             if (file.Length <= 0)
             {
@@ -505,7 +509,7 @@ namespace Human_Resource_Generator.Controllers
 
             for (var row = 2;
                  row <= rowCount;
-                 row++) 
+                 row++)
             {
                 var value = worksheet?.Cells[row, 1]?.Value?.ToString() ?? "0";
                 excelDataList.Add(value);
@@ -514,7 +518,7 @@ namespace Human_Resource_Generator.Controllers
             var listEmployees = _employeeRepo.GetEmployeesByListCodes(excelDataList);
             return PartialView("_Employees", listEmployees);
         }
-        
+
         [HttpPost]
         public List<string> ImportAttendance(IFormFile? file)
         {
@@ -533,11 +537,11 @@ namespace Human_Resource_Generator.Controllers
 
             for (var row = 2;
                  row <= rowCount;
-                 row++) 
+                 row++)
             {
                 var code = worksheet?.Cells[row, 1]?.Value?.ToString() ?? "0";
                 var score = worksheet?.Cells[row, 3]?.Value?.ToString() ?? "0";
-                excelDataList.Add(code+":"+score);
+                excelDataList.Add(code + ":" + score);
             }
 
             return excelDataList;
@@ -598,10 +602,10 @@ namespace Human_Resource_Generator.Controllers
                     return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmptyCodeList.xlsx");
                 }
             }
-            }
         }
-
-
-
     }
+
+
+
+}
 
