@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Caching;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using ClosedXML.Excel;
+using Human_Resource_Generator.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
 
