@@ -617,9 +617,14 @@ namespace Human_Resource_Generator.Controllers
         }
 
         [HttpGet]
-        public IActionResult ExportAttendance(string token)
+        public IActionResult ExportAttendance(string? token)
         {
-            var data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token);
+            var data = new List<DataDownloadAttendanceViewModel>();
+            if (token != null)
+            {
+                data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token);
+            }
+            
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Training Program Attendance");
