@@ -36,11 +36,6 @@ namespace Human_Resource_Generator.Repository.Implement
 
         public async Task<int> Add(TrainingProgram trainingProgram)
         {
-            var existTraining = _db.TrainingPrograms.FirstOrDefault(x => x.Name == trainingProgram.Name);
-            if (existTraining != null)
-            {
-                return -1;
-            }
             await _db.TrainingPrograms.AddAsync(trainingProgram);
             await _db.SaveChangesAsync();
             return trainingProgram.Id;
