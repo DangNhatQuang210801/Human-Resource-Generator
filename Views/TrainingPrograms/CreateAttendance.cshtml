@@ -44,6 +44,11 @@
             @Model.CreatedAt.ToShortDateString()
         </dd>
     </dl>
+    <div>
+        <input type="button" value="Create" id="submit" class="btn btn-primary" />
+        <button type="button" style="margin-left:5px" class="btn btn-info" id="btn-search-employee" onclick="ImportAttendance()">Import</button>
+        <a asp-action="Attendance" class="btn btn-info" asp-route-id="@Model.Id">Back to List</a>
+    </div>
     <hr />
     <div class="row">
         <div class="col-md-8">

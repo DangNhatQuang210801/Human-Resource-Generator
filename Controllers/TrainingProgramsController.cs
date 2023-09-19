@@ -1,15 +1,14 @@
-﻿using System.Runtime.Caching;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
 using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using ClosedXML.Excel;
 using Microsoft.Extensions.Caching.Memory;
-
+using AutoMapper;
+using Human_Resource_Generator.Interfaces;
 
 namespace Human_Resource_Generator.Controllers
 {

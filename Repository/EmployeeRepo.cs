@@ -28,7 +28,7 @@ namespace Human_Resource_Generator.Repository
 
         public Employee GetById(int id)
         {
-            var employees = _db.Employees.Include(e => e.EmployeeTrainings).FirstOrDefault(x => x.Id == id) ?? new Employee();;
+            var employees = _db.Employees.Include(e => e.EmployeeTrainings).FirstOrDefault(x => x.Id == id) ?? new Employee(); ;
             var employeeTrainings = employees.EmployeeTrainings.Select(et => new EmployeeTraining
             {
                 TrainingProgram = _db.TrainingPrograms.FirstOrDefault(t => t.Id == et.TrainingProgramId) ??
@@ -72,17 +72,27 @@ namespace Human_Resource_Generator.Repository
             var id = _db.Employees.FirstOrDefault(e => e.Code == code)?.Id;
             return id;
         }
-
         private static string _getShortCode(string code)
         {
+            if (string.IsNullOrEmpty(code) || code.Length < 4)
+                return string.Empty;
+
             return code[0] + code[^3..];
         }
+
         public int? GetEmployeeIdByCodeScanner(string code)
         {
-            var listE = _db.Employees.Where(e => e.Code.Contains(code.Substring(code.Length-3))).ToList();
-            var id = listE.FirstOrDefault(e => _getShortCode(e.Code) == code).Id;
-            return id;
+            if (string.IsNullOrEmpty(code))
+                return null;
+
+            var shortCode = code.Substring(code.Length - 3).ToUpper();  // Convert to upper in case it's case-sensitive
+            var employees = _db.Employees.Where(e => e.Code.ToUpper().Contains(shortCode)).ToList();
+
+            var employee = employees.FirstOrDefault(e => _getShortCode(e.Code.ToUpper()) == code.ToUpper());
+
+            return employee?.Id;
         }
+
 
         public List<Employee> GetEmployeesByListCodes(List<string> listCodes)
         {

@@ -29,8 +29,6 @@
                         <li class="nav-item">
                             @* <a class="nav-link" asp-area="" asp-controller="TrainingProgram" asp-action="Index">Trainning Program</a> *@
                         </li>
-                        @if (User.IsInRole(SD.Role_Admin))
-                        {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Training</a>
                                 <div class="dropdown-menu">
@@ -40,7 +38,6 @@
                                 </div>
                         </li> 
                             
-                        }
 
                         @if (User.IsInRole(SD.Role_Employee))
                         {

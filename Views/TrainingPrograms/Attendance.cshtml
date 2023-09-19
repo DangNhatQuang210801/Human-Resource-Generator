@@ -72,7 +72,7 @@
             <h4>List joined employee </h4>
         </div>
         <div class="col-md-8 text-end">
-            <button class="btn btn-success btn-sm" id="exportToExcel">Export To Excel</button>
+            <a asp-action="ExportAttendance" asp-route-id="@Model?.Id" class="btn btn-success btn-sm">Export Excel</a>
             <a asp-action="DownloadFormTemplate" asp-route-id="@Model?.Id" class="btn btn-sm btn-dark">Score Template</a>
             <a asp-action="CreateAttendance" asp-route-id="@Model?.Id" class="btn btn-sm btn-primary">Take Attendance</a>
             <a asp-action="CreateAttendanceByScanner" asp-route-id="@Model?.Id" class="btn btn-sm btn-info">Scan for Attendance</a>
