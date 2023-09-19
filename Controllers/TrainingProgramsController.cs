@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Runtime.Caching;
+using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
@@ -6,6 +7,7 @@ using Human_Resource_Generator.ViewModels.TrainingProgramViewModel;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using ClosedXML.Excel;
+using Human_Resource_Generator.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using AutoMapper;
 using Human_Resource_Generator.Interfaces;
@@ -619,9 +621,14 @@ namespace Human_Resource_Generator.Controllers
         }
 
         [HttpGet]
-        public IActionResult ExportAttendance(string token)
+        public IActionResult ExportAttendance(string? token)
         {
-            var data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token);
+            var data = new List<DataDownloadAttendanceViewModel>();
+            if (token != null)
+            {
+                data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token);
+            }
+            
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Training Program Attendance");
