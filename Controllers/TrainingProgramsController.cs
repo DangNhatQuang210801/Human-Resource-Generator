@@ -1,5 +1,4 @@
-﻿using System.Runtime.Caching;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
@@ -626,12 +625,20 @@ namespace Human_Resource_Generator.Controllers
             var data = new List<DataDownloadAttendanceViewModel>();
             if (token != null)
             {
-                data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token);
+                data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token) ?? new List<DataDownloadAttendanceViewModel>();
             }
             
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Training Program Attendance");
+
+                // Check if data has elements before accessing it
+                if (data.Any())
+                {
+                    worksheet.Cell("A3").Value = $"\u25cbThời gian  日時  {data.ElementAt(0).CreateAt}";
+                    worksheet.Cell("A4").Value = $"\u25cbHạng mục 項目 : {data.ElementAt(0).Subject}";
+                    worksheet.Cell("A5").Value = $"\u25cbNgười hướng dẫn 講師 \t\t   {data.ElementAt(0).Teacher}";
+                }
 
                 // First row contain text "付属書 No. SEDV-M100-0001-6 (10) 1/1"
                 worksheet.Cell("I1").Value = "付属書 No. SEDV-M100-0001-6 (10) 1/1";
@@ -696,6 +703,7 @@ namespace Human_Resource_Generator.Controllers
                 worksheet.Cell("K9").Value = "Mức độ hiểu\n理解度";
                 worksheet.Cell("L9").Value = "Ghi chú\n備考";
                 
+
                 // Insert data
                 var count = data.Count;
                 var mid = (count + 1) / 2;

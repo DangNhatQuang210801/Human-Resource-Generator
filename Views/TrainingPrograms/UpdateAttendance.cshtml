@@ -242,7 +242,7 @@
 
             $('input:checkbox.check-item-employee').each(function () {
                 let code = $(this).attr("code");
-                if (listCode.includes(code[0] + code.slice(-3))) {
+                if (listCode.includes(code) || listCode.includes(code[0] + code.slice(-3))) {
                     $(this).prop('checked', true);
                 }
                 let thisId = $(this).val();
@@ -253,9 +253,10 @@
                 }
             });
 
-            $(".listCode").val(""); // I assume you intended to clear the textarea value. Use val("") instead of val = ""
+            $(".listCode").val(""); // Corrected this to clear the textarea value
             $("#modalScanner").modal("hide");
         }
+
 
         var ConfirmDelete = function (attendanceId) {
                                         $("#hiddenAttendanceId").val(attendanceId);
