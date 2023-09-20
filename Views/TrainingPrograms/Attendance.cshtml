@@ -72,7 +72,7 @@
             <h4>List joined employee </h4>
         </div>
         <div class="col-md-8 text-end">
-            <a asp-action="ExportAttendance" asp-route-id="@Model?.Id" class="btn btn-success btn-sm">Export Excel</a>
+            <a id="exportToExcel" class="btn btn-success btn-sm">Export Excel</a>
             <a asp-action="DownloadFormTemplate" asp-route-id="@Model?.Id" class="btn btn-sm btn-dark">Score Template</a>
             <a asp-action="CreateAttendance" asp-route-id="@Model?.Id" class="btn btn-sm btn-primary">Take Attendance</a>
             <a asp-action="CreateAttendanceByScanner" asp-route-id="@Model?.Id" class="btn btn-sm btn-info">Scan for Attendance</a>
@@ -145,7 +145,6 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#exportToExcel").click(function () {
@@ -161,6 +160,13 @@
                     var subject = "@Model.Name";
                     var teacher = "@Model.Teacher";
                     var description = "@Model.Description";
+                    var attendanceDate = "";
+                    $(this).find('td span').each(function (){
+                        let val = $(this).text().trim()
+                        if (val !== "Miss"){
+                            attendanceDate = val;
+                        }
+                    });
                     data.push({
                         code, 
                         name, 
@@ -168,9 +174,11 @@
                         createAt,
                         teacher,
                         description,
-                        subject
+                        subject,
+                        attendanceDate
                     })
                 });
+                console.log(data)
                 $.ajax({
                         url:'/TrainingPrograms/DataDownloadAttendance',
                         type: 'POST',
@@ -245,32 +253,6 @@
         });
     </script>
     <!-- Include jQuery if not already included -->
-
-
-    <script>
-        $(document).ready(function () {
-            $("#exportFormExcel").click(function () {
-                var trainingProgramId = $(this).data("trainingProgramId");
-
-                $.ajax({
-                    url:'/TrainingProgramsController/DownloadFormTemplate',
-                    type: 'GET',
-                    data: { trainingProgramId: trainingProgramId },
-                    success: function () {
-                        alert('Excel template file generated successfully.');
-                    },
-                    error: function () {
-                        alert('Error generating Excel template file.');
-                    }
-                });
-            });
-        });
-    </script>
-
-
-
-
-
 
 }
 

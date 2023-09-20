@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Human_Resource_Generator.Models;
 using Human_Resource_Generator.Repository;
 using Human_Resource_Generator.ViewModels.AttendanceViewModels;
@@ -627,6 +628,7 @@ namespace Human_Resource_Generator.Controllers
             {
                 data = _memoryCache.Get<List<DataDownloadAttendanceViewModel>>(token) ?? new List<DataDownloadAttendanceViewModel>();
             }
+            _memoryCache.Remove(token);
             
             using (var workbook = new XLWorkbook())
             {
@@ -712,6 +714,7 @@ namespace Human_Resource_Generator.Controllers
                     worksheet.Cell($"A{10 + i}").Value = i;
                     worksheet.Cell($"B{10 + i}").Value = data.ElementAt(i).Code;
                     worksheet.Cell($"C{10 + i}").Value = data.ElementAt(i).Name;
+                    worksheet.Cell($"D{10 + i}").Value = data.ElementAt(i).AttendanceDate;
                     worksheet.Cell($"E{10 + i}").Value = data.ElementAt(i).Score;
                 }
                 for (var i = mid; i < count; i++)
@@ -719,6 +722,7 @@ namespace Human_Resource_Generator.Controllers
                     worksheet.Cell($"G{10 + i - mid}").Value = i ;
                     worksheet.Cell($"H{10 + i - mid}").Value = data.ElementAt(i).Code;
                     worksheet.Cell($"I{10 + i - mid}").Value = data.ElementAt(i).Name;
+                    worksheet.Cell($"J{10 + i - mid}").Value = data.ElementAt(i).AttendanceDate;
                     worksheet.Cell($"K{10 + i - mid}").Value = data.ElementAt(i).Score;
                 }
 
