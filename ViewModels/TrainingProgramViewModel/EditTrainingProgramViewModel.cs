@@ -6,5 +6,7 @@ namespace Human_Resource_Generator.ViewModels.TrainingProgramViewModel
     {
         public List<int> JoinedEmployeeIds { get; set; }
         public List<Employee> Employees { get; set; }
+        public DateTime CreatedAt { get; set; }
+
     }
 }

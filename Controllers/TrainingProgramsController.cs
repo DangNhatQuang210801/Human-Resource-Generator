@@ -659,22 +659,30 @@ namespace Human_Resource_Generator.Controllers
                 worksheet.Range("A3:L4").Row(1).Merge();
 
                 // fourth row
-                worksheet.Cell("A4").Value =
-                    $"\u25cbHạng mục 項目 : {data.ElementAt(0).Subject}";
-                worksheet.Cell("A4").Style.Font.SetFontSize(12);
+                worksheet.Cell("A4").Value = $"\u25cbHạng mục 項目 : {data.ElementAt(0).Subject}";
+                worksheet.Cell("A4").Style.Font.SetFontSize(12)
+                                             .Font.SetFontName("Times New Roman") // Set font to Times New Roman
+                                             .Alignment.WrapText = true; // Enable text wrapping
                 worksheet.Range("A4:L5").Row(1).Merge();
 
                 // fifth row
                 worksheet.Cell("A5").Value = $"\u25cbNgười hướng dẫn 講師 \t\t   {data.ElementAt(0).Teacher}";
-                worksheet.Cell("A5").Style.Font.SetFontSize(12);
+                worksheet.Cell("A5").Style.Font.SetFontSize(12)
+                                             .Font.SetFontName("Times New Roman") // Set font to Times New Roman
+                                             .Alignment.WrapText = true; // Enable text wrapping
                 worksheet.Range("A5:L6").Row(1).Merge();
 
+
                 // sixth row
-                worksheet.Cell("A6").Value =
-                    "\u25cbTài liệu hướng dẫn đính kèm  概要 ；使用教育資料 添付 0Có有   (Ghi rõ tên + Mã số ở ô bên dưới)    0Không 無 (Ghi rõ nội dung  hướng dẫn ở ô bên dưới)";
-                worksheet.Cell("A6").Style.Font.SetFontSize(12);
+                worksheet.Cell("A6").Value = "\u25cbTài liệu hướng dẫn đính kèm  概要 ；使用教育資料 添付 0Có有   (Ghi rõ tên + Mã số ở ô bên dưới)    0Không 無 (Ghi rõ nội dung  hướng dẫn ở ô bên dưới)";
+                worksheet.Cell("A6").Style.Font.SetFontSize(12).Font.SetFontName("Times New Roman"); // Set font details
+                worksheet.Cell("A6").Style.Alignment.WrapText = true; // Enable text wrapping
+                worksheet.Cell("A6").Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center); // Vertically center the content
+                worksheet.Cell("A6").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center); // Horizontally center the content
                 worksheet.Cell("A6").Style.Fill.SetBackgroundColor(XLColor.Gray);
                 worksheet.Range("A6:L7").Row(1).Merge();
+
+
 
                 // seventh row
                 worksheet.Cell("A7").Value = "Tài liệu đào tạo SEDV-HR&GA-23-02";
@@ -716,6 +724,7 @@ namespace Human_Resource_Generator.Controllers
                     worksheet.Cell($"C{10 + i}").Value = data.ElementAt(i).Name;
                     worksheet.Cell($"D{10 + i}").Value = data.ElementAt(i).AttendanceDate;
                     worksheet.Cell($"E{10 + i}").Value = data.ElementAt(i).Score;
+                    worksheet.CellsUsed().Style.Alignment.WrapText = true;
                 }
                 for (var i = mid; i < count; i++)
                 {
@@ -724,7 +733,10 @@ namespace Human_Resource_Generator.Controllers
                     worksheet.Cell($"I{10 + i - mid}").Value = data.ElementAt(i).Name;
                     worksheet.Cell($"J{10 + i - mid}").Value = data.ElementAt(i).AttendanceDate;
                     worksheet.Cell($"K{10 + i - mid}").Value = data.ElementAt(i).Score;
+                    worksheet.CellsUsed().Style.Alignment.WrapText = true;
                 }
+                // Adjusting the column width to fit the content
+                worksheet.Columns().AdjustToContents();
 
                 using (var stream = new MemoryStream())
                 {
